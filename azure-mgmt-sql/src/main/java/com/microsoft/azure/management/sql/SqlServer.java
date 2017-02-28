@@ -15,6 +15,7 @@ import com.microsoft.azure.management.resources.fluentcore.model.Refreshable;
 import com.microsoft.azure.management.resources.fluentcore.model.Updatable;
 import com.microsoft.azure.management.sql.implementation.ServerInner;
 import com.microsoft.azure.management.sql.implementation.SqlServerManager;
+
 import rx.Completable;
 
 import java.util.List;
@@ -85,6 +86,13 @@ public interface SqlServer extends
      */
     Map<String, RecommendedElasticPool> listRecommendedElasticPools();
 
+    /**
+     * Gets an Azure SQL Server Auditing Policy for the server.
+     *
+     * @return an Azure SQL Server Auditing Policy for the server
+     */
+    AuditingPolicy getAuditingPolicy();    
+    
     /**
      * Entry point to access FirewallRules from the SQL Server.
      */

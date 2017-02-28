@@ -13,6 +13,7 @@ import com.microsoft.azure.management.resources.fluentcore.arm.models.implementa
 import com.microsoft.azure.management.resources.fluentcore.model.Creatable;
 import com.microsoft.azure.management.resources.fluentcore.utils.ListToMapConverter;
 import com.microsoft.azure.management.resources.fluentcore.utils.PagedListConverter;
+import com.microsoft.azure.management.sql.AuditingPolicy;
 import com.microsoft.azure.management.sql.CreateMode;
 import com.microsoft.azure.management.sql.DatabaseEditions;
 import com.microsoft.azure.management.sql.DatabaseMetric;
@@ -26,7 +27,9 @@ import com.microsoft.azure.management.sql.SqlServer;
 import com.microsoft.azure.management.sql.SqlWarehouse;
 import com.microsoft.azure.management.sql.TransparentDataEncryption;
 import com.microsoft.azure.management.sql.UpgradeHintInterface;
+
 import org.joda.time.DateTime;
+
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -235,6 +238,16 @@ class SqlDatabaseImpl
                 this.name()));
     }
 
+	@Override
+	public AuditingPolicy getAuditingPolicy()
+	{
+        return new AuditingPolicyImpl(
+                this.innerCollection.getAuditingPolicy(
+                        this.resourceGroupName(),
+                        this.sqlServerName(),
+                        this.name()), this.innerCollection);
+	}
+    
     @Override
     public void delete() {
         this.manager().inner().databases().delete(this.resourceGroupName(), this.sqlServerName(), this.name());

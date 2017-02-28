@@ -15,6 +15,7 @@ import com.microsoft.azure.management.resources.fluentcore.utils.ListToMapConver
 import com.microsoft.azure.management.resources.fluentcore.utils.PagedListConverter;
 import com.microsoft.azure.management.resources.fluentcore.utils.SdkContext;
 import com.microsoft.azure.management.resources.fluentcore.utils.Utils;
+import com.microsoft.azure.management.sql.AuditingPolicy;
 import com.microsoft.azure.management.sql.ElasticPoolEditions;
 import com.microsoft.azure.management.sql.RecommendedElasticPool;
 import com.microsoft.azure.management.sql.ServerMetric;
@@ -24,6 +25,7 @@ import com.microsoft.azure.management.sql.SqlDatabase;
 import com.microsoft.azure.management.sql.SqlElasticPool;
 import com.microsoft.azure.management.sql.SqlFirewallRule;
 import com.microsoft.azure.management.sql.SqlServer;
+
 import rx.Completable;
 import rx.Observable;
 import rx.functions.Func1;
@@ -202,8 +204,16 @@ public class SqlServerImpl
                 this.resourceGroupName(),
                 this.name()));
     }
+    
+	@Override
+	public AuditingPolicy getAuditingPolicy()
+	{
+		return new AuditingPolicyImpl(
+				this.innerCollection.getAuditingPolicy(this.resourceGroupName(), this.name()),
+				this.innerCollection);
+	}
 
-    @Override
+	@Override
     public SqlServerImpl withAdministratorLogin(String administratorLogin) {
         this.inner().withAdministratorLogin(administratorLogin);
         return this;

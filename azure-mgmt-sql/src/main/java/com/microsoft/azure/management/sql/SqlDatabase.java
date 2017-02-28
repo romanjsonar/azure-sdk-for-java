@@ -154,6 +154,13 @@ public interface SqlDatabase extends
     Map<String, ReplicationLink> listReplicationLinks();
 
     /**
+     * Gets an Azure SQL Database Auditing Policy for the database.
+     *
+     * @return an Azure SQL Database Auditing Policy for the database
+     */
+    AuditingPolicy getAuditingPolicy();    
+    
+    /**
      * Deletes the existing SQL database.
      */
     void delete();

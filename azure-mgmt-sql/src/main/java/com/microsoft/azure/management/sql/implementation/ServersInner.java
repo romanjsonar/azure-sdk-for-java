@@ -10,6 +10,7 @@ package com.microsoft.azure.management.sql.implementation;
 
 import com.microsoft.azure.management.resources.fluentcore.collection.InnerSupportsListing;
 import retrofit2.Retrofit;
+
 import com.google.common.reflect.TypeToken;
 import com.microsoft.azure.CloudException;
 import com.microsoft.azure.Page;
@@ -17,8 +18,11 @@ import com.microsoft.rest.ServiceCallback;
 import com.microsoft.rest.ServiceFuture;
 import com.microsoft.rest.ServiceResponse;
 import com.microsoft.rest.Validator;
+import com.microsoft.rest.protocol.ResponseBuilder;
+
 import java.io.IOException;
 import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -106,6 +110,9 @@ public class ServersInner implements InnerSupportsListing<ServerInner> {
         @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/serviceObjectives")
         Observable<Response<ResponseBody>> listServiceObjectives(@Path("subscriptionId") String subscriptionId, @Path("resourceGroupName") String resourceGroupName, @Path("serverName") String serverName, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.sql.Servers getAuditingPolicy" })
+        @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Sql/servers/{serverName}/auditingPolicies/{policyName}")
+        Observable<Response<ResponseBody>> getAuditingPolicy(@Path("subscriptionId") String subscriptionId, @Path("resourceGroupName") String resourceGroupName, @Path("serverName") String serverName, @Path("policyName") String policyName, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
     }
 
     /**
@@ -1076,4 +1083,96 @@ public class ServersInner implements InnerSupportsListing<ServerInner> {
                 .build(response);
     }
 
+    
+    /**
+     * Gets information about a service tier advisor.
+     *
+     * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
+     * @param serverName The name of the Azure SQL server.
+     * @param databaseName The name of database.
+     * @param serviceTierAdvisorName The name of service tier advisor.
+     * @return the ServiceTierAdvisorInner object if successful.
+     */
+    public AuditingPolicyInner getAuditingPolicy(String resourceGroupName, String serverName) {
+        return getAuditingPolicyResponseAsync(resourceGroupName, serverName).toBlocking().single().body();
+    }
+
+    /**
+     * Gets information about a service tier advisor.
+     *
+     * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
+     * @param serverName The name of the Azure SQL server.
+     * @param databaseName The name of database.
+     * @param serviceTierAdvisorName The name of service tier advisor.
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @return the {@link ServiceCall} object
+     */
+    public ServiceCall<AuditingPolicyInner> getAuditingPolicyResponseAsync(String resourceGroupName, String serverName, final ServiceCallback<AuditingPolicyInner> serviceCallback) {
+        return ServiceCall.fromResponse(getAuditingPolicyResponseAsync(resourceGroupName, serverName), serviceCallback);
+    }
+
+    /**
+     * Gets information about a service tier advisor.
+     *
+     * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
+     * @param serverName The name of the Azure SQL server.
+     * @param databaseName The name of database.
+     * @param serviceTierAdvisorName The name of service tier advisor.
+     * @return the observable to the ServiceTierAdvisorInner object
+     */
+    public Observable<AuditingPolicyInner> getAuditingPolicyAsync(String resourceGroupName, String serverName) {
+        return getAuditingPolicyResponseAsync(resourceGroupName, serverName).map(new Func1<ServiceResponse<AuditingPolicyInner>, AuditingPolicyInner>() {
+            @Override
+            public AuditingPolicyInner call(ServiceResponse<AuditingPolicyInner> response) {
+                return response.body();
+            }
+        });
+    }
+
+    /**
+     * Gets information about a service tier advisor.
+     *
+     * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
+     * @param serverName The name of the Azure SQL server.
+     * @param databaseName The name of database.
+     * @param serviceTierAdvisorName The name of service tier advisor.
+     * @return the observable to the ServiceTierAdvisorInner object
+     */
+    public Observable<ServiceResponse<AuditingPolicyInner>> getAuditingPolicyResponseAsync(String resourceGroupName, String serverName) {
+        if (this.client.subscriptionId() == null) {
+            throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
+        }
+        if (resourceGroupName == null) {
+            throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
+        }
+        if (serverName == null) {
+            throw new IllegalArgumentException("Parameter serverName is required and cannot be null.");
+        }
+        final String apiVersion = "2014-04-01";
+        final String auditingPolicyName = "Default";
+        return service.getAuditingPolicy(this.client.subscriptionId(), resourceGroupName, serverName, auditingPolicyName, apiVersion, this.client.acceptLanguage(), this.client.userAgent())
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<AuditingPolicyInner>>>() {
+                @Override
+                public Observable<ServiceResponse<AuditingPolicyInner>> call(Response<ResponseBody> response) {
+                    try {
+                        ServiceResponse<AuditingPolicyInner> clientResponse = getAuditingPolicyDelegate(response);
+                        return Observable.just(clientResponse);
+                    } catch (Throwable t) {
+                        return Observable.error(t);
+                    }
+                }
+            });
+    }
+
+    private ServiceResponse<AuditingPolicyInner> getAuditingPolicyDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
+    	ResponseBuilder<AuditingPolicyInner, CloudException> builder = this.client.restClient().responseBuilderFactory().<AuditingPolicyInner, CloudException>newInstance(this.client.serializerAdapter());
+    	if (response.code()!=404)
+	        return builder
+	                .register(200, new TypeToken<AuditingPolicyInner>() { }.getType())
+	                .registerError(CloudException.class)
+	                .build(response);
+    	else
+	        return new ServiceResponse<AuditingPolicyInner>(new AuditingPolicyInner(),response);
+    }
+    
 }
