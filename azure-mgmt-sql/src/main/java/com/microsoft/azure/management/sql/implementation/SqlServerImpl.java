@@ -209,8 +209,8 @@ public class SqlServerImpl
 	public AuditingPolicy getAuditingPolicy()
 	{
 		return new AuditingPolicyImpl(
-				this.innerCollection.getAuditingPolicy(this.resourceGroupName(), this.name()),
-				this.innerCollection);
+				this.manager().inner().servers().getAuditingPolicy(this.resourceGroupName(), this.name()),
+				this.manager().inner().databases());
 	}
 
 	@Override

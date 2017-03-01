@@ -1107,8 +1107,8 @@ public class ServersInner implements InnerSupportsListing<ServerInner> {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceCall} object
      */
-    public ServiceCall<AuditingPolicyInner> getAuditingPolicyResponseAsync(String resourceGroupName, String serverName, final ServiceCallback<AuditingPolicyInner> serviceCallback) {
-        return ServiceCall.fromResponse(getAuditingPolicyResponseAsync(resourceGroupName, serverName), serviceCallback);
+    public ServiceFuture<AuditingPolicyInner> getAuditingPolicyResponseAsync(String resourceGroupName, String serverName, final ServiceCallback<AuditingPolicyInner> serviceCallback) {
+        return ServiceFuture.fromResponse(getAuditingPolicyResponseAsync(resourceGroupName, serverName), serviceCallback);
     }
 
     /**

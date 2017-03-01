@@ -26,6 +26,7 @@ packages
 *.pydevproject
 .project
 .metadata
+bin/
 bin/**
 tmp/**
 tmp/**/*
@@ -54,3 +55,4 @@ Thumbs.db
 
 # reduced pom files should not be included
 dependency-reduced-pom.xml
+

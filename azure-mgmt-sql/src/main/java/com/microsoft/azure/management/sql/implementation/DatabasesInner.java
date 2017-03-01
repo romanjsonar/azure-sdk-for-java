@@ -16,6 +16,8 @@ import com.microsoft.rest.ServiceCallback;
 import com.microsoft.rest.ServiceFuture;
 import com.microsoft.rest.ServiceResponse;
 import com.microsoft.rest.Validator;
+import com.microsoft.rest.protocol.ResponseBuilder;
+
 import java.io.IOException;
 import java.util.List;
 import okhttp3.ResponseBody;
@@ -2275,8 +2277,8 @@ public class DatabasesInner {
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
      * @return the {@link ServiceCall} object
      */
-    public ServiceCall<AuditingPolicyInner> getAuditingPolicyResponseAsync(String resourceGroupName, String serverName, String databaseName, final ServiceCallback<AuditingPolicyInner> serviceCallback) {
-        return ServiceCall.fromResponse(getAuditingPolicyResponseAsync(resourceGroupName, serverName, databaseName), serviceCallback);
+    public ServiceFuture<AuditingPolicyInner> getAuditingPolicyResponseAsync(String resourceGroupName, String serverName, String databaseName, final ServiceCallback<AuditingPolicyInner> serviceCallback) {
+        return ServiceFuture.fromResponse(getAuditingPolicyResponseAsync(resourceGroupName, serverName, databaseName), serviceCallback);
     }
 
     /**
