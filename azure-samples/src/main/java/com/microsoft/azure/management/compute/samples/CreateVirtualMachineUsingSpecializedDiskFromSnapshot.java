@@ -39,8 +39,8 @@ public final class CreateVirtualMachineUsingSpecializedDiskFromSnapshot {
      * @return true if sample runs successfully
      */
     public static boolean runSample(Azure azure) {
-        final String linuxVmName1 = Utils.createRandomName("VM1");
-        final String linuxVmName2 = Utils.createRandomName("VM2");
+        final String linuxVMName1 = Utils.createRandomName("VM1");
+        final String linuxVMName2 = Utils.createRandomName("VM2");
         final String managedOSSnapshotName = Utils.createRandomName("ss-os-");
         final String managedDataDiskSnapshotPrefix = Utils.createRandomName("ss-data-");
         final String managedNewOSDiskName = Utils.createRandomName("ds-os-nw-");
@@ -64,7 +64,7 @@ public final class CreateVirtualMachineUsingSpecializedDiskFromSnapshot {
 
             System.out.println("Creating a un-managed Linux VM");
 
-            VirtualMachine linuxVM = azure.virtualMachines().define(linuxVmName1)
+            VirtualMachine linuxVM = azure.virtualMachines().define(linuxVMName1)
                     .withRegion(region)
                     .withNewResourceGroup(rgName)
                     .withNewPrimaryNetwork("10.0.0.0/28")
@@ -183,13 +183,13 @@ public final class CreateVirtualMachineUsingSpecializedDiskFromSnapshot {
 
             System.out.println("Creating a Linux VM using specialized OS and data disks");
 
-            VirtualMachine linuxVM2 = azure.virtualMachines().define(linuxVmName2)
+            VirtualMachine linuxVM2 = azure.virtualMachines().define(linuxVMName2)
                     .withRegion(region)
                     .withExistingResourceGroup(rgName)
                     .withNewPrimaryNetwork("10.0.0.0/28")
                     .withPrimaryPrivateIPAddressDynamic()
                     .withoutPrimaryPublicIPAddress()
-                    .withSpecializedOsDisk(newOSDisk, OperatingSystemTypes.LINUX)
+                    .withSpecializedOSDisk(newOSDisk, OperatingSystemTypes.LINUX)
                     .withExistingDataDisk(newDataDisks.get(0))
                     .withExistingDataDisk(newDataDisks.get(1), 1, CachingTypes.READ_WRITE)
                     .withSize(VirtualMachineSizeTypes.STANDARD_D3_V2)
@@ -246,7 +246,7 @@ public final class CreateVirtualMachineUsingSpecializedDiskFromSnapshot {
         } finally {
             try {
                 System.out.println("Deleting Resource Group: " + rgName);
-                azure.resourceGroups().deleteByName(rgName);
+                azure.resourceGroups().beginDeleteByName(rgName);
                 System.out.println("Deleted Resource Group: " + rgName);
             } catch (NullPointerException npe) {
                 System.out.println("Did not create any resources in Azure. No clean up is necessary");

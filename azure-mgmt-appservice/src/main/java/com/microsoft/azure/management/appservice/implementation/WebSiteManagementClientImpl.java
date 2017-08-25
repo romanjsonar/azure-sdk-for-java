@@ -10,8 +10,8 @@ package com.microsoft.azure.management.appservice.implementation;
 
 import com.google.common.reflect.TypeToken;
 import com.microsoft.azure.AzureClient;
-import com.microsoft.azure.AzureServiceFuture;
 import com.microsoft.azure.AzureServiceClient;
+import com.microsoft.azure.AzureServiceFuture;
 import com.microsoft.azure.CloudException;
 import com.microsoft.azure.ListOperationCallback;
 import com.microsoft.azure.management.appservice.CheckNameResourceTypes;
@@ -21,8 +21,8 @@ import com.microsoft.azure.Page;
 import com.microsoft.azure.PagedList;
 import com.microsoft.rest.credentials.ServiceClientCredentials;
 import com.microsoft.rest.RestClient;
-import com.microsoft.rest.ServiceFuture;
 import com.microsoft.rest.ServiceCallback;
+import com.microsoft.rest.ServiceFuture;
 import com.microsoft.rest.ServiceResponse;
 import com.microsoft.rest.Validator;
 import java.io.IOException;
@@ -44,7 +44,7 @@ import rx.Observable;
 /**
  * Initializes a new instance of the WebSiteManagementClientImpl class.
  */
-public final class WebSiteManagementClientImpl extends AzureServiceClient {
+public class WebSiteManagementClientImpl extends AzureServiceClient {
     /** The Retrofit service to perform REST calls. */
     private WebSiteManagementClientService service;
     /** the {@link AzureClient} used for long running operations. */
@@ -164,6 +164,97 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
     }
 
     /**
+     * The DomainsInner object to access its operations.
+     */
+    private DomainsInner domains;
+
+    /**
+     * Gets the DomainsInner object to access its operations.
+     * @return the DomainsInner object.
+     */
+    public DomainsInner domains() {
+        return this.domains;
+    }
+
+    /**
+     * The TopLevelDomainsInner object to access its operations.
+     */
+    private TopLevelDomainsInner topLevelDomains;
+
+    /**
+     * Gets the TopLevelDomainsInner object to access its operations.
+     * @return the TopLevelDomainsInner object.
+     */
+    public TopLevelDomainsInner topLevelDomains() {
+        return this.topLevelDomains;
+    }
+
+    /**
+     * The CertificatesInner object to access its operations.
+     */
+    private CertificatesInner certificates;
+
+    /**
+     * Gets the CertificatesInner object to access its operations.
+     * @return the CertificatesInner object.
+     */
+    public CertificatesInner certificates() {
+        return this.certificates;
+    }
+
+    /**
+     * The DeletedWebAppsInner object to access its operations.
+     */
+    private DeletedWebAppsInner deletedWebApps;
+
+    /**
+     * Gets the DeletedWebAppsInner object to access its operations.
+     * @return the DeletedWebAppsInner object.
+     */
+    public DeletedWebAppsInner deletedWebApps() {
+        return this.deletedWebApps;
+    }
+
+    /**
+     * The ProvidersInner object to access its operations.
+     */
+    private ProvidersInner providers;
+
+    /**
+     * Gets the ProvidersInner object to access its operations.
+     * @return the ProvidersInner object.
+     */
+    public ProvidersInner providers() {
+        return this.providers;
+    }
+
+    /**
+     * The RecommendationsInner object to access its operations.
+     */
+    private RecommendationsInner recommendations;
+
+    /**
+     * Gets the RecommendationsInner object to access its operations.
+     * @return the RecommendationsInner object.
+     */
+    public RecommendationsInner recommendations() {
+        return this.recommendations;
+    }
+
+    /**
+     * The WebAppsInner object to access its operations.
+     */
+    private WebAppsInner webApps;
+
+    /**
+     * Gets the WebAppsInner object to access its operations.
+     * @return the WebAppsInner object.
+     */
+    public WebAppsInner webApps() {
+        return this.webApps;
+    }
+
+    /**
      * The AppServiceEnvironmentsInner object to access its operations.
      */
     private AppServiceEnvironmentsInner appServiceEnvironments;
@@ -187,84 +278,6 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      */
     public AppServicePlansInner appServicePlans() {
         return this.appServicePlans;
-    }
-
-    /**
-     * The CertificatesInner object to access its operations.
-     */
-    private CertificatesInner certificates;
-
-    /**
-     * Gets the CertificatesInner object to access its operations.
-     * @return the CertificatesInner object.
-     */
-    public CertificatesInner certificates() {
-        return this.certificates;
-    }
-
-    /**
-     * The DomainsInner object to access its operations.
-     */
-    private DomainsInner domains;
-
-    /**
-     * Gets the DomainsInner object to access its operations.
-     * @return the DomainsInner object.
-     */
-    public DomainsInner domains() {
-        return this.domains;
-    }
-
-    /**
-     * The RecommendationsInner object to access its operations.
-     */
-    private RecommendationsInner recommendations;
-
-    /**
-     * Gets the RecommendationsInner object to access its operations.
-     * @return the RecommendationsInner object.
-     */
-    public RecommendationsInner recommendations() {
-        return this.recommendations;
-    }
-
-    /**
-     * The TopLevelDomainsInner object to access its operations.
-     */
-    private TopLevelDomainsInner topLevelDomains;
-
-    /**
-     * Gets the TopLevelDomainsInner object to access its operations.
-     * @return the TopLevelDomainsInner object.
-     */
-    public TopLevelDomainsInner topLevelDomains() {
-        return this.topLevelDomains;
-    }
-
-    /**
-     * The WebAppsInner object to access its operations.
-     */
-    private WebAppsInner webApps;
-
-    /**
-     * Gets the WebAppsInner object to access its operations.
-     * @return the WebAppsInner object.
-     */
-    public WebAppsInner webApps() {
-        return this.webApps;
-    }
-
-    /**
-     * The DeletedWebAppsInner object to access its operations.
-     */
-    private DeletedWebAppsInner deletedWebApps;
-
-    /**
-     * Gets the DeletedWebAppsInner object to access its operations.
-     * @return the DeletedWebAppsInner object.
-     */
-    public DeletedWebAppsInner deletedWebApps() {
-        return this.deletedWebApps;
     }
 
     /**
@@ -302,14 +315,15 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
         this.longRunningOperationRetryTimeout = 30;
         this.generateClientRequestId = true;
         this.appServiceCertificateOrders = new AppServiceCertificateOrdersInner(restClient().retrofit(), this);
+        this.domains = new DomainsInner(restClient().retrofit(), this);
+        this.topLevelDomains = new TopLevelDomainsInner(restClient().retrofit(), this);
+        this.certificates = new CertificatesInner(restClient().retrofit(), this);
+        this.deletedWebApps = new DeletedWebAppsInner(restClient().retrofit(), this);
+        this.providers = new ProvidersInner(restClient().retrofit(), this);
+        this.recommendations = new RecommendationsInner(restClient().retrofit(), this);
+        this.webApps = new WebAppsInner(restClient().retrofit(), this);
         this.appServiceEnvironments = new AppServiceEnvironmentsInner(restClient().retrofit(), this);
         this.appServicePlans = new AppServicePlansInner(restClient().retrofit(), this);
-        this.certificates = new CertificatesInner(restClient().retrofit(), this);
-        this.domains = new DomainsInner(restClient().retrofit(), this);
-        this.recommendations = new RecommendationsInner(restClient().retrofit(), this);
-        this.topLevelDomains = new TopLevelDomainsInner(restClient().retrofit(), this);
-        this.webApps = new WebAppsInner(restClient().retrofit(), this);
-        this.deletedWebApps = new DeletedWebAppsInner(restClient().retrofit(), this);
         this.azureClient = new AzureClient(this);
         initializeService();
     }
@@ -321,9 +335,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      */
     @Override
     public String userAgent() {
-        return String.format("Azure-SDK-For-Java/%s (%s)",
-                getClass().getPackage().getImplementationVersion(),
-                "WebSiteManagementClient, ");
+        return String.format("%s (%s)", super.userAgent(), "WebSiteManagementClient");
     }
 
     private void initializeService() {
@@ -335,6 +347,14 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * used by Retrofit to perform actually REST calls.
      */
     interface WebSiteManagementClientService {
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.appservice.WebSiteManagementClient getPublishingUser" })
+        @GET("providers/Microsoft.Web/publishingUsers/web")
+        Observable<Response<ResponseBody>> getPublishingUser(@Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.appservice.WebSiteManagementClient updatePublishingUser" })
+        @PUT("providers/Microsoft.Web/publishingUsers/web")
+        Observable<Response<ResponseBody>> updatePublishingUser(@Body UserInner userDetails, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+
         @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.appservice.WebSiteManagementClient listSourceControls" })
         @GET("providers/Microsoft.Web/sourcecontrols")
         Observable<Response<ResponseBody>> listSourceControls(@Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
@@ -348,20 +368,12 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
         Observable<Response<ResponseBody>> checkNameAvailability(@Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Body ResourceNameAvailabilityRequest request, @Header("User-Agent") String userAgent);
 
         @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.appservice.WebSiteManagementClient listGeoRegions" })
-        @POST("subscriptions/{subscriptionId}/providers/Microsoft.Web/geoRegions")
-        Observable<Response<ResponseBody>> listGeoRegions(@Path("subscriptionId") String subscriptionId, @Query("sku") SkuName sku, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        @GET("subscriptions/{subscriptionId}/providers/Microsoft.Web/geoRegions")
+        Observable<Response<ResponseBody>> listGeoRegions(@Path("subscriptionId") String subscriptionId, @Query("sku") SkuName sku, @Query("linuxWorkersEnabled") Boolean linuxWorkersEnabled, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
         @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.appservice.WebSiteManagementClient listPremierAddOnOffers" })
         @GET("subscriptions/{subscriptionId}/providers/Microsoft.Web/premieraddonoffers")
         Observable<Response<ResponseBody>> listPremierAddOnOffers(@Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
-
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.appservice.WebSiteManagementClient getPublishingCredentials" })
-        @GET("subscriptions/{subscriptionId}/providers/Microsoft.Web/publishingCredentials")
-        Observable<Response<ResponseBody>> getPublishingCredentials(@Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
-
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.appservice.WebSiteManagementClient updatePublishingCredentials" })
-        @PUT("subscriptions/{subscriptionId}/providers/Microsoft.Web/publishingCredentials")
-        Observable<Response<ResponseBody>> updatePublishingCredentials(@Path("subscriptionId") String subscriptionId, @Body UserInner requestMessage, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
         @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.appservice.WebSiteManagementClient listSkus" })
         @GET("subscriptions/{subscriptionId}/providers/Microsoft.Web/skus")
@@ -394,9 +406,162 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
     }
 
     /**
+     * Gets publishing user.
+     * Gets publishing user.
+     *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @return the UserInner object if successful.
+     */
+    public UserInner getPublishingUser() {
+        return getPublishingUserWithServiceResponseAsync().toBlocking().single().body();
+    }
+
+    /**
+     * Gets publishing user.
+     * Gets publishing user.
+     *
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the {@link ServiceFuture} object
+     */
+    public ServiceFuture<UserInner> getPublishingUserAsync(final ServiceCallback<UserInner> serviceCallback) {
+        return ServiceFuture.fromResponse(getPublishingUserWithServiceResponseAsync(), serviceCallback);
+    }
+
+    /**
+     * Gets publishing user.
+     * Gets publishing user.
+     *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the observable to the UserInner object
+     */
+    public Observable<UserInner> getPublishingUserAsync() {
+        return getPublishingUserWithServiceResponseAsync().map(new Func1<ServiceResponse<UserInner>, UserInner>() {
+            @Override
+            public UserInner call(ServiceResponse<UserInner> response) {
+                return response.body();
+            }
+        });
+    }
+
+    /**
+     * Gets publishing user.
+     * Gets publishing user.
+     *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the observable to the UserInner object
+     */
+    public Observable<ServiceResponse<UserInner>> getPublishingUserWithServiceResponseAsync() {
+        final String apiVersion = "2016-03-01";
+        return service.getPublishingUser(apiVersion, this.acceptLanguage(), this.userAgent())
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<UserInner>>>() {
+                @Override
+                public Observable<ServiceResponse<UserInner>> call(Response<ResponseBody> response) {
+                    try {
+                        ServiceResponse<UserInner> clientResponse = getPublishingUserDelegate(response);
+                        return Observable.just(clientResponse);
+                    } catch (Throwable t) {
+                        return Observable.error(t);
+                    }
+                }
+            });
+    }
+
+    private ServiceResponse<UserInner> getPublishingUserDelegate(Response<ResponseBody> response) throws CloudException, IOException {
+        return this.restClient().responseBuilderFactory().<UserInner, CloudException>newInstance(this.serializerAdapter())
+                .register(200, new TypeToken<UserInner>() { }.getType())
+                .registerError(CloudException.class)
+                .build(response);
+    }
+
+    /**
+     * Updates publishing user.
+     * Updates publishing user.
+     *
+     * @param userDetails Details of publishing user
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
+     * @return the UserInner object if successful.
+     */
+    public UserInner updatePublishingUser(UserInner userDetails) {
+        return updatePublishingUserWithServiceResponseAsync(userDetails).toBlocking().single().body();
+    }
+
+    /**
+     * Updates publishing user.
+     * Updates publishing user.
+     *
+     * @param userDetails Details of publishing user
+     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the {@link ServiceFuture} object
+     */
+    public ServiceFuture<UserInner> updatePublishingUserAsync(UserInner userDetails, final ServiceCallback<UserInner> serviceCallback) {
+        return ServiceFuture.fromResponse(updatePublishingUserWithServiceResponseAsync(userDetails), serviceCallback);
+    }
+
+    /**
+     * Updates publishing user.
+     * Updates publishing user.
+     *
+     * @param userDetails Details of publishing user
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the observable to the UserInner object
+     */
+    public Observable<UserInner> updatePublishingUserAsync(UserInner userDetails) {
+        return updatePublishingUserWithServiceResponseAsync(userDetails).map(new Func1<ServiceResponse<UserInner>, UserInner>() {
+            @Override
+            public UserInner call(ServiceResponse<UserInner> response) {
+                return response.body();
+            }
+        });
+    }
+
+    /**
+     * Updates publishing user.
+     * Updates publishing user.
+     *
+     * @param userDetails Details of publishing user
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @return the observable to the UserInner object
+     */
+    public Observable<ServiceResponse<UserInner>> updatePublishingUserWithServiceResponseAsync(UserInner userDetails) {
+        if (userDetails == null) {
+            throw new IllegalArgumentException("Parameter userDetails is required and cannot be null.");
+        }
+        Validator.validate(userDetails);
+        final String apiVersion = "2016-03-01";
+        return service.updatePublishingUser(userDetails, apiVersion, this.acceptLanguage(), this.userAgent())
+            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<UserInner>>>() {
+                @Override
+                public Observable<ServiceResponse<UserInner>> call(Response<ResponseBody> response) {
+                    try {
+                        ServiceResponse<UserInner> clientResponse = updatePublishingUserDelegate(response);
+                        return Observable.just(clientResponse);
+                    } catch (Throwable t) {
+                        return Observable.error(t);
+                    }
+                }
+            });
+    }
+
+    private ServiceResponse<UserInner> updatePublishingUserDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
+        return this.restClient().responseBuilderFactory().<UserInner, CloudException>newInstance(this.serializerAdapter())
+                .register(200, new TypeToken<UserInner>() { }.getType())
+                .registerError(CloudException.class)
+                .build(response);
+    }
+
+    /**
      * Gets the source controls available for Azure websites.
      * Gets the source controls available for Azure websites.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;SourceControlInner&gt; object if successful.
      */
     public PagedList<SourceControlInner> listSourceControls() {
@@ -414,6 +579,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Gets the source controls available for Azure websites.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<SourceControlInner>> listSourceControlsAsync(final ListOperationCallback<SourceControlInner> serviceCallback) {
@@ -432,6 +598,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Gets the source controls available for Azure websites.
      * Gets the source controls available for Azure websites.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;SourceControlInner&gt; object
      */
     public Observable<Page<SourceControlInner>> listSourceControlsAsync() {
@@ -448,6 +615,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Gets the source controls available for Azure websites.
      * Gets the source controls available for Azure websites.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;SourceControlInner&gt; object
      */
     public Observable<ServiceResponse<Page<SourceControlInner>>> listSourceControlsWithServiceResponseAsync() {
@@ -468,6 +636,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Gets the source controls available for Azure websites.
      * Gets the source controls available for Azure websites.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;SourceControlInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<SourceControlInner>>> listSourceControlsSinglePageAsync() {
@@ -499,6 +668,9 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      *
      * @param sourceControlType Type of source control
      * @param requestMessage Source control token information
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the SourceControlInner object if successful.
      */
     public SourceControlInner updateSourceControl(String sourceControlType, SourceControlInner requestMessage) {
@@ -512,6 +684,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * @param sourceControlType Type of source control
      * @param requestMessage Source control token information
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<SourceControlInner> updateSourceControlAsync(String sourceControlType, SourceControlInner requestMessage, final ServiceCallback<SourceControlInner> serviceCallback) {
@@ -524,6 +697,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      *
      * @param sourceControlType Type of source control
      * @param requestMessage Source control token information
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the SourceControlInner object
      */
     public Observable<SourceControlInner> updateSourceControlAsync(String sourceControlType, SourceControlInner requestMessage) {
@@ -541,6 +715,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      *
      * @param sourceControlType Type of source control
      * @param requestMessage Source control token information
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the SourceControlInner object
      */
     public Observable<ServiceResponse<SourceControlInner>> updateSourceControlWithServiceResponseAsync(String sourceControlType, SourceControlInner requestMessage) {
@@ -579,6 +754,9 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      *
      * @param name Resource name to verify.
      * @param type Resource type used for verification. Possible values include: 'Site', 'Slot', 'HostingEnvironment'
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the ResourceNameAvailabilityInner object if successful.
      */
     public ResourceNameAvailabilityInner checkNameAvailability(String name, CheckNameResourceTypes type) {
@@ -592,6 +770,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * @param name Resource name to verify.
      * @param type Resource type used for verification. Possible values include: 'Site', 'Slot', 'HostingEnvironment'
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<ResourceNameAvailabilityInner> checkNameAvailabilityAsync(String name, CheckNameResourceTypes type, final ServiceCallback<ResourceNameAvailabilityInner> serviceCallback) {
@@ -604,6 +783,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      *
      * @param name Resource name to verify.
      * @param type Resource type used for verification. Possible values include: 'Site', 'Slot', 'HostingEnvironment'
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the ResourceNameAvailabilityInner object
      */
     public Observable<ResourceNameAvailabilityInner> checkNameAvailabilityAsync(String name, CheckNameResourceTypes type) {
@@ -621,6 +801,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      *
      * @param name Resource name to verify.
      * @param type Resource type used for verification. Possible values include: 'Site', 'Slot', 'HostingEnvironment'
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the ResourceNameAvailabilityInner object
      */
     public Observable<ServiceResponse<ResourceNameAvailabilityInner>> checkNameAvailabilityWithServiceResponseAsync(String name, CheckNameResourceTypes type) {
@@ -660,6 +841,9 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * @param name Resource name to verify.
      * @param type Resource type used for verification. Possible values include: 'Site', 'Slot', 'HostingEnvironment'
      * @param isFqdn Is fully qualified domain name.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the ResourceNameAvailabilityInner object if successful.
      */
     public ResourceNameAvailabilityInner checkNameAvailability(String name, CheckNameResourceTypes type, Boolean isFqdn) {
@@ -674,6 +858,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * @param type Resource type used for verification. Possible values include: 'Site', 'Slot', 'HostingEnvironment'
      * @param isFqdn Is fully qualified domain name.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<ResourceNameAvailabilityInner> checkNameAvailabilityAsync(String name, CheckNameResourceTypes type, Boolean isFqdn, final ServiceCallback<ResourceNameAvailabilityInner> serviceCallback) {
@@ -687,6 +872,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * @param name Resource name to verify.
      * @param type Resource type used for verification. Possible values include: 'Site', 'Slot', 'HostingEnvironment'
      * @param isFqdn Is fully qualified domain name.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the ResourceNameAvailabilityInner object
      */
     public Observable<ResourceNameAvailabilityInner> checkNameAvailabilityAsync(String name, CheckNameResourceTypes type, Boolean isFqdn) {
@@ -705,6 +891,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * @param name Resource name to verify.
      * @param type Resource type used for verification. Possible values include: 'Site', 'Slot', 'HostingEnvironment'
      * @param isFqdn Is fully qualified domain name.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the ResourceNameAvailabilityInner object
      */
     public Observable<ServiceResponse<ResourceNameAvailabilityInner>> checkNameAvailabilityWithServiceResponseAsync(String name, CheckNameResourceTypes type, Boolean isFqdn) {
@@ -747,6 +934,9 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Get a list of available geographical regions.
      * Get a list of available geographical regions.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;GeoRegionInner&gt; object if successful.
      */
     public PagedList<GeoRegionInner> listGeoRegions() {
@@ -764,6 +954,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Get a list of available geographical regions.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<GeoRegionInner>> listGeoRegionsAsync(final ListOperationCallback<GeoRegionInner> serviceCallback) {
@@ -782,6 +973,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Get a list of available geographical regions.
      * Get a list of available geographical regions.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;GeoRegionInner&gt; object
      */
     public Observable<Page<GeoRegionInner>> listGeoRegionsAsync() {
@@ -798,6 +990,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Get a list of available geographical regions.
      * Get a list of available geographical regions.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;GeoRegionInner&gt; object
      */
     public Observable<ServiceResponse<Page<GeoRegionInner>>> listGeoRegionsWithServiceResponseAsync() {
@@ -818,6 +1011,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Get a list of available geographical regions.
      * Get a list of available geographical regions.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;GeoRegionInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<GeoRegionInner>>> listGeoRegionsSinglePageAsync() {
@@ -826,7 +1020,8 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
         }
         final String apiVersion = "2016-03-01";
         final SkuName sku = null;
-        return service.listGeoRegions(this.subscriptionId(), sku, apiVersion, this.acceptLanguage(), this.userAgent())
+        final Boolean linuxWorkersEnabled = null;
+        return service.listGeoRegions(this.subscriptionId(), sku, linuxWorkersEnabled, apiVersion, this.acceptLanguage(), this.userAgent())
             .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<GeoRegionInner>>>>() {
                 @Override
                 public Observable<ServiceResponse<Page<GeoRegionInner>>> call(Response<ResponseBody> response) {
@@ -844,11 +1039,15 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Get a list of available geographical regions.
      * Get a list of available geographical regions.
      *
-     * @param sku Name of SKU used to filter the regions. Possible values include: 'Free', 'Shared', 'Basic', 'Standard', 'Premium', 'Dynamic'
+     * @param sku Name of SKU used to filter the regions. Possible values include: 'Free', 'Shared', 'Basic', 'Standard', 'Premium', 'Dynamic', 'Isolated'
+     * @param linuxWorkersEnabled Specify &lt;code&gt;true&lt;/code&gt; if you want to filter to only regions that support Linux workers.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;GeoRegionInner&gt; object if successful.
      */
-    public PagedList<GeoRegionInner> listGeoRegions(final SkuName sku) {
-        ServiceResponse<Page<GeoRegionInner>> response = listGeoRegionsSinglePageAsync(sku).toBlocking().single();
+    public PagedList<GeoRegionInner> listGeoRegions(final SkuName sku, final Boolean linuxWorkersEnabled) {
+        ServiceResponse<Page<GeoRegionInner>> response = listGeoRegionsSinglePageAsync(sku, linuxWorkersEnabled).toBlocking().single();
         return new PagedList<GeoRegionInner>(response.body()) {
             @Override
             public Page<GeoRegionInner> nextPage(String nextPageLink) {
@@ -861,13 +1060,15 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Get a list of available geographical regions.
      * Get a list of available geographical regions.
      *
-     * @param sku Name of SKU used to filter the regions. Possible values include: 'Free', 'Shared', 'Basic', 'Standard', 'Premium', 'Dynamic'
+     * @param sku Name of SKU used to filter the regions. Possible values include: 'Free', 'Shared', 'Basic', 'Standard', 'Premium', 'Dynamic', 'Isolated'
+     * @param linuxWorkersEnabled Specify &lt;code&gt;true&lt;/code&gt; if you want to filter to only regions that support Linux workers.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<List<GeoRegionInner>> listGeoRegionsAsync(final SkuName sku, final ListOperationCallback<GeoRegionInner> serviceCallback) {
+    public ServiceFuture<List<GeoRegionInner>> listGeoRegionsAsync(final SkuName sku, final Boolean linuxWorkersEnabled, final ListOperationCallback<GeoRegionInner> serviceCallback) {
         return AzureServiceFuture.fromPageResponse(
-            listGeoRegionsSinglePageAsync(sku),
+            listGeoRegionsSinglePageAsync(sku, linuxWorkersEnabled),
             new Func1<String, Observable<ServiceResponse<Page<GeoRegionInner>>>>() {
                 @Override
                 public Observable<ServiceResponse<Page<GeoRegionInner>>> call(String nextPageLink) {
@@ -881,11 +1082,13 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Get a list of available geographical regions.
      * Get a list of available geographical regions.
      *
-     * @param sku Name of SKU used to filter the regions. Possible values include: 'Free', 'Shared', 'Basic', 'Standard', 'Premium', 'Dynamic'
+     * @param sku Name of SKU used to filter the regions. Possible values include: 'Free', 'Shared', 'Basic', 'Standard', 'Premium', 'Dynamic', 'Isolated'
+     * @param linuxWorkersEnabled Specify &lt;code&gt;true&lt;/code&gt; if you want to filter to only regions that support Linux workers.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;GeoRegionInner&gt; object
      */
-    public Observable<Page<GeoRegionInner>> listGeoRegionsAsync(final SkuName sku) {
-        return listGeoRegionsWithServiceResponseAsync(sku)
+    public Observable<Page<GeoRegionInner>> listGeoRegionsAsync(final SkuName sku, final Boolean linuxWorkersEnabled) {
+        return listGeoRegionsWithServiceResponseAsync(sku, linuxWorkersEnabled)
             .map(new Func1<ServiceResponse<Page<GeoRegionInner>>, Page<GeoRegionInner>>() {
                 @Override
                 public Page<GeoRegionInner> call(ServiceResponse<Page<GeoRegionInner>> response) {
@@ -898,11 +1101,13 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Get a list of available geographical regions.
      * Get a list of available geographical regions.
      *
-     * @param sku Name of SKU used to filter the regions. Possible values include: 'Free', 'Shared', 'Basic', 'Standard', 'Premium', 'Dynamic'
+     * @param sku Name of SKU used to filter the regions. Possible values include: 'Free', 'Shared', 'Basic', 'Standard', 'Premium', 'Dynamic', 'Isolated'
+     * @param linuxWorkersEnabled Specify &lt;code&gt;true&lt;/code&gt; if you want to filter to only regions that support Linux workers.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;GeoRegionInner&gt; object
      */
-    public Observable<ServiceResponse<Page<GeoRegionInner>>> listGeoRegionsWithServiceResponseAsync(final SkuName sku) {
-        return listGeoRegionsSinglePageAsync(sku)
+    public Observable<ServiceResponse<Page<GeoRegionInner>>> listGeoRegionsWithServiceResponseAsync(final SkuName sku, final Boolean linuxWorkersEnabled) {
+        return listGeoRegionsSinglePageAsync(sku, linuxWorkersEnabled)
             .concatMap(new Func1<ServiceResponse<Page<GeoRegionInner>>, Observable<ServiceResponse<Page<GeoRegionInner>>>>() {
                 @Override
                 public Observable<ServiceResponse<Page<GeoRegionInner>>> call(ServiceResponse<Page<GeoRegionInner>> page) {
@@ -919,15 +1124,17 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Get a list of available geographical regions.
      * Get a list of available geographical regions.
      *
-    ServiceResponse<PageImpl<GeoRegionInner>> * @param sku Name of SKU used to filter the regions. Possible values include: 'Free', 'Shared', 'Basic', 'Standard', 'Premium', 'Dynamic'
+    ServiceResponse<PageImpl<GeoRegionInner>> * @param sku Name of SKU used to filter the regions. Possible values include: 'Free', 'Shared', 'Basic', 'Standard', 'Premium', 'Dynamic', 'Isolated'
+    ServiceResponse<PageImpl<GeoRegionInner>> * @param linuxWorkersEnabled Specify &lt;code&gt;true&lt;/code&gt; if you want to filter to only regions that support Linux workers.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;GeoRegionInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
-    public Observable<ServiceResponse<Page<GeoRegionInner>>> listGeoRegionsSinglePageAsync(final SkuName sku) {
+    public Observable<ServiceResponse<Page<GeoRegionInner>>> listGeoRegionsSinglePageAsync(final SkuName sku, final Boolean linuxWorkersEnabled) {
         if (this.subscriptionId() == null) {
             throw new IllegalArgumentException("Parameter this.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2016-03-01";
-        return service.listGeoRegions(this.subscriptionId(), sku, apiVersion, this.acceptLanguage(), this.userAgent())
+        return service.listGeoRegions(this.subscriptionId(), sku, linuxWorkersEnabled, apiVersion, this.acceptLanguage(), this.userAgent())
             .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<Page<GeoRegionInner>>>>() {
                 @Override
                 public Observable<ServiceResponse<Page<GeoRegionInner>>> call(Response<ResponseBody> response) {
@@ -952,6 +1159,9 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * List all premier add-on offers.
      * List all premier add-on offers.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;PremierAddOnOfferInner&gt; object if successful.
      */
     public PagedList<PremierAddOnOfferInner> listPremierAddOnOffers() {
@@ -969,6 +1179,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * List all premier add-on offers.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<PremierAddOnOfferInner>> listPremierAddOnOffersAsync(final ListOperationCallback<PremierAddOnOfferInner> serviceCallback) {
@@ -987,6 +1198,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * List all premier add-on offers.
      * List all premier add-on offers.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;PremierAddOnOfferInner&gt; object
      */
     public Observable<Page<PremierAddOnOfferInner>> listPremierAddOnOffersAsync() {
@@ -1003,6 +1215,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * List all premier add-on offers.
      * List all premier add-on offers.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;PremierAddOnOfferInner&gt; object
      */
     public Observable<ServiceResponse<Page<PremierAddOnOfferInner>>> listPremierAddOnOffersWithServiceResponseAsync() {
@@ -1023,6 +1236,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * List all premier add-on offers.
      * List all premier add-on offers.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;PremierAddOnOfferInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<PremierAddOnOfferInner>>> listPremierAddOnOffersSinglePageAsync() {
@@ -1052,153 +1266,12 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
     }
 
     /**
-     * Get the publishing credentials for the subscription owner.
-     * Get the publishing credentials for the subscription owner.
-     *
-     * @return the UserInner object if successful.
-     */
-    public UserInner getPublishingCredentials() {
-        return getPublishingCredentialsWithServiceResponseAsync().toBlocking().single().body();
-    }
-
-    /**
-     * Get the publishing credentials for the subscription owner.
-     * Get the publishing credentials for the subscription owner.
-     *
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<UserInner> getPublishingCredentialsAsync(final ServiceCallback<UserInner> serviceCallback) {
-        return ServiceFuture.fromResponse(getPublishingCredentialsWithServiceResponseAsync(), serviceCallback);
-    }
-
-    /**
-     * Get the publishing credentials for the subscription owner.
-     * Get the publishing credentials for the subscription owner.
-     *
-     * @return the observable to the UserInner object
-     */
-    public Observable<UserInner> getPublishingCredentialsAsync() {
-        return getPublishingCredentialsWithServiceResponseAsync().map(new Func1<ServiceResponse<UserInner>, UserInner>() {
-            @Override
-            public UserInner call(ServiceResponse<UserInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Get the publishing credentials for the subscription owner.
-     * Get the publishing credentials for the subscription owner.
-     *
-     * @return the observable to the UserInner object
-     */
-    public Observable<ServiceResponse<UserInner>> getPublishingCredentialsWithServiceResponseAsync() {
-        if (this.subscriptionId() == null) {
-            throw new IllegalArgumentException("Parameter this.subscriptionId() is required and cannot be null.");
-        }
-        final String apiVersion = "2016-03-01";
-        return service.getPublishingCredentials(this.subscriptionId(), apiVersion, this.acceptLanguage(), this.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<UserInner>>>() {
-                @Override
-                public Observable<ServiceResponse<UserInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<UserInner> clientResponse = getPublishingCredentialsDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<UserInner> getPublishingCredentialsDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.restClient().responseBuilderFactory().<UserInner, CloudException>newInstance(this.serializerAdapter())
-                .register(200, new TypeToken<UserInner>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
-    }
-
-    /**
-     * Update the publishing credentials for the subscription owner.
-     * Update the publishing credentials for the subscription owner.
-     *
-     * @param requestMessage A request message with the new publishing credentials.
-     * @return the UserInner object if successful.
-     */
-    public UserInner updatePublishingCredentials(UserInner requestMessage) {
-        return updatePublishingCredentialsWithServiceResponseAsync(requestMessage).toBlocking().single().body();
-    }
-
-    /**
-     * Update the publishing credentials for the subscription owner.
-     * Update the publishing credentials for the subscription owner.
-     *
-     * @param requestMessage A request message with the new publishing credentials.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<UserInner> updatePublishingCredentialsAsync(UserInner requestMessage, final ServiceCallback<UserInner> serviceCallback) {
-        return ServiceFuture.fromResponse(updatePublishingCredentialsWithServiceResponseAsync(requestMessage), serviceCallback);
-    }
-
-    /**
-     * Update the publishing credentials for the subscription owner.
-     * Update the publishing credentials for the subscription owner.
-     *
-     * @param requestMessage A request message with the new publishing credentials.
-     * @return the observable to the UserInner object
-     */
-    public Observable<UserInner> updatePublishingCredentialsAsync(UserInner requestMessage) {
-        return updatePublishingCredentialsWithServiceResponseAsync(requestMessage).map(new Func1<ServiceResponse<UserInner>, UserInner>() {
-            @Override
-            public UserInner call(ServiceResponse<UserInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Update the publishing credentials for the subscription owner.
-     * Update the publishing credentials for the subscription owner.
-     *
-     * @param requestMessage A request message with the new publishing credentials.
-     * @return the observable to the UserInner object
-     */
-    public Observable<ServiceResponse<UserInner>> updatePublishingCredentialsWithServiceResponseAsync(UserInner requestMessage) {
-        if (this.subscriptionId() == null) {
-            throw new IllegalArgumentException("Parameter this.subscriptionId() is required and cannot be null.");
-        }
-        if (requestMessage == null) {
-            throw new IllegalArgumentException("Parameter requestMessage is required and cannot be null.");
-        }
-        Validator.validate(requestMessage);
-        final String apiVersion = "2016-03-01";
-        return service.updatePublishingCredentials(this.subscriptionId(), requestMessage, apiVersion, this.acceptLanguage(), this.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<UserInner>>>() {
-                @Override
-                public Observable<ServiceResponse<UserInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<UserInner> clientResponse = updatePublishingCredentialsDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    private ServiceResponse<UserInner> updatePublishingCredentialsDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
-        return this.restClient().responseBuilderFactory().<UserInner, CloudException>newInstance(this.serializerAdapter())
-                .register(200, new TypeToken<UserInner>() { }.getType())
-                .registerError(CloudException.class)
-                .build(response);
-    }
-
-    /**
      * List all SKUs.
      * List all SKUs.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the SkuInfosInner object if successful.
      */
     public SkuInfosInner listSkus() {
@@ -1210,6 +1283,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * List all SKUs.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<SkuInfosInner> listSkusAsync(final ServiceCallback<SkuInfosInner> serviceCallback) {
@@ -1220,6 +1294,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * List all SKUs.
      * List all SKUs.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the SkuInfosInner object
      */
     public Observable<SkuInfosInner> listSkusAsync() {
@@ -1235,6 +1310,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * List all SKUs.
      * List all SKUs.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the SkuInfosInner object
      */
     public Observable<ServiceResponse<SkuInfosInner>> listSkusWithServiceResponseAsync() {
@@ -1269,6 +1345,9 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param moveResourceEnvelope Object that represents the resource to move.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void move(String resourceGroupName, CsmMoveResourceEnvelopeInner moveResourceEnvelope) {
         moveWithServiceResponseAsync(resourceGroupName, moveResourceEnvelope).toBlocking().single().body();
@@ -1281,6 +1360,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param moveResourceEnvelope Object that represents the resource to move.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<Void> moveAsync(String resourceGroupName, CsmMoveResourceEnvelopeInner moveResourceEnvelope, final ServiceCallback<Void> serviceCallback) {
@@ -1293,6 +1373,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param moveResourceEnvelope Object that represents the resource to move.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<Void> moveAsync(String resourceGroupName, CsmMoveResourceEnvelopeInner moveResourceEnvelope) {
@@ -1310,6 +1391,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param moveResourceEnvelope Object that represents the resource to move.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<ServiceResponse<Void>> moveWithServiceResponseAsync(String resourceGroupName, CsmMoveResourceEnvelopeInner moveResourceEnvelope) {
@@ -1341,6 +1423,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
     private ServiceResponse<Void> moveDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
         return this.restClient().responseBuilderFactory().<Void, CloudException>newInstance(this.serializerAdapter())
                 .register(204, new TypeToken<Void>() { }.getType())
+                .registerError(CloudException.class)
                 .build(response);
     }
 
@@ -1350,6 +1433,9 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param validateRequest Request with the resources to validate.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the ValidateResponseInner object if successful.
      */
     public ValidateResponseInner validate(String resourceGroupName, ValidateRequestInner validateRequest) {
@@ -1363,6 +1449,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param validateRequest Request with the resources to validate.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<ValidateResponseInner> validateAsync(String resourceGroupName, ValidateRequestInner validateRequest, final ServiceCallback<ValidateResponseInner> serviceCallback) {
@@ -1375,6 +1462,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param validateRequest Request with the resources to validate.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the ValidateResponseInner object
      */
     public Observable<ValidateResponseInner> validateAsync(String resourceGroupName, ValidateRequestInner validateRequest) {
@@ -1392,6 +1480,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param validateRequest Request with the resources to validate.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the ValidateResponseInner object
      */
     public Observable<ServiceResponse<ValidateResponseInner>> validateWithServiceResponseAsync(String resourceGroupName, ValidateRequestInner validateRequest) {
@@ -1433,6 +1522,9 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param moveResourceEnvelope Object that represents the resource to move.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void validateMove(String resourceGroupName, CsmMoveResourceEnvelopeInner moveResourceEnvelope) {
         validateMoveWithServiceResponseAsync(resourceGroupName, moveResourceEnvelope).toBlocking().single().body();
@@ -1445,6 +1537,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param moveResourceEnvelope Object that represents the resource to move.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<Void> validateMoveAsync(String resourceGroupName, CsmMoveResourceEnvelopeInner moveResourceEnvelope, final ServiceCallback<Void> serviceCallback) {
@@ -1457,6 +1550,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param moveResourceEnvelope Object that represents the resource to move.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<Void> validateMoveAsync(String resourceGroupName, CsmMoveResourceEnvelopeInner moveResourceEnvelope) {
@@ -1474,6 +1568,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param moveResourceEnvelope Object that represents the resource to move.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<ServiceResponse<Void>> validateMoveWithServiceResponseAsync(String resourceGroupName, CsmMoveResourceEnvelopeInner moveResourceEnvelope) {
@@ -1505,6 +1600,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
     private ServiceResponse<Void> validateMoveDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
         return this.restClient().responseBuilderFactory().<Void, CloudException>newInstance(this.serializerAdapter())
                 .register(204, new TypeToken<Void>() { }.getType())
+                .registerError(CloudException.class)
                 .build(response);
     }
 
@@ -1513,6 +1609,9 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Gets the source controls available for Azure websites.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;SourceControlInner&gt; object if successful.
      */
     public PagedList<SourceControlInner> listSourceControlsNext(final String nextPageLink) {
@@ -1530,8 +1629,9 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Gets the source controls available for Azure websites.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceCall object tracking the Retrofit calls
+     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<SourceControlInner>> listSourceControlsNextAsync(final String nextPageLink, final ServiceFuture<List<SourceControlInner>> serviceFuture, final ListOperationCallback<SourceControlInner> serviceCallback) {
@@ -1551,6 +1651,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Gets the source controls available for Azure websites.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;SourceControlInner&gt; object
      */
     public Observable<Page<SourceControlInner>> listSourceControlsNextAsync(final String nextPageLink) {
@@ -1568,6 +1669,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Gets the source controls available for Azure websites.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;SourceControlInner&gt; object
      */
     public Observable<ServiceResponse<Page<SourceControlInner>>> listSourceControlsNextWithServiceResponseAsync(final String nextPageLink) {
@@ -1589,6 +1691,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Gets the source controls available for Azure websites.
      *
     ServiceResponse<PageImpl<SourceControlInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;SourceControlInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<SourceControlInner>>> listSourceControlsNextSinglePageAsync(final String nextPageLink) {
@@ -1622,6 +1725,9 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Get a list of available geographical regions.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;GeoRegionInner&gt; object if successful.
      */
     public PagedList<GeoRegionInner> listGeoRegionsNext(final String nextPageLink) {
@@ -1639,8 +1745,9 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Get a list of available geographical regions.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceCall object tracking the Retrofit calls
+     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<GeoRegionInner>> listGeoRegionsNextAsync(final String nextPageLink, final ServiceFuture<List<GeoRegionInner>> serviceFuture, final ListOperationCallback<GeoRegionInner> serviceCallback) {
@@ -1660,6 +1767,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Get a list of available geographical regions.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;GeoRegionInner&gt; object
      */
     public Observable<Page<GeoRegionInner>> listGeoRegionsNextAsync(final String nextPageLink) {
@@ -1677,6 +1785,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Get a list of available geographical regions.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;GeoRegionInner&gt; object
      */
     public Observable<ServiceResponse<Page<GeoRegionInner>>> listGeoRegionsNextWithServiceResponseAsync(final String nextPageLink) {
@@ -1698,6 +1807,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * Get a list of available geographical regions.
      *
     ServiceResponse<PageImpl<GeoRegionInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;GeoRegionInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<GeoRegionInner>>> listGeoRegionsNextSinglePageAsync(final String nextPageLink) {
@@ -1731,6 +1841,9 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * List all premier add-on offers.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;PremierAddOnOfferInner&gt; object if successful.
      */
     public PagedList<PremierAddOnOfferInner> listPremierAddOnOffersNext(final String nextPageLink) {
@@ -1748,8 +1861,9 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * List all premier add-on offers.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceCall object tracking the Retrofit calls
+     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<PremierAddOnOfferInner>> listPremierAddOnOffersNextAsync(final String nextPageLink, final ServiceFuture<List<PremierAddOnOfferInner>> serviceFuture, final ListOperationCallback<PremierAddOnOfferInner> serviceCallback) {
@@ -1769,6 +1883,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * List all premier add-on offers.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;PremierAddOnOfferInner&gt; object
      */
     public Observable<Page<PremierAddOnOfferInner>> listPremierAddOnOffersNextAsync(final String nextPageLink) {
@@ -1786,6 +1901,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * List all premier add-on offers.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;PremierAddOnOfferInner&gt; object
      */
     public Observable<ServiceResponse<Page<PremierAddOnOfferInner>>> listPremierAddOnOffersNextWithServiceResponseAsync(final String nextPageLink) {
@@ -1807,6 +1923,7 @@ public final class WebSiteManagementClientImpl extends AzureServiceClient {
      * List all premier add-on offers.
      *
     ServiceResponse<PageImpl<PremierAddOnOfferInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;PremierAddOnOfferInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<PremierAddOnOfferInner>>> listPremierAddOnOffersNextSinglePageAsync(final String nextPageLink) {

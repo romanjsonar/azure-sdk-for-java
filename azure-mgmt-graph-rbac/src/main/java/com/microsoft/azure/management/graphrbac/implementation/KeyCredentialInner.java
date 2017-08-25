@@ -9,39 +9,52 @@
 package com.microsoft.azure.management.graphrbac.implementation;
 
 import org.joda.time.DateTime;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Active Directory Key Credential information.
  */
 public class KeyCredentialInner {
     /**
+     * Custom key identifier.
+     */
+    @JsonProperty(value = "customKeyIdentifier")
+    private String customKeyIdentifier;
+
+    /**
      * Start date.
      */
+    @JsonProperty(value = "startDate")
     private DateTime startDate;
 
     /**
      * End date.
      */
+    @JsonProperty(value = "endDate")
     private DateTime endDate;
 
     /**
      * Key value.
      */
+    @JsonProperty(value = "value")
     private String value;
 
     /**
      * Key ID.
      */
+    @JsonProperty(value = "keyId")
     private String keyId;
 
     /**
      * Usage. Acceptable values are 'Verify' and 'Sign'.
      */
+    @JsonProperty(value = "usage")
     private String usage;
 
     /**
      * Type. Acceptable values are 'AsymmetricX509Cert' and 'Symmetric'.
      */
+    @JsonProperty(value = "type")
     private String type;
 
     /**
@@ -61,6 +74,26 @@ public class KeyCredentialInner {
      */
     public KeyCredentialInner withStartDate(DateTime startDate) {
         this.startDate = startDate;
+        return this;
+    }
+
+    /**
+     * Get the customKeyIdentifier value.
+     *
+     * @return the customKeyIdentifier value
+     */
+    public String customKeyIdentifier() {
+        return this.customKeyIdentifier;
+    }
+
+    /**
+     * Set the customKeyIdentifier value.
+     *
+     * @param customKeyIdentifier the customKeyIdentifier value to set
+     * @return the KeyCredentialInner object itself.
+     */
+    public KeyCredentialInner withCustomKeyIdentifier(String customKeyIdentifier) {
+        this.customKeyIdentifier = customKeyIdentifier;
         return this;
     }
 

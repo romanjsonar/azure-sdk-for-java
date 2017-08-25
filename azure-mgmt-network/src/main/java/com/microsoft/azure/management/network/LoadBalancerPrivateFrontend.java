@@ -5,6 +5,7 @@
  */
 package com.microsoft.azure.management.network;
 
+import com.microsoft.azure.management.apigeneration.Beta;
 import com.microsoft.azure.management.apigeneration.Fluent;
 import com.microsoft.azure.management.network.model.HasPrivateIPAddress;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.HasSubnet;
@@ -12,9 +13,10 @@ import com.microsoft.azure.management.resources.fluentcore.model.Attachable;
 import com.microsoft.azure.management.resources.fluentcore.model.Settable;
 
 /**
- * An immutable client-side representation of a private frontend of an internal load balancer.
+ * A client-side representation of a private frontend of an internal load balancer.
  */
 @Fluent()
+@Beta
 public interface LoadBalancerPrivateFrontend extends
     LoadBalancerFrontend,
     HasPrivateIPAddress,
@@ -33,14 +35,14 @@ public interface LoadBalancerPrivateFrontend extends
     interface DefinitionStages {
         /**
          * The first stage of a private frontend definition.
-         * @param <ParentT> the return type of the final {@link WithAttach#attach()}
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface Blank<ParentT> extends WithSubnet<ParentT> {
         }
 
         /**
          * The stage of a private frontend definition allowing to specify a subnet from the selected network.
-         * @param <ParentT> the next stage of the parent definition
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface WithSubnet<ParentT> extends HasSubnet.DefinitionStages.WithSubnet<WithAttach<ParentT>> {
             /**
@@ -56,8 +58,8 @@ public interface LoadBalancerPrivateFrontend extends
          * The final stage of a private frontend definition.
          * <p>
          * At this stage, any remaining optional settings can be specified, or the frontend definition
-         * can be attached to the parent load balancer definition using {@link WithAttach#attach()}.
-         * @param <ParentT> the return type of {@link WithAttach#attach()}
+         * can be attached to the parent load balancer definition.
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface WithAttach<ParentT> extends
             Attachable.InDefinitionAlt<ParentT>,
@@ -66,7 +68,7 @@ public interface LoadBalancerPrivateFrontend extends
     }
 
     /** The entirety of a private frontend definition.
-     * @param <ParentT> the return type of the final {@link DefinitionStages.WithAttach#attach()}
+     * @param <ParentT> the stage of the parent definition to return to after attaching this definition
      */
     interface Definition<ParentT> extends
         DefinitionStages.Blank<ParentT>,
@@ -107,14 +109,14 @@ public interface LoadBalancerPrivateFrontend extends
     interface UpdateDefinitionStages {
         /**
          * The first stage of a private frontend definition.
-         * @param <ParentT> the return type of the final {@link WithAttach#attach()}
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface Blank<ParentT> extends WithSubnet<ParentT> {
         }
 
         /**
          * The stage of a private frontend definition allowing to specify a subnet from the selected network.
-         * @param <ParentT> the next stage of the parent definition
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface WithSubnet<ParentT> {
             /**
@@ -129,8 +131,8 @@ public interface LoadBalancerPrivateFrontend extends
         /** The final stage of an internal frontend definition.
          * <p>
          * At this stage, any remaining optional settings can be specified, or the frontend definition
-         * can be attached to the parent load balancer definition using {@link WithAttach#attach()}.
-         * @param <ParentT> the return type of {@link WithAttach#attach()}
+         * can be attached to the parent load balancer definition.
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface WithAttach<ParentT> extends
             Attachable.InUpdateAlt<ParentT>,
@@ -139,7 +141,7 @@ public interface LoadBalancerPrivateFrontend extends
     }
 
     /** The entirety of a private frontend definition as part of a load balancer update.
-     * @param <ParentT> the return type of the final {@link UpdateDefinitionStages.WithAttach#attach()}
+     * @param <ParentT> the stage of the parent definition to return to after attaching this definition
      */
     interface UpdateDefinition<ParentT> extends
         UpdateDefinitionStages.Blank<ParentT>,

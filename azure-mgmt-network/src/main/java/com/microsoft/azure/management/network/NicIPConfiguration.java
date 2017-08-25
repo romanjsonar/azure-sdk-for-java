@@ -11,7 +11,6 @@ import com.microsoft.azure.management.network.implementation.NetworkInterfaceIPC
 import com.microsoft.azure.management.network.model.HasPrivateIPAddress;
 import com.microsoft.azure.management.network.model.HasPublicIPAddress;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.ChildResource;
-import com.microsoft.azure.management.resources.fluentcore.arm.models.HasSubnet;
 import com.microsoft.azure.management.resources.fluentcore.model.Attachable;
 import com.microsoft.azure.management.resources.fluentcore.model.Creatable;
 import com.microsoft.azure.management.resources.fluentcore.model.Settable;
@@ -25,9 +24,8 @@ public interface NicIPConfiguration extends
         NicIPConfigurationBase,
         HasInner<NetworkInterfaceIPConfigurationInner>,
         ChildResource<NetworkInterface>,
-        HasPrivateIPAddress,
-        HasPublicIPAddress,
-        HasSubnet {
+        HasPublicIPAddress {
+
     /**
      * The entirety of the network interface IP configuration definition.
      * @param <ParentT> the return type of the final {@link Attachable#attach()}
@@ -64,7 +62,7 @@ public interface NicIPConfiguration extends
              * based on the provided definition.
              *
              * @param creatable a creatable definition for a new virtual network
-             * @return the next stage of the network interface IP configuration definition
+             * @return the next stage of the definition
              */
             WithPrivateIP<ParentT> withNewNetwork(Creatable<Network> creatable);
 
@@ -77,7 +75,7 @@ public interface NicIPConfiguration extends
              *
              * @param name the name of the new virtual network
              * @param addressSpace the address space for rhe virtual network
-             * @return the next stage of the network interface IP configuration definition
+             * @return the next stage of the definition
              */
             WithPrivateIP<ParentT> withNewNetwork(String name, String addressSpace);
 
@@ -89,7 +87,7 @@ public interface NicIPConfiguration extends
              * network IP address space.
              *
              * @param addressSpace the address space for the virtual network
-             * @return the next stage of the network interface IP configuration definition
+             * @return the next stage of the definition
              */
             WithPrivateIP<ParentT> withNewNetwork(String addressSpace);
 
@@ -97,7 +95,7 @@ public interface NicIPConfiguration extends
              * Associate an existing virtual network with the network interface IP configuration.
              *
              * @param network an existing virtual network
-             * @return the next stage of the network interface IP configuration definition
+             * @return the next stage of the definition
              */
             WithSubnet<ParentT> withExistingNetwork(Network network);
         }
@@ -127,7 +125,7 @@ public interface NicIPConfiguration extends
              * Associate a subnet with the network interface IP configuration.
              *
              * @param name the subnet name
-             * @return the next stage of the network interface IP configuration definition
+             * @return the next stage of the definition
              */
             WithPrivateIP<ParentT> withSubnet(String name);
         }
@@ -216,7 +214,7 @@ public interface NicIPConfiguration extends
              * based on the provided definition.
              *
              * @param creatable a creatable definition for a new virtual network
-             * @return the next stage of the network interface IP configuration definition
+             * @return the next stage of the definition
              */
             WithPrivateIP<ParentT> withNewNetwork(Creatable<Network> creatable);
 
@@ -229,7 +227,7 @@ public interface NicIPConfiguration extends
              *
              * @param name the name of the new virtual network
              * @param addressSpace the address space for rhe virtual network
-             * @return the next stage of the network interface IP configuration definition
+             * @return the next stage of the definition
              */
             WithPrivateIP<ParentT> withNewNetwork(String name, String addressSpace);
 
@@ -241,7 +239,7 @@ public interface NicIPConfiguration extends
              * network IP address space.
              *
              * @param addressSpace the address space for the virtual network
-             * @return the next stage of the network interface IP configuration definition
+             * @return the next stage of the definition
              */
             WithPrivateIP<ParentT> withNewNetwork(String addressSpace);
 
@@ -249,7 +247,7 @@ public interface NicIPConfiguration extends
              * Associate an existing virtual network with the network interface IP configuration.
              *
              * @param network an existing virtual network
-             * @return the next stage of the network interface IP configuration definition
+             * @return the next stage of the definition
              */
             WithSubnet<ParentT> withExistingNetwork(Network network);
         }
@@ -279,7 +277,7 @@ public interface NicIPConfiguration extends
              * Associate a subnet with the network interface IP configuration.
              *
              * @param name the subnet name
-             * @return the next stage of the network interface IP configuration definition
+             * @return the next stage of the definition
              */
             WithPrivateIP<ParentT> withSubnet(String name);
         }

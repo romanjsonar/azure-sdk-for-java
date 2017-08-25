@@ -9,30 +9,61 @@
 package com.microsoft.azure.management.graphrbac.implementation;
 
 import org.joda.time.DateTime;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Active Directory Password Credential information.
  */
 public class PasswordCredentialInner {
     /**
+     * Custom key identifier.
+     */
+    @JsonProperty(value = "customKeyIdentifier")
+    private String customKeyIdentifier;
+
+    /**
      * Start date.
      */
+    @JsonProperty(value = "startDate")
     private DateTime startDate;
 
     /**
      * End date.
      */
+    @JsonProperty(value = "endDate")
     private DateTime endDate;
 
     /**
      * Key ID.
      */
+    @JsonProperty(value = "keyId")
     private String keyId;
 
     /**
      * Key value.
      */
+    @JsonProperty(value = "value")
     private String value;
+
+    /**
+     * Get the customKeyIdentifier value.
+     *
+     * @return the customKeyIdentifier value
+     */
+    public String customKeyIdentifier() {
+        return this.customKeyIdentifier;
+    }
+
+    /**
+     * Set the customKeyIdentifier value.
+     *
+     * @param customKeyIdentifier the customKeyIdentifier value to set
+     * @return the PasswordCredentialInner object itself.
+     */
+    public PasswordCredentialInner withCustomKeyIdentifier(String customKeyIdentifier) {
+        this.customKeyIdentifier = customKeyIdentifier;
+        return this;
+    }
 
     /**
      * Get the startDate value.

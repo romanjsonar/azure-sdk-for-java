@@ -7,30 +7,40 @@
 package com.microsoft.azure.management.appservice.implementation;
 
 import com.microsoft.azure.AzureEnvironment;
-import com.microsoft.rest.RestClient;
+import com.microsoft.azure.AzureResponseBuilder;
 import com.microsoft.azure.credentials.AzureTokenCredentials;
+import com.microsoft.azure.management.apigeneration.Beta;
+import com.microsoft.azure.management.appservice.AppServiceCertificateOrders;
+import com.microsoft.azure.management.appservice.AppServiceCertificates;
+import com.microsoft.azure.management.appservice.AppServiceDomains;
+import com.microsoft.azure.management.appservice.AppServicePlans;
+import com.microsoft.azure.management.appservice.FunctionApps;
+import com.microsoft.azure.management.appservice.WebApps;
 import com.microsoft.azure.management.keyvault.implementation.KeyVaultManager;
 import com.microsoft.azure.management.resources.fluentcore.arm.AzureConfigurable;
 import com.microsoft.azure.management.resources.fluentcore.arm.implementation.AzureConfigurableImpl;
 import com.microsoft.azure.management.resources.fluentcore.arm.implementation.Manager;
-import com.microsoft.azure.management.appservice.AppServiceCertificates;
-import com.microsoft.azure.management.appservice.AppServiceDomains;
-import com.microsoft.azure.management.appservice.AppServicePlans;
-import com.microsoft.azure.management.appservice.AppServiceCertificateOrders;
-import com.microsoft.azure.management.appservice.WebApps;
+import com.microsoft.azure.management.resources.fluentcore.utils.ProviderRegistrationInterceptor;
+import com.microsoft.azure.management.resources.fluentcore.utils.ResourceManagerThrottlingInterceptor;
+import com.microsoft.azure.management.storage.implementation.StorageManager;
+import com.microsoft.azure.serializer.AzureJacksonAdapter;
+import com.microsoft.rest.RestClient;
 
 /**
  * Entry point to Azure storage resource management.
  */
+@Beta
 public final class AppServiceManager extends Manager<AppServiceManager, WebSiteManagementClientImpl> {
     // Managers
     private KeyVaultManager keyVaultManager;
+    private StorageManager storageManager;
     // Collections
     private WebApps webApps;
     private AppServicePlans appServicePlans;
     private AppServiceCertificateOrders appServiceCertificateOrders;
     private AppServiceCertificates appServiceCertificates;
     private AppServiceDomains appServiceDomains;
+    private FunctionApps functionApps;
     private RestClient restClient;
 
     /**
@@ -53,6 +63,10 @@ public final class AppServiceManager extends Manager<AppServiceManager, WebSiteM
         return new AppServiceManager(new RestClient.Builder()
                 .withBaseUrl(credentials.environment(), AzureEnvironment.Endpoint.RESOURCE_MANAGER)
                 .withCredentials(credentials)
+                .withSerializerAdapter(new AzureJacksonAdapter())
+                .withResponseBuilderFactory(new AzureResponseBuilder.Factory())
+                .withInterceptor(new ProviderRegistrationInterceptor(credentials))
+                .withInterceptor(new ResourceManagerThrottlingInterceptor())
                 .build(), credentials.domain(), subscriptionId);
     }
 
@@ -77,7 +91,7 @@ public final class AppServiceManager extends Manager<AppServiceManager, WebSiteM
          *
          * @param credentials the credentials to use
          * @param subscriptionId the subscription UUID
-         * @return the interface exposing storage management API entry points that work across subscriptions
+         * @return the interface exposing AppService management API entry points that work across subscriptions
          */
         AppServiceManager authenticate(AzureTokenCredentials credentials, String subscriptionId);
     }
@@ -97,6 +111,7 @@ public final class AppServiceManager extends Manager<AppServiceManager, WebSiteM
                 subscriptionId,
                 new WebSiteManagementClientImpl(restClient).withSubscriptionId(subscriptionId));
         keyVaultManager = KeyVaultManager.authenticate(restClient, tenantId, subscriptionId);
+        storageManager = StorageManager.authenticate(restClient, subscriptionId);
         this.restClient = restClient;
     }
 
@@ -105,6 +120,13 @@ public final class AppServiceManager extends Manager<AppServiceManager, WebSiteM
      */
     KeyVaultManager keyVaultManager() {
         return keyVaultManager;
+    }
+
+    /**
+     * @return the storage manager instance.
+     */
+    StorageManager storageManager() {
+        return storageManager;
     }
 
     RestClient restClient() {
@@ -160,5 +182,14 @@ public final class AppServiceManager extends Manager<AppServiceManager, WebSiteM
             appServiceDomains = new AppServiceDomainsImpl(this);
         }
         return appServiceDomains;
+    }
+    /**
+     * @return the web app management API entry point
+     */
+    public FunctionApps functionApps() {
+        if (functionApps == null) {
+            functionApps = new FunctionAppsImpl(this);
+        }
+        return functionApps;
     }
 }

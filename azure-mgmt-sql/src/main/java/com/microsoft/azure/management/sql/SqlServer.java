@@ -8,14 +8,12 @@ package com.microsoft.azure.management.sql;
 
 import com.microsoft.azure.management.apigeneration.Fluent;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.GroupableResource;
-import com.microsoft.azure.management.resources.fluentcore.arm.models.HasManager;
 import com.microsoft.azure.management.resources.fluentcore.model.Appliable;
 import com.microsoft.azure.management.resources.fluentcore.model.Creatable;
 import com.microsoft.azure.management.resources.fluentcore.model.Refreshable;
 import com.microsoft.azure.management.resources.fluentcore.model.Updatable;
 import com.microsoft.azure.management.sql.implementation.ServerInner;
 import com.microsoft.azure.management.sql.implementation.SqlServerManager;
-
 import rx.Completable;
 
 import java.util.List;
@@ -29,8 +27,7 @@ import java.util.Map;
 public interface SqlServer extends
         GroupableResource<SqlServerManager, ServerInner>,
         Refreshable<SqlServer>,
-        Updatable<SqlServer.Update>,
-        HasManager<SqlServerManager> {
+        Updatable<SqlServer.Update> {
 
     /**
      * @return fully qualified name of the SQL Server
@@ -94,7 +91,7 @@ public interface SqlServer extends
     AuditingPolicy getAuditingPolicy();    
     
     /**
-     * Entry point to access FirewallRules from the SQL Server.
+     * Entry point to firewall rules from the SQL Server.
      */
     interface FirewallRules {
         /**
@@ -137,7 +134,7 @@ public interface SqlServer extends
     }
 
     /**
-     * Entry point to access ElasticPools from the SQL Server.
+     * Entry point to elastic pools from the SQL Server.
      */
     interface ElasticPools {
         /**
@@ -180,7 +177,7 @@ public interface SqlServer extends
     }
 
     /**
-     * Entry point to access ElasticPools from the SQL Server.
+     * Entry point to databases from the SQL Server.
      */
     interface Databases {
         /**

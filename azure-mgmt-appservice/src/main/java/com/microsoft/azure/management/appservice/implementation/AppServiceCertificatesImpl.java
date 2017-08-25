@@ -12,6 +12,7 @@ import com.microsoft.azure.management.resources.fluentcore.arm.collection.implem
 import com.microsoft.azure.management.appservice.AppServiceCertificate;
 import com.microsoft.azure.management.appservice.AppServiceCertificates;
 import rx.Completable;
+import rx.Observable;
 
 /**
  * The implementation for AppServiceCertificates.
@@ -31,13 +32,24 @@ class AppServiceCertificatesImpl
     }
 
     @Override
-    public AppServiceCertificate getByGroup(String groupName, String name) {
-        return wrapModel(this.inner().get(groupName, name));
+    protected Observable<CertificateInner> getInnerAsync(String resourceGroupName, String name) {
+        return this.inner().getByResourceGroupAsync(resourceGroupName, name);
     }
 
     @Override
-    public PagedList<AppServiceCertificate> listByGroup(String resourceGroupName) {
+    protected Completable deleteInnerAsync(String resourceGroupName, String name) {
+        return this.inner().deleteAsync(resourceGroupName, name).toCompletable();
+
+    }
+
+    @Override
+    public PagedList<AppServiceCertificate> listByResourceGroup(String resourceGroupName) {
         return wrapList(this.inner().listByResourceGroup(resourceGroupName));
+    }
+
+    @Override
+    public Observable<AppServiceCertificate> listByResourceGroupAsync(String resourceGroupName) {
+        return null;
     }
 
     @Override
@@ -59,7 +71,12 @@ class AppServiceCertificatesImpl
     }
 
     @Override
-    public Completable deleteByGroupAsync(String groupName, String name) {
-        return this.inner().deleteAsync(groupName, name).toCompletable();
+    public PagedList<AppServiceCertificate> list() {
+        return wrapList(inner().list());
+    }
+
+    @Override
+    public Observable<AppServiceCertificate> listAsync() {
+        return wrapPageAsync(inner().listAsync());
     }
 }

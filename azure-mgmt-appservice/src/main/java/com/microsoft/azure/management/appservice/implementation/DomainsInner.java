@@ -8,6 +8,9 @@
 
 package com.microsoft.azure.management.appservice.implementation;
 
+import com.microsoft.azure.management.resources.fluentcore.collection.InnerSupportsGet;
+import com.microsoft.azure.management.resources.fluentcore.collection.InnerSupportsDelete;
+import com.microsoft.azure.management.resources.fluentcore.collection.InnerSupportsListing;
 import retrofit2.Retrofit;
 import com.google.common.reflect.TypeToken;
 import com.microsoft.azure.AzureServiceFuture;
@@ -15,8 +18,8 @@ import com.microsoft.azure.CloudException;
 import com.microsoft.azure.ListOperationCallback;
 import com.microsoft.azure.Page;
 import com.microsoft.azure.PagedList;
-import com.microsoft.rest.ServiceFuture;
 import com.microsoft.rest.ServiceCallback;
+import com.microsoft.rest.ServiceFuture;
 import com.microsoft.rest.ServiceResponse;
 import com.microsoft.rest.Validator;
 import java.io.IOException;
@@ -41,7 +44,7 @@ import rx.Observable;
  * An instance of this class provides access to all the operations defined
  * in Domains.
  */
-public final class DomainsInner {
+public class DomainsInner implements InnerSupportsGet<DomainInner>, InnerSupportsDelete<Void>, InnerSupportsListing<DomainInner> {
     /** The Retrofit service to perform REST calls. */
     private DomainsService service;
     /** The service client containing this operation class. */
@@ -65,7 +68,7 @@ public final class DomainsInner {
     interface DomainsService {
         @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.appservice.Domains checkAvailability" })
         @POST("subscriptions/{subscriptionId}/providers/Microsoft.DomainRegistration/checkDomainAvailability")
-        Observable<Response<ResponseBody>> checkAvailability(@Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Body NameIdentifierInner identifier, @Header("User-Agent") String userAgent);
+        Observable<Response<ResponseBody>> checkAvailability(@Path("subscriptionId") String subscriptionId, @Body NameIdentifierInner identifier, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
         @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.appservice.Domains list" })
         @GET("subscriptions/{subscriptionId}/providers/Microsoft.DomainRegistration/domains")
@@ -83,9 +86,9 @@ public final class DomainsInner {
         @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DomainRegistration/domains")
         Observable<Response<ResponseBody>> listByResourceGroup(@Path("resourceGroupName") String resourceGroupName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
-        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.appservice.Domains get" })
+        @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.appservice.Domains getByResourceGroup" })
         @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DomainRegistration/domains/{domainName}")
-        Observable<Response<ResponseBody>> get(@Path("resourceGroupName") String resourceGroupName, @Path("domainName") String domainName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        Observable<Response<ResponseBody>> getByResourceGroup(@Path("resourceGroupName") String resourceGroupName, @Path("domainName") String domainName, @Path("subscriptionId") String subscriptionId, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
         @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.appservice.Domains createOrUpdate" })
         @PUT("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.DomainRegistration/domains/{domainName}")
@@ -141,31 +144,39 @@ public final class DomainsInner {
      * Check if a domain is available for registration.
      * Check if a domain is available for registration.
      *
+     * @param identifier Name of the domain.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the DomainAvailablilityCheckResultInner object if successful.
      */
-    public DomainAvailablilityCheckResultInner checkAvailability() {
-        return checkAvailabilityWithServiceResponseAsync().toBlocking().single().body();
+    public DomainAvailablilityCheckResultInner checkAvailability(NameIdentifierInner identifier) {
+        return checkAvailabilityWithServiceResponseAsync(identifier).toBlocking().single().body();
     }
 
     /**
      * Check if a domain is available for registration.
      * Check if a domain is available for registration.
      *
+     * @param identifier Name of the domain.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<DomainAvailablilityCheckResultInner> checkAvailabilityAsync(final ServiceCallback<DomainAvailablilityCheckResultInner> serviceCallback) {
-        return ServiceFuture.fromResponse(checkAvailabilityWithServiceResponseAsync(), serviceCallback);
+    public ServiceFuture<DomainAvailablilityCheckResultInner> checkAvailabilityAsync(NameIdentifierInner identifier, final ServiceCallback<DomainAvailablilityCheckResultInner> serviceCallback) {
+        return ServiceFuture.fromResponse(checkAvailabilityWithServiceResponseAsync(identifier), serviceCallback);
     }
 
     /**
      * Check if a domain is available for registration.
      * Check if a domain is available for registration.
      *
+     * @param identifier Name of the domain.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DomainAvailablilityCheckResultInner object
      */
-    public Observable<DomainAvailablilityCheckResultInner> checkAvailabilityAsync() {
-        return checkAvailabilityWithServiceResponseAsync().map(new Func1<ServiceResponse<DomainAvailablilityCheckResultInner>, DomainAvailablilityCheckResultInner>() {
+    public Observable<DomainAvailablilityCheckResultInner> checkAvailabilityAsync(NameIdentifierInner identifier) {
+        return checkAvailabilityWithServiceResponseAsync(identifier).map(new Func1<ServiceResponse<DomainAvailablilityCheckResultInner>, DomainAvailablilityCheckResultInner>() {
             @Override
             public DomainAvailablilityCheckResultInner call(ServiceResponse<DomainAvailablilityCheckResultInner> response) {
                 return response.body();
@@ -177,84 +188,20 @@ public final class DomainsInner {
      * Check if a domain is available for registration.
      * Check if a domain is available for registration.
      *
+     * @param identifier Name of the domain.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DomainAvailablilityCheckResultInner object
      */
-    public Observable<ServiceResponse<DomainAvailablilityCheckResultInner>> checkAvailabilityWithServiceResponseAsync() {
+    public Observable<ServiceResponse<DomainAvailablilityCheckResultInner>> checkAvailabilityWithServiceResponseAsync(NameIdentifierInner identifier) {
         if (this.client.subscriptionId() == null) {
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
-        final String apiVersion = "2015-04-01";
-        final String name = null;
-        NameIdentifierInner identifier = new NameIdentifierInner();
-        identifier.withName(null);
-        return service.checkAvailability(this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), identifier, this.client.userAgent())
-            .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<DomainAvailablilityCheckResultInner>>>() {
-                @Override
-                public Observable<ServiceResponse<DomainAvailablilityCheckResultInner>> call(Response<ResponseBody> response) {
-                    try {
-                        ServiceResponse<DomainAvailablilityCheckResultInner> clientResponse = checkAvailabilityDelegate(response);
-                        return Observable.just(clientResponse);
-                    } catch (Throwable t) {
-                        return Observable.error(t);
-                    }
-                }
-            });
-    }
-
-    /**
-     * Check if a domain is available for registration.
-     * Check if a domain is available for registration.
-     *
-     * @param name Name of the object.
-     * @return the DomainAvailablilityCheckResultInner object if successful.
-     */
-    public DomainAvailablilityCheckResultInner checkAvailability(String name) {
-        return checkAvailabilityWithServiceResponseAsync(name).toBlocking().single().body();
-    }
-
-    /**
-     * Check if a domain is available for registration.
-     * Check if a domain is available for registration.
-     *
-     * @param name Name of the object.
-     * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
-     * @return the {@link ServiceFuture} object
-     */
-    public ServiceFuture<DomainAvailablilityCheckResultInner> checkAvailabilityAsync(String name, final ServiceCallback<DomainAvailablilityCheckResultInner> serviceCallback) {
-        return ServiceFuture.fromResponse(checkAvailabilityWithServiceResponseAsync(name), serviceCallback);
-    }
-
-    /**
-     * Check if a domain is available for registration.
-     * Check if a domain is available for registration.
-     *
-     * @param name Name of the object.
-     * @return the observable to the DomainAvailablilityCheckResultInner object
-     */
-    public Observable<DomainAvailablilityCheckResultInner> checkAvailabilityAsync(String name) {
-        return checkAvailabilityWithServiceResponseAsync(name).map(new Func1<ServiceResponse<DomainAvailablilityCheckResultInner>, DomainAvailablilityCheckResultInner>() {
-            @Override
-            public DomainAvailablilityCheckResultInner call(ServiceResponse<DomainAvailablilityCheckResultInner> response) {
-                return response.body();
-            }
-        });
-    }
-
-    /**
-     * Check if a domain is available for registration.
-     * Check if a domain is available for registration.
-     *
-     * @param name Name of the object.
-     * @return the observable to the DomainAvailablilityCheckResultInner object
-     */
-    public Observable<ServiceResponse<DomainAvailablilityCheckResultInner>> checkAvailabilityWithServiceResponseAsync(String name) {
-        if (this.client.subscriptionId() == null) {
-            throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
+        if (identifier == null) {
+            throw new IllegalArgumentException("Parameter identifier is required and cannot be null.");
         }
+        Validator.validate(identifier);
         final String apiVersion = "2015-04-01";
-        NameIdentifierInner identifier = new NameIdentifierInner();
-        identifier.withName(name);
-        return service.checkAvailability(this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), identifier, this.client.userAgent())
+        return service.checkAvailability(this.client.subscriptionId(), identifier, apiVersion, this.client.acceptLanguage(), this.client.userAgent())
             .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<DomainAvailablilityCheckResultInner>>>() {
                 @Override
                 public Observable<ServiceResponse<DomainAvailablilityCheckResultInner>> call(Response<ResponseBody> response) {
@@ -279,6 +226,9 @@ public final class DomainsInner {
      * Get all domains in a subscription.
      * Get all domains in a subscription.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;DomainInner&gt; object if successful.
      */
     public PagedList<DomainInner> list() {
@@ -296,6 +246,7 @@ public final class DomainsInner {
      * Get all domains in a subscription.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<DomainInner>> listAsync(final ListOperationCallback<DomainInner> serviceCallback) {
@@ -314,6 +265,7 @@ public final class DomainsInner {
      * Get all domains in a subscription.
      * Get all domains in a subscription.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;DomainInner&gt; object
      */
     public Observable<Page<DomainInner>> listAsync() {
@@ -330,6 +282,7 @@ public final class DomainsInner {
      * Get all domains in a subscription.
      * Get all domains in a subscription.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;DomainInner&gt; object
      */
     public Observable<ServiceResponse<Page<DomainInner>>> listWithServiceResponseAsync() {
@@ -350,6 +303,7 @@ public final class DomainsInner {
      * Get all domains in a subscription.
      * Get all domains in a subscription.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;DomainInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<DomainInner>>> listSinglePageAsync() {
@@ -382,6 +336,9 @@ public final class DomainsInner {
      * Generate a single sign-on request for the domain management portal.
      * Generate a single sign-on request for the domain management portal.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the DomainControlCenterSsoRequestInner object if successful.
      */
     public DomainControlCenterSsoRequestInner getControlCenterSsoRequest() {
@@ -393,6 +350,7 @@ public final class DomainsInner {
      * Generate a single sign-on request for the domain management portal.
      *
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<DomainControlCenterSsoRequestInner> getControlCenterSsoRequestAsync(final ServiceCallback<DomainControlCenterSsoRequestInner> serviceCallback) {
@@ -403,6 +361,7 @@ public final class DomainsInner {
      * Generate a single sign-on request for the domain management portal.
      * Generate a single sign-on request for the domain management portal.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DomainControlCenterSsoRequestInner object
      */
     public Observable<DomainControlCenterSsoRequestInner> getControlCenterSsoRequestAsync() {
@@ -418,6 +377,7 @@ public final class DomainsInner {
      * Generate a single sign-on request for the domain management portal.
      * Generate a single sign-on request for the domain management portal.
      *
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DomainControlCenterSsoRequestInner object
      */
     public Observable<ServiceResponse<DomainControlCenterSsoRequestInner>> getControlCenterSsoRequestWithServiceResponseAsync() {
@@ -451,6 +411,9 @@ public final class DomainsInner {
      * Get domain name recommendations based on keywords.
      *
      * @param parameters Search parameters for domain name recommendations.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;NameIdentifierInner&gt; object if successful.
      */
     public PagedList<NameIdentifierInner> listRecommendations(final DomainRecommendationSearchParametersInner parameters) {
@@ -469,6 +432,7 @@ public final class DomainsInner {
      *
      * @param parameters Search parameters for domain name recommendations.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<NameIdentifierInner>> listRecommendationsAsync(final DomainRecommendationSearchParametersInner parameters, final ListOperationCallback<NameIdentifierInner> serviceCallback) {
@@ -488,6 +452,7 @@ public final class DomainsInner {
      * Get domain name recommendations based on keywords.
      *
      * @param parameters Search parameters for domain name recommendations.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;NameIdentifierInner&gt; object
      */
     public Observable<Page<NameIdentifierInner>> listRecommendationsAsync(final DomainRecommendationSearchParametersInner parameters) {
@@ -505,6 +470,7 @@ public final class DomainsInner {
      * Get domain name recommendations based on keywords.
      *
      * @param parameters Search parameters for domain name recommendations.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;NameIdentifierInner&gt; object
      */
     public Observable<ServiceResponse<Page<NameIdentifierInner>>> listRecommendationsWithServiceResponseAsync(final DomainRecommendationSearchParametersInner parameters) {
@@ -526,6 +492,7 @@ public final class DomainsInner {
      * Get domain name recommendations based on keywords.
      *
     ServiceResponse<PageImpl<NameIdentifierInner>> * @param parameters Search parameters for domain name recommendations.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;NameIdentifierInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<NameIdentifierInner>>> listRecommendationsSinglePageAsync(final DomainRecommendationSearchParametersInner parameters) {
@@ -563,6 +530,9 @@ public final class DomainsInner {
      * Get all domains in a resource group.
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;DomainInner&gt; object if successful.
      */
     public PagedList<DomainInner> listByResourceGroup(final String resourceGroupName) {
@@ -581,6 +551,7 @@ public final class DomainsInner {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<DomainInner>> listByResourceGroupAsync(final String resourceGroupName, final ListOperationCallback<DomainInner> serviceCallback) {
@@ -600,6 +571,7 @@ public final class DomainsInner {
      * Get all domains in a resource group.
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;DomainInner&gt; object
      */
     public Observable<Page<DomainInner>> listByResourceGroupAsync(final String resourceGroupName) {
@@ -617,6 +589,7 @@ public final class DomainsInner {
      * Get all domains in a resource group.
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;DomainInner&gt; object
      */
     public Observable<ServiceResponse<Page<DomainInner>>> listByResourceGroupWithServiceResponseAsync(final String resourceGroupName) {
@@ -638,6 +611,7 @@ public final class DomainsInner {
      * Get all domains in a resource group.
      *
     ServiceResponse<PageImpl<DomainInner>> * @param resourceGroupName Name of the resource group to which the resource belongs.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;DomainInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<DomainInner>>> listByResourceGroupSinglePageAsync(final String resourceGroupName) {
@@ -675,10 +649,13 @@ public final class DomainsInner {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the DomainInner object if successful.
      */
-    public DomainInner get(String resourceGroupName, String domainName) {
-        return getWithServiceResponseAsync(resourceGroupName, domainName).toBlocking().single().body();
+    public DomainInner getByResourceGroup(String resourceGroupName, String domainName) {
+        return getByResourceGroupWithServiceResponseAsync(resourceGroupName, domainName).toBlocking().single().body();
     }
 
     /**
@@ -688,10 +665,11 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<DomainInner> getAsync(String resourceGroupName, String domainName, final ServiceCallback<DomainInner> serviceCallback) {
-        return ServiceFuture.fromResponse(getWithServiceResponseAsync(resourceGroupName, domainName), serviceCallback);
+    public ServiceFuture<DomainInner> getByResourceGroupAsync(String resourceGroupName, String domainName, final ServiceCallback<DomainInner> serviceCallback) {
+        return ServiceFuture.fromResponse(getByResourceGroupWithServiceResponseAsync(resourceGroupName, domainName), serviceCallback);
     }
 
     /**
@@ -700,10 +678,11 @@ public final class DomainsInner {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DomainInner object
      */
-    public Observable<DomainInner> getAsync(String resourceGroupName, String domainName) {
-        return getWithServiceResponseAsync(resourceGroupName, domainName).map(new Func1<ServiceResponse<DomainInner>, DomainInner>() {
+    public Observable<DomainInner> getByResourceGroupAsync(String resourceGroupName, String domainName) {
+        return getByResourceGroupWithServiceResponseAsync(resourceGroupName, domainName).map(new Func1<ServiceResponse<DomainInner>, DomainInner>() {
             @Override
             public DomainInner call(ServiceResponse<DomainInner> response) {
                 return response.body();
@@ -717,9 +696,10 @@ public final class DomainsInner {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DomainInner object
      */
-    public Observable<ServiceResponse<DomainInner>> getWithServiceResponseAsync(String resourceGroupName, String domainName) {
+    public Observable<ServiceResponse<DomainInner>> getByResourceGroupWithServiceResponseAsync(String resourceGroupName, String domainName) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -730,12 +710,12 @@ public final class DomainsInner {
             throw new IllegalArgumentException("Parameter this.client.subscriptionId() is required and cannot be null.");
         }
         final String apiVersion = "2015-04-01";
-        return service.get(resourceGroupName, domainName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
+        return service.getByResourceGroup(resourceGroupName, domainName, this.client.subscriptionId(), apiVersion, this.client.acceptLanguage(), this.client.userAgent())
             .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<DomainInner>>>() {
                 @Override
                 public Observable<ServiceResponse<DomainInner>> call(Response<ResponseBody> response) {
                     try {
-                        ServiceResponse<DomainInner> clientResponse = getDelegate(response);
+                        ServiceResponse<DomainInner> clientResponse = getByResourceGroupDelegate(response);
                         return Observable.just(clientResponse);
                     } catch (Throwable t) {
                         return Observable.error(t);
@@ -744,7 +724,7 @@ public final class DomainsInner {
             });
     }
 
-    private ServiceResponse<DomainInner> getDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
+    private ServiceResponse<DomainInner> getByResourceGroupDelegate(Response<ResponseBody> response) throws CloudException, IOException, IllegalArgumentException {
         return this.client.restClient().responseBuilderFactory().<DomainInner, CloudException>newInstance(this.client.serializerAdapter())
                 .register(200, new TypeToken<DomainInner>() { }.getType())
                 .registerError(CloudException.class)
@@ -758,6 +738,9 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
      * @param domain Domain registration information.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the DomainInner object if successful.
      */
     public DomainInner createOrUpdate(String resourceGroupName, String domainName, DomainInner domain) {
@@ -772,6 +755,7 @@ public final class DomainsInner {
      * @param domainName Name of the domain.
      * @param domain Domain registration information.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<DomainInner> createOrUpdateAsync(String resourceGroupName, String domainName, DomainInner domain, final ServiceCallback<DomainInner> serviceCallback) {
@@ -785,6 +769,7 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
      * @param domain Domain registration information.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable for the request
      */
     public Observable<DomainInner> createOrUpdateAsync(String resourceGroupName, String domainName, DomainInner domain) {
@@ -803,6 +788,7 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
      * @param domain Domain registration information.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable for the request
      */
     public Observable<ServiceResponse<DomainInner>> createOrUpdateWithServiceResponseAsync(String resourceGroupName, String domainName, DomainInner domain) {
@@ -831,6 +817,9 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
      * @param domain Domain registration information.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the DomainInner object if successful.
      */
     public DomainInner beginCreateOrUpdate(String resourceGroupName, String domainName, DomainInner domain) {
@@ -845,6 +834,7 @@ public final class DomainsInner {
      * @param domainName Name of the domain.
      * @param domain Domain registration information.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<DomainInner> beginCreateOrUpdateAsync(String resourceGroupName, String domainName, DomainInner domain, final ServiceCallback<DomainInner> serviceCallback) {
@@ -858,6 +848,7 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
      * @param domain Domain registration information.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DomainInner object
      */
     public Observable<DomainInner> beginCreateOrUpdateAsync(String resourceGroupName, String domainName, DomainInner domain) {
@@ -876,6 +867,7 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
      * @param domain Domain registration information.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DomainInner object
      */
     public Observable<ServiceResponse<DomainInner>> beginCreateOrUpdateWithServiceResponseAsync(String resourceGroupName, String domainName, DomainInner domain) {
@@ -921,6 +913,9 @@ public final class DomainsInner {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void delete(String resourceGroupName, String domainName) {
         deleteWithServiceResponseAsync(resourceGroupName, domainName).toBlocking().single().body();
@@ -933,6 +928,7 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<Void> deleteAsync(String resourceGroupName, String domainName, final ServiceCallback<Void> serviceCallback) {
@@ -945,6 +941,7 @@ public final class DomainsInner {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<Void> deleteAsync(String resourceGroupName, String domainName) {
@@ -962,6 +959,7 @@ public final class DomainsInner {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<ServiceResponse<Void>> deleteWithServiceResponseAsync(String resourceGroupName, String domainName) {
@@ -997,6 +995,9 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
      * @param forceHardDeleteDomain Specify &lt;code&gt;true&lt;/code&gt; to delete the domain immediately. The default is &lt;code&gt;false&lt;/code&gt; which deletes the domain after 24 hours.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void delete(String resourceGroupName, String domainName, Boolean forceHardDeleteDomain) {
         deleteWithServiceResponseAsync(resourceGroupName, domainName, forceHardDeleteDomain).toBlocking().single().body();
@@ -1010,6 +1011,7 @@ public final class DomainsInner {
      * @param domainName Name of the domain.
      * @param forceHardDeleteDomain Specify &lt;code&gt;true&lt;/code&gt; to delete the domain immediately. The default is &lt;code&gt;false&lt;/code&gt; which deletes the domain after 24 hours.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<Void> deleteAsync(String resourceGroupName, String domainName, Boolean forceHardDeleteDomain, final ServiceCallback<Void> serviceCallback) {
@@ -1023,6 +1025,7 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
      * @param forceHardDeleteDomain Specify &lt;code&gt;true&lt;/code&gt; to delete the domain immediately. The default is &lt;code&gt;false&lt;/code&gt; which deletes the domain after 24 hours.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<Void> deleteAsync(String resourceGroupName, String domainName, Boolean forceHardDeleteDomain) {
@@ -1041,6 +1044,7 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of the domain.
      * @param forceHardDeleteDomain Specify &lt;code&gt;true&lt;/code&gt; to delete the domain immediately. The default is &lt;code&gt;false&lt;/code&gt; which deletes the domain after 24 hours.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<ServiceResponse<Void>> deleteWithServiceResponseAsync(String resourceGroupName, String domainName, Boolean forceHardDeleteDomain) {
@@ -1072,6 +1076,7 @@ public final class DomainsInner {
         return this.client.restClient().responseBuilderFactory().<Void, CloudException>newInstance(this.client.serializerAdapter())
                 .register(200, new TypeToken<Void>() { }.getType())
                 .register(204, new TypeToken<Void>() { }.getType())
+                .registerError(CloudException.class)
                 .build(response);
     }
 
@@ -1081,6 +1086,9 @@ public final class DomainsInner {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of domain.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;DomainOwnershipIdentifierInner&gt; object if successful.
      */
     public PagedList<DomainOwnershipIdentifierInner> listOwnershipIdentifiers(final String resourceGroupName, final String domainName) {
@@ -1100,6 +1108,7 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of domain.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<DomainOwnershipIdentifierInner>> listOwnershipIdentifiersAsync(final String resourceGroupName, final String domainName, final ListOperationCallback<DomainOwnershipIdentifierInner> serviceCallback) {
@@ -1120,6 +1129,7 @@ public final class DomainsInner {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of domain.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;DomainOwnershipIdentifierInner&gt; object
      */
     public Observable<Page<DomainOwnershipIdentifierInner>> listOwnershipIdentifiersAsync(final String resourceGroupName, final String domainName) {
@@ -1138,6 +1148,7 @@ public final class DomainsInner {
      *
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of domain.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;DomainOwnershipIdentifierInner&gt; object
      */
     public Observable<ServiceResponse<Page<DomainOwnershipIdentifierInner>>> listOwnershipIdentifiersWithServiceResponseAsync(final String resourceGroupName, final String domainName) {
@@ -1160,6 +1171,7 @@ public final class DomainsInner {
      *
     ServiceResponse<PageImpl<DomainOwnershipIdentifierInner>> * @param resourceGroupName Name of the resource group to which the resource belongs.
     ServiceResponse<PageImpl<DomainOwnershipIdentifierInner>> * @param domainName Name of domain.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;DomainOwnershipIdentifierInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<DomainOwnershipIdentifierInner>>> listOwnershipIdentifiersSinglePageAsync(final String resourceGroupName, final String domainName) {
@@ -1201,6 +1213,9 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of domain.
      * @param name Name of identifier.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the DomainOwnershipIdentifierInner object if successful.
      */
     public DomainOwnershipIdentifierInner getOwnershipIdentifier(String resourceGroupName, String domainName, String name) {
@@ -1215,6 +1230,7 @@ public final class DomainsInner {
      * @param domainName Name of domain.
      * @param name Name of identifier.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<DomainOwnershipIdentifierInner> getOwnershipIdentifierAsync(String resourceGroupName, String domainName, String name, final ServiceCallback<DomainOwnershipIdentifierInner> serviceCallback) {
@@ -1228,6 +1244,7 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of domain.
      * @param name Name of identifier.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DomainOwnershipIdentifierInner object
      */
     public Observable<DomainOwnershipIdentifierInner> getOwnershipIdentifierAsync(String resourceGroupName, String domainName, String name) {
@@ -1246,6 +1263,7 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of domain.
      * @param name Name of identifier.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DomainOwnershipIdentifierInner object
      */
     public Observable<ServiceResponse<DomainOwnershipIdentifierInner>> getOwnershipIdentifierWithServiceResponseAsync(String resourceGroupName, String domainName, String name) {
@@ -1291,6 +1309,9 @@ public final class DomainsInner {
      * @param domainName Name of domain.
      * @param name Name of identifier.
      * @param domainOwnershipIdentifier A JSON representation of the domain ownership properties.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the DomainOwnershipIdentifierInner object if successful.
      */
     public DomainOwnershipIdentifierInner createOrUpdateOwnershipIdentifier(String resourceGroupName, String domainName, String name, DomainOwnershipIdentifierInner domainOwnershipIdentifier) {
@@ -1306,6 +1327,7 @@ public final class DomainsInner {
      * @param name Name of identifier.
      * @param domainOwnershipIdentifier A JSON representation of the domain ownership properties.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<DomainOwnershipIdentifierInner> createOrUpdateOwnershipIdentifierAsync(String resourceGroupName, String domainName, String name, DomainOwnershipIdentifierInner domainOwnershipIdentifier, final ServiceCallback<DomainOwnershipIdentifierInner> serviceCallback) {
@@ -1320,6 +1342,7 @@ public final class DomainsInner {
      * @param domainName Name of domain.
      * @param name Name of identifier.
      * @param domainOwnershipIdentifier A JSON representation of the domain ownership properties.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DomainOwnershipIdentifierInner object
      */
     public Observable<DomainOwnershipIdentifierInner> createOrUpdateOwnershipIdentifierAsync(String resourceGroupName, String domainName, String name, DomainOwnershipIdentifierInner domainOwnershipIdentifier) {
@@ -1339,6 +1362,7 @@ public final class DomainsInner {
      * @param domainName Name of domain.
      * @param name Name of identifier.
      * @param domainOwnershipIdentifier A JSON representation of the domain ownership properties.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DomainOwnershipIdentifierInner object
      */
     public Observable<ServiceResponse<DomainOwnershipIdentifierInner>> createOrUpdateOwnershipIdentifierWithServiceResponseAsync(String resourceGroupName, String domainName, String name, DomainOwnershipIdentifierInner domainOwnershipIdentifier) {
@@ -1387,6 +1411,9 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of domain.
      * @param name Name of identifier.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void deleteOwnershipIdentifier(String resourceGroupName, String domainName, String name) {
         deleteOwnershipIdentifierWithServiceResponseAsync(resourceGroupName, domainName, name).toBlocking().single().body();
@@ -1400,6 +1427,7 @@ public final class DomainsInner {
      * @param domainName Name of domain.
      * @param name Name of identifier.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<Void> deleteOwnershipIdentifierAsync(String resourceGroupName, String domainName, String name, final ServiceCallback<Void> serviceCallback) {
@@ -1413,6 +1441,7 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of domain.
      * @param name Name of identifier.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<Void> deleteOwnershipIdentifierAsync(String resourceGroupName, String domainName, String name) {
@@ -1431,6 +1460,7 @@ public final class DomainsInner {
      * @param resourceGroupName Name of the resource group to which the resource belongs.
      * @param domainName Name of domain.
      * @param name Name of identifier.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<ServiceResponse<Void>> deleteOwnershipIdentifierWithServiceResponseAsync(String resourceGroupName, String domainName, String name) {
@@ -1465,6 +1495,7 @@ public final class DomainsInner {
         return this.client.restClient().responseBuilderFactory().<Void, CloudException>newInstance(this.client.serializerAdapter())
                 .register(200, new TypeToken<Void>() { }.getType())
                 .register(204, new TypeToken<Void>() { }.getType())
+                .registerError(CloudException.class)
                 .build(response);
     }
 
@@ -1476,6 +1507,9 @@ public final class DomainsInner {
      * @param domainName Name of domain.
      * @param name Name of identifier.
      * @param domainOwnershipIdentifier A JSON representation of the domain ownership properties.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the DomainOwnershipIdentifierInner object if successful.
      */
     public DomainOwnershipIdentifierInner updateOwnershipIdentifier(String resourceGroupName, String domainName, String name, DomainOwnershipIdentifierInner domainOwnershipIdentifier) {
@@ -1491,6 +1525,7 @@ public final class DomainsInner {
      * @param name Name of identifier.
      * @param domainOwnershipIdentifier A JSON representation of the domain ownership properties.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<DomainOwnershipIdentifierInner> updateOwnershipIdentifierAsync(String resourceGroupName, String domainName, String name, DomainOwnershipIdentifierInner domainOwnershipIdentifier, final ServiceCallback<DomainOwnershipIdentifierInner> serviceCallback) {
@@ -1505,6 +1540,7 @@ public final class DomainsInner {
      * @param domainName Name of domain.
      * @param name Name of identifier.
      * @param domainOwnershipIdentifier A JSON representation of the domain ownership properties.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DomainOwnershipIdentifierInner object
      */
     public Observable<DomainOwnershipIdentifierInner> updateOwnershipIdentifierAsync(String resourceGroupName, String domainName, String name, DomainOwnershipIdentifierInner domainOwnershipIdentifier) {
@@ -1524,6 +1560,7 @@ public final class DomainsInner {
      * @param domainName Name of domain.
      * @param name Name of identifier.
      * @param domainOwnershipIdentifier A JSON representation of the domain ownership properties.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DomainOwnershipIdentifierInner object
      */
     public Observable<ServiceResponse<DomainOwnershipIdentifierInner>> updateOwnershipIdentifierWithServiceResponseAsync(String resourceGroupName, String domainName, String name, DomainOwnershipIdentifierInner domainOwnershipIdentifier) {
@@ -1570,6 +1607,9 @@ public final class DomainsInner {
      * Get all domains in a subscription.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;DomainInner&gt; object if successful.
      */
     public PagedList<DomainInner> listNext(final String nextPageLink) {
@@ -1587,8 +1627,9 @@ public final class DomainsInner {
      * Get all domains in a subscription.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceCall object tracking the Retrofit calls
+     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<DomainInner>> listNextAsync(final String nextPageLink, final ServiceFuture<List<DomainInner>> serviceFuture, final ListOperationCallback<DomainInner> serviceCallback) {
@@ -1608,6 +1649,7 @@ public final class DomainsInner {
      * Get all domains in a subscription.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;DomainInner&gt; object
      */
     public Observable<Page<DomainInner>> listNextAsync(final String nextPageLink) {
@@ -1625,6 +1667,7 @@ public final class DomainsInner {
      * Get all domains in a subscription.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;DomainInner&gt; object
      */
     public Observable<ServiceResponse<Page<DomainInner>>> listNextWithServiceResponseAsync(final String nextPageLink) {
@@ -1646,6 +1689,7 @@ public final class DomainsInner {
      * Get all domains in a subscription.
      *
     ServiceResponse<PageImpl<DomainInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;DomainInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<DomainInner>>> listNextSinglePageAsync(final String nextPageLink) {
@@ -1679,6 +1723,9 @@ public final class DomainsInner {
      * Get domain name recommendations based on keywords.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;NameIdentifierInner&gt; object if successful.
      */
     public PagedList<NameIdentifierInner> listRecommendationsNext(final String nextPageLink) {
@@ -1696,8 +1743,9 @@ public final class DomainsInner {
      * Get domain name recommendations based on keywords.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceCall object tracking the Retrofit calls
+     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<NameIdentifierInner>> listRecommendationsNextAsync(final String nextPageLink, final ServiceFuture<List<NameIdentifierInner>> serviceFuture, final ListOperationCallback<NameIdentifierInner> serviceCallback) {
@@ -1717,6 +1765,7 @@ public final class DomainsInner {
      * Get domain name recommendations based on keywords.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;NameIdentifierInner&gt; object
      */
     public Observable<Page<NameIdentifierInner>> listRecommendationsNextAsync(final String nextPageLink) {
@@ -1734,6 +1783,7 @@ public final class DomainsInner {
      * Get domain name recommendations based on keywords.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;NameIdentifierInner&gt; object
      */
     public Observable<ServiceResponse<Page<NameIdentifierInner>>> listRecommendationsNextWithServiceResponseAsync(final String nextPageLink) {
@@ -1755,6 +1805,7 @@ public final class DomainsInner {
      * Get domain name recommendations based on keywords.
      *
     ServiceResponse<PageImpl<NameIdentifierInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;NameIdentifierInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<NameIdentifierInner>>> listRecommendationsNextSinglePageAsync(final String nextPageLink) {
@@ -1788,6 +1839,9 @@ public final class DomainsInner {
      * Get all domains in a resource group.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;DomainInner&gt; object if successful.
      */
     public PagedList<DomainInner> listByResourceGroupNext(final String nextPageLink) {
@@ -1805,8 +1859,9 @@ public final class DomainsInner {
      * Get all domains in a resource group.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceCall object tracking the Retrofit calls
+     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<DomainInner>> listByResourceGroupNextAsync(final String nextPageLink, final ServiceFuture<List<DomainInner>> serviceFuture, final ListOperationCallback<DomainInner> serviceCallback) {
@@ -1826,6 +1881,7 @@ public final class DomainsInner {
      * Get all domains in a resource group.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;DomainInner&gt; object
      */
     public Observable<Page<DomainInner>> listByResourceGroupNextAsync(final String nextPageLink) {
@@ -1843,6 +1899,7 @@ public final class DomainsInner {
      * Get all domains in a resource group.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;DomainInner&gt; object
      */
     public Observable<ServiceResponse<Page<DomainInner>>> listByResourceGroupNextWithServiceResponseAsync(final String nextPageLink) {
@@ -1864,6 +1921,7 @@ public final class DomainsInner {
      * Get all domains in a resource group.
      *
     ServiceResponse<PageImpl<DomainInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;DomainInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<DomainInner>>> listByResourceGroupNextSinglePageAsync(final String nextPageLink) {
@@ -1897,6 +1955,9 @@ public final class DomainsInner {
      * Lists domain ownership identifiers.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;DomainOwnershipIdentifierInner&gt; object if successful.
      */
     public PagedList<DomainOwnershipIdentifierInner> listOwnershipIdentifiersNext(final String nextPageLink) {
@@ -1914,8 +1975,9 @@ public final class DomainsInner {
      * Lists domain ownership identifiers.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
-     * @param serviceFuture the ServiceCall object tracking the Retrofit calls
+     * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<DomainOwnershipIdentifierInner>> listOwnershipIdentifiersNextAsync(final String nextPageLink, final ServiceFuture<List<DomainOwnershipIdentifierInner>> serviceFuture, final ListOperationCallback<DomainOwnershipIdentifierInner> serviceCallback) {
@@ -1935,6 +1997,7 @@ public final class DomainsInner {
      * Lists domain ownership identifiers.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;DomainOwnershipIdentifierInner&gt; object
      */
     public Observable<Page<DomainOwnershipIdentifierInner>> listOwnershipIdentifiersNextAsync(final String nextPageLink) {
@@ -1952,6 +2015,7 @@ public final class DomainsInner {
      * Lists domain ownership identifiers.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;DomainOwnershipIdentifierInner&gt; object
      */
     public Observable<ServiceResponse<Page<DomainOwnershipIdentifierInner>>> listOwnershipIdentifiersNextWithServiceResponseAsync(final String nextPageLink) {
@@ -1973,6 +2037,7 @@ public final class DomainsInner {
      * Lists domain ownership identifiers.
      *
     ServiceResponse<PageImpl<DomainOwnershipIdentifierInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;DomainOwnershipIdentifierInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<DomainOwnershipIdentifierInner>>> listOwnershipIdentifiersNextSinglePageAsync(final String nextPageLink) {

@@ -16,7 +16,7 @@ import com.microsoft.azure.management.resources.fluentcore.model.Settable;
 import com.microsoft.azure.management.resources.fluentcore.model.HasInner;
 
 /**
- * An immutable client-side representation of an application gateway SSL certificate.
+ * A client-side representation of an application gateway SSL certificate.
  */
 @Fluent()
 public interface ApplicationGatewaySslCertificate extends

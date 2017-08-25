@@ -8,6 +8,7 @@ package com.microsoft.azure.management.cdn.implementation;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import com.microsoft.azure.Page;
 import com.microsoft.azure.PagedList;
 import com.microsoft.azure.management.apigeneration.LangDefinition;
 import com.microsoft.azure.management.cdn.CdnEndpoint;
@@ -19,10 +20,13 @@ import com.microsoft.azure.management.cdn.GeoFilter;
 import com.microsoft.azure.management.cdn.GeoFilterActions;
 import com.microsoft.azure.management.cdn.QueryStringCachingBehavior;
 import com.microsoft.azure.management.cdn.ResourceUsage;
-import com.microsoft.azure.management.resources.fluentcore.arm.CountryISOCode;
+import com.microsoft.azure.management.resources.fluentcore.arm.CountryIsoCode;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.implementation.ExternalChildResourceImpl;
 import com.microsoft.azure.management.resources.fluentcore.utils.PagedListConverter;
 import com.microsoft.azure.management.resources.fluentcore.utils.SdkContext;
+import com.microsoft.rest.ServiceCallback;
+import com.microsoft.rest.ServiceFuture;
+import rx.Completable;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -30,9 +34,12 @@ import rx.functions.Func3;
 import rx.functions.FuncN;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Implementation for {@link CdnEndpoint}.
@@ -179,27 +186,36 @@ class CdnEndpointImpl extends ExternalChildResourceImpl<CdnEndpoint,
     public Observable<Void> deleteAsync() {
         return this.parent().manager().inner().endpoints().deleteAsync(this.parent().resourceGroupName(),
                 this.parent().name(),
-                this.name()).map(new Func1<Void, Void>() {
+                this.name());
+    }
+
+    @Override
+    public Observable<CdnEndpoint> refreshAsync() {
+        final CdnEndpointImpl self = this;
+        return refreshAsync().flatMap(new Func1<CdnEndpoint, Observable<CdnEndpoint>>() {
             @Override
-            public Void call(Void result) {
-                return result;
+            public Observable<CdnEndpoint> call(CdnEndpoint cdnEndpoint) {
+                self.customDomainList.clear();
+                self.deletedCustomDomainList.clear();
+                return self.parent().manager().inner().customDomains().listByEndpointAsync(
+                        self.parent().resourceGroupName(),
+                        self.parent().name(),
+                        self.name()).flatMap(new Func1<Page<CustomDomainInner>, Observable<CdnEndpoint>>() {
+                    @Override
+                    public Observable<CdnEndpoint> call(Page<CustomDomainInner> customDomainInnerPage) {
+                        self.customDomainList.addAll(customDomainInnerPage.items());
+                        return Observable.just((CdnEndpoint) self);
+                    }
+                });
             }
         });
     }
 
     @Override
-    public CdnEndpointImpl refresh() {
-        EndpointInner inner = this.parent().manager().inner().endpoints().get(this.parent().resourceGroupName(),
+    protected Observable<EndpointInner> getInnerAsync() {
+        return this.parent().manager().inner().endpoints().getAsync(this.parent().resourceGroupName(),
                 this.parent().name(),
                 this.name());
-        this.setInner(inner);
-        this.customDomainList.clear();
-        this.deletedCustomDomainList.clear();
-        this.customDomainList.addAll(this.parent().manager().inner().customDomains().listByEndpoint(
-                this.parent().resourceGroupName(),
-                this.parent().name(),
-                this.name()));
-        return this;
     }
 
     @Override
@@ -231,8 +247,13 @@ class CdnEndpointImpl extends ExternalChildResourceImpl<CdnEndpoint,
     }
 
     @Override
-    public List<String> contentTypesToCompress() {
-        return this.inner().contentTypesToCompress();
+    public Set<String> contentTypesToCompress() {
+        List<String> contentTypes = this.inner().contentTypesToCompress();
+        Set<String> set = new HashSet<>();
+        if (contentTypes != null) {
+            set.addAll(contentTypes);
+        }
+        return Collections.unmodifiableSet(set);
     }
 
     @Override
@@ -307,14 +328,19 @@ class CdnEndpointImpl extends ExternalChildResourceImpl<CdnEndpoint,
     }
 
     @Override
-    public List<String> customDomains() {
-        return Collections.unmodifiableList(
-                Lists.transform(this.customDomainList,
-                        new Function<CustomDomainInner, String>() {
-                    public String apply(CustomDomainInner customDomain) {
-                        return customDomain.hostName();
-                    }
-                }));
+    public Set<String> customDomains() {
+        List<String> customDomains = Lists.transform(this.customDomainList,
+                new Function<CustomDomainInner, String>() {
+            public String apply(CustomDomainInner customDomain) {
+                return customDomain.hostName();
+            }
+        });
+
+        Set<String> set = new HashSet<>();
+        if (customDomains != null) {
+            set.addAll(customDomains);
+        }
+        return Collections.unmodifiableSet(set);
     }
 
     @Override
@@ -323,23 +349,75 @@ class CdnEndpointImpl extends ExternalChildResourceImpl<CdnEndpoint,
     }
 
     @Override
+    public Completable startAsync() {
+        return this.parent().startEndpointAsync(this.name());
+    }
+
+    @Override
+    public ServiceFuture<Void> startAsync(ServiceCallback<Void> callback) {
+        return ServiceFuture.fromBody(this.startAsync().<Void>toObservable(), callback);
+    }
+
+    @Override
     public void stop() {
-        this.parent().stopEndpoint(this.name());
+        this.stopAsync().await();
     }
 
     @Override
-    public void purgeContent(List<String> contentPaths) {
-        this.parent().purgeEndpointContent(this.name(), contentPaths);
+    public Completable stopAsync() {
+        return this.parent().stopEndpointAsync(this.name());
     }
 
     @Override
-    public void loadContent(List<String> contentPaths) {
-        this.parent().loadEndpointContent(this.name(), contentPaths);
+    public ServiceFuture<Void> stopAsync(ServiceCallback<Void> callback) {
+        return ServiceFuture.fromBody(this.stopAsync().<Void>toObservable(), callback);
+    }
+
+    @Override
+    public void purgeContent(Set<String> contentPaths) {
+        if (contentPaths != null) {
+            this.purgeContentAsync(contentPaths).await();
+        }
+    }
+
+    @Override
+    public Completable purgeContentAsync(Set<String> contentPaths) {
+        return this.parent().purgeEndpointContentAsync(this.name(), contentPaths);
+    }
+
+    @Override
+    public ServiceFuture<Void> purgeContentAsync(Set<String> contentPaths, ServiceCallback<Void> callback) {
+        return ServiceFuture.fromBody(this.purgeContentAsync(contentPaths).<Void>toObservable(), callback);
+    }
+
+    @Override
+    public void loadContent(Set<String> contentPaths) {
+        this.loadContentAsync(contentPaths).await();
+    }
+
+    @Override
+    public Completable loadContentAsync(Set<String> contentPaths) {
+        return this.parent().loadEndpointContentAsync(this.name(), contentPaths);
+    }
+
+    @Override
+    public ServiceFuture<Void> loadContentAsync(Set<String> contentPaths, ServiceCallback<Void> callback) {
+        return ServiceFuture.fromBody(this.loadContentAsync(contentPaths).<Void>toObservable(), callback);
     }
 
     @Override
     public CustomDomainValidationResult validateCustomDomain(String hostName) {
-        return this.parent().validateEndpointCustomDomain(this.name(), hostName);
+        return this.validateCustomDomainAsync(hostName).toBlocking().last();
+    }
+
+    @Override
+    public Observable<CustomDomainValidationResult> validateCustomDomainAsync(String hostName) {
+        return this.parent().validateEndpointCustomDomainAsync(this.name(), hostName);
+    }
+
+    @Override
+    public ServiceFuture<CustomDomainValidationResult> validateCustomDomainAsync(String hostName, ServiceCallback<CustomDomainValidationResult> callback) {
+        return ServiceFuture.fromBody(this.validateCustomDomainAsync(hostName), callback);
     }
 
     @Override
@@ -407,8 +485,12 @@ class CdnEndpointImpl extends ExternalChildResourceImpl<CdnEndpoint,
     }
 
     @Override
-    public CdnEndpointImpl withContentTypesToCompress(List<String> contentTypesToCompress) {
-        this.inner().withContentTypesToCompress(contentTypesToCompress);
+    public CdnEndpointImpl withContentTypesToCompress(Set<String> contentTypesToCompress) {
+        List<String> list = null;
+        if (contentTypesToCompress != null) {
+            list = new ArrayList<>(contentTypesToCompress);
+        }
+        this.inner().withContentTypesToCompress(list);
         return this;
     }
 
@@ -450,8 +532,13 @@ class CdnEndpointImpl extends ExternalChildResourceImpl<CdnEndpoint,
     }
 
     @Override
-    public CdnEndpointImpl withGeoFilters(List<GeoFilter> geoFilters) {
-        this.inner().withGeoFilters(geoFilters);
+    public CdnEndpointImpl withGeoFilters(Collection<GeoFilter> geoFilters) {
+        List<GeoFilter> list = null;
+        if (geoFilters != null) {
+            list = new ArrayList<>(geoFilters);
+        }
+
+        this.inner().withGeoFilters(list);
         return this;
     }
 
@@ -464,7 +551,7 @@ class CdnEndpointImpl extends ExternalChildResourceImpl<CdnEndpoint,
     }
 
     @Override
-    public CdnEndpointImpl withGeoFilter(String relativePath, GeoFilterActions action, CountryISOCode countryCode) {
+    public CdnEndpointImpl withGeoFilter(String relativePath, GeoFilterActions action, CountryIsoCode countryCode) {
         GeoFilter geoFilter = this.createGeoFiltersObject(relativePath, action);
 
         if (geoFilter.countryCodes() == null) {
@@ -477,7 +564,7 @@ class CdnEndpointImpl extends ExternalChildResourceImpl<CdnEndpoint,
     }
 
     @Override
-    public CdnEndpointImpl withGeoFilter(String relativePath, GeoFilterActions action, List<CountryISOCode> countryCodes) {
+    public CdnEndpointImpl withGeoFilter(String relativePath, GeoFilterActions action, Collection<CountryIsoCode> countryCodes) {
         GeoFilter geoFilter = this.createGeoFiltersObject(relativePath, action);
 
         if (geoFilter.countryCodes() == null) {
@@ -486,7 +573,7 @@ class CdnEndpointImpl extends ExternalChildResourceImpl<CdnEndpoint,
             geoFilter.countryCodes().clear();
         }
 
-        for (CountryISOCode countryCode : countryCodes) {
+        for (CountryIsoCode countryCode : countryCodes) {
             geoFilter.countryCodes().add(countryCode.toString());
         }
 

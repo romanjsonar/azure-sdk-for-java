@@ -15,6 +15,7 @@ import com.microsoft.azure.management.keyvault.VaultProperties;
 import com.microsoft.azure.management.keyvault.Vaults;
 import com.microsoft.azure.management.resources.fluentcore.arm.collection.implementation.GroupableResourcesImpl;
 import rx.Completable;
+import rx.Observable;
 
 import java.util.UUID;
 
@@ -43,17 +44,22 @@ class VaultsImpl
     }
 
     @Override
-    public PagedList<Vault> listByGroup(String groupName) {
+    public PagedList<Vault> listByResourceGroup(String groupName) {
         return wrapList(this.inner().listByResourceGroup(groupName));
     }
 
     @Override
-    public Vault getByGroup(String groupName, String name) {
-        return wrapModel(this.inner().get(groupName, name));
+    protected Observable<VaultInner> getInnerAsync(String resourceGroupName, String name) {
+        return this.inner().getByResourceGroupAsync(resourceGroupName, name);
     }
 
     @Override
-    public Completable deleteByGroupAsync(String groupName, String name) {
+    protected Completable deleteInnerAsync(String resourceGroupName, String name) {
+        return this.inner().deleteAsync(resourceGroupName, name).toCompletable();
+    }
+
+    @Override
+    public Completable deleteByResourceGroupAsync(String groupName, String name) {
         return this.inner().deleteAsync(groupName, name).toCompletable();
     }
 
@@ -85,5 +91,10 @@ class VaultsImpl
                 vaultInner,
                 super.manager(),
                 graphRbacManager);
+    }
+
+    @Override
+    public Observable<Vault> listByResourceGroupAsync(String resourceGroupName) {
+        return wrapPageAsync(this.inner().listByResourceGroupAsync(resourceGroupName));
     }
 }

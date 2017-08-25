@@ -164,6 +164,9 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database that has the replication link to be dropped.
      * @param linkId The ID of the replication link to be deleted.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void deleteReplicationLink(String resourceGroupName, String serverName, String databaseName, String linkId) {
         deleteReplicationLinkWithServiceResponseAsync(resourceGroupName, serverName, databaseName, linkId).toBlocking().single().body();
@@ -177,6 +180,7 @@ public class DatabasesInner {
      * @param databaseName The name of the Azure SQL database that has the replication link to be dropped.
      * @param linkId The ID of the replication link to be deleted.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<Void> deleteReplicationLinkAsync(String resourceGroupName, String serverName, String databaseName, String linkId, final ServiceCallback<Void> serviceCallback) {
@@ -190,6 +194,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database that has the replication link to be dropped.
      * @param linkId The ID of the replication link to be deleted.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<Void> deleteReplicationLinkAsync(String resourceGroupName, String serverName, String databaseName, String linkId) {
@@ -208,6 +213,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database that has the replication link to be dropped.
      * @param linkId The ID of the replication link to be deleted.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<ServiceResponse<Void>> deleteReplicationLinkWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName, String linkId) {
@@ -245,6 +251,7 @@ public class DatabasesInner {
         return this.client.restClient().responseBuilderFactory().<Void, CloudException>newInstance(this.client.serializerAdapter())
                 .register(200, new TypeToken<Void>() { }.getType())
                 .register(204, new TypeToken<Void>() { }.getType())
+                .registerError(CloudException.class)
                 .build(response);
     }
 
@@ -255,6 +262,9 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to get the link for.
      * @param linkId The replication link ID to be retrieved.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the ReplicationLinkInner object if successful.
      */
     public ReplicationLinkInner getReplicationLink(String resourceGroupName, String serverName, String databaseName, String linkId) {
@@ -269,6 +279,7 @@ public class DatabasesInner {
      * @param databaseName The name of the Azure SQL database to get the link for.
      * @param linkId The replication link ID to be retrieved.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<ReplicationLinkInner> getReplicationLinkAsync(String resourceGroupName, String serverName, String databaseName, String linkId, final ServiceCallback<ReplicationLinkInner> serviceCallback) {
@@ -282,6 +293,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to get the link for.
      * @param linkId The replication link ID to be retrieved.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the ReplicationLinkInner object
      */
     public Observable<ReplicationLinkInner> getReplicationLinkAsync(String resourceGroupName, String serverName, String databaseName, String linkId) {
@@ -300,6 +312,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to get the link for.
      * @param linkId The replication link ID to be retrieved.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the ReplicationLinkInner object
      */
     public Observable<ServiceResponse<ReplicationLinkInner>> getReplicationLinkWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName, String linkId) {
@@ -347,6 +360,9 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database that has the replication link to be failed over.
      * @param linkId The ID of the replication link to be failed over.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void failoverReplicationLink(String resourceGroupName, String serverName, String databaseName, String linkId) {
         failoverReplicationLinkWithServiceResponseAsync(resourceGroupName, serverName, databaseName, linkId).toBlocking().last().body();
@@ -360,6 +376,7 @@ public class DatabasesInner {
      * @param databaseName The name of the Azure SQL database that has the replication link to be failed over.
      * @param linkId The ID of the replication link to be failed over.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<Void> failoverReplicationLinkAsync(String resourceGroupName, String serverName, String databaseName, String linkId, final ServiceCallback<Void> serviceCallback) {
@@ -373,6 +390,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database that has the replication link to be failed over.
      * @param linkId The ID of the replication link to be failed over.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable for the request
      */
     public Observable<Void> failoverReplicationLinkAsync(String resourceGroupName, String serverName, String databaseName, String linkId) {
@@ -391,6 +409,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database that has the replication link to be failed over.
      * @param linkId The ID of the replication link to be failed over.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable for the request
      */
     public Observable<ServiceResponse<Void>> failoverReplicationLinkWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName, String linkId) {
@@ -421,6 +440,9 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database that has the replication link to be failed over.
      * @param linkId The ID of the replication link to be failed over.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void beginFailoverReplicationLink(String resourceGroupName, String serverName, String databaseName, String linkId) {
         beginFailoverReplicationLinkWithServiceResponseAsync(resourceGroupName, serverName, databaseName, linkId).toBlocking().single().body();
@@ -434,6 +456,7 @@ public class DatabasesInner {
      * @param databaseName The name of the Azure SQL database that has the replication link to be failed over.
      * @param linkId The ID of the replication link to be failed over.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<Void> beginFailoverReplicationLinkAsync(String resourceGroupName, String serverName, String databaseName, String linkId, final ServiceCallback<Void> serviceCallback) {
@@ -447,6 +470,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database that has the replication link to be failed over.
      * @param linkId The ID of the replication link to be failed over.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<Void> beginFailoverReplicationLinkAsync(String resourceGroupName, String serverName, String databaseName, String linkId) {
@@ -465,6 +489,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database that has the replication link to be failed over.
      * @param linkId The ID of the replication link to be failed over.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<ServiceResponse<Void>> beginFailoverReplicationLinkWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName, String linkId) {
@@ -502,6 +527,7 @@ public class DatabasesInner {
         return this.client.restClient().responseBuilderFactory().<Void, CloudException>newInstance(this.client.serializerAdapter())
                 .register(204, new TypeToken<Void>() { }.getType())
                 .register(202, new TypeToken<Void>() { }.getType())
+                .registerError(CloudException.class)
                 .build(response);
     }
 
@@ -512,6 +538,9 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database that has the replication link to be failed over.
      * @param linkId The ID of the replication link to be failed over.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void failoverReplicationLinkAllowDataLoss(String resourceGroupName, String serverName, String databaseName, String linkId) {
         failoverReplicationLinkAllowDataLossWithServiceResponseAsync(resourceGroupName, serverName, databaseName, linkId).toBlocking().last().body();
@@ -525,6 +554,7 @@ public class DatabasesInner {
      * @param databaseName The name of the Azure SQL database that has the replication link to be failed over.
      * @param linkId The ID of the replication link to be failed over.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<Void> failoverReplicationLinkAllowDataLossAsync(String resourceGroupName, String serverName, String databaseName, String linkId, final ServiceCallback<Void> serviceCallback) {
@@ -538,6 +568,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database that has the replication link to be failed over.
      * @param linkId The ID of the replication link to be failed over.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable for the request
      */
     public Observable<Void> failoverReplicationLinkAllowDataLossAsync(String resourceGroupName, String serverName, String databaseName, String linkId) {
@@ -556,6 +587,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database that has the replication link to be failed over.
      * @param linkId The ID of the replication link to be failed over.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable for the request
      */
     public Observable<ServiceResponse<Void>> failoverReplicationLinkAllowDataLossWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName, String linkId) {
@@ -586,6 +618,9 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database that has the replication link to be failed over.
      * @param linkId The ID of the replication link to be failed over.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void beginFailoverReplicationLinkAllowDataLoss(String resourceGroupName, String serverName, String databaseName, String linkId) {
         beginFailoverReplicationLinkAllowDataLossWithServiceResponseAsync(resourceGroupName, serverName, databaseName, linkId).toBlocking().single().body();
@@ -599,6 +634,7 @@ public class DatabasesInner {
      * @param databaseName The name of the Azure SQL database that has the replication link to be failed over.
      * @param linkId The ID of the replication link to be failed over.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<Void> beginFailoverReplicationLinkAllowDataLossAsync(String resourceGroupName, String serverName, String databaseName, String linkId, final ServiceCallback<Void> serviceCallback) {
@@ -612,6 +648,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database that has the replication link to be failed over.
      * @param linkId The ID of the replication link to be failed over.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<Void> beginFailoverReplicationLinkAllowDataLossAsync(String resourceGroupName, String serverName, String databaseName, String linkId) {
@@ -630,6 +667,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database that has the replication link to be failed over.
      * @param linkId The ID of the replication link to be failed over.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<ServiceResponse<Void>> beginFailoverReplicationLinkAllowDataLossWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName, String linkId) {
@@ -667,6 +705,7 @@ public class DatabasesInner {
         return this.client.restClient().responseBuilderFactory().<Void, CloudException>newInstance(this.client.serializerAdapter())
                 .register(204, new TypeToken<Void>() { }.getType())
                 .register(202, new TypeToken<Void>() { }.getType())
+                .registerError(CloudException.class)
                 .build(response);
     }
 
@@ -676,6 +715,9 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to retrieve links for.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the List&lt;ReplicationLinkInner&gt; object if successful.
      */
     public List<ReplicationLinkInner> listReplicationLinks(String resourceGroupName, String serverName, String databaseName) {
@@ -689,6 +731,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to retrieve links for.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<ReplicationLinkInner>> listReplicationLinksAsync(String resourceGroupName, String serverName, String databaseName, final ServiceCallback<List<ReplicationLinkInner>> serviceCallback) {
@@ -701,6 +744,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to retrieve links for.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;ReplicationLinkInner&gt; object
      */
     public Observable<List<ReplicationLinkInner>> listReplicationLinksAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -718,6 +762,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to retrieve links for.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;ReplicationLinkInner&gt; object
      */
     public Observable<ServiceResponse<List<ReplicationLinkInner>>> listReplicationLinksWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -762,6 +807,9 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL Data Warehouse database to pause.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void pauseDataWarehouse(String resourceGroupName, String serverName, String databaseName) {
         pauseDataWarehouseWithServiceResponseAsync(resourceGroupName, serverName, databaseName).toBlocking().last().body();
@@ -774,6 +822,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL Data Warehouse database to pause.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<Void> pauseDataWarehouseAsync(String resourceGroupName, String serverName, String databaseName, final ServiceCallback<Void> serviceCallback) {
@@ -786,6 +835,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL Data Warehouse database to pause.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable for the request
      */
     public Observable<Void> pauseDataWarehouseAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -803,6 +853,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL Data Warehouse database to pause.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable for the request
      */
     public Observable<ServiceResponse<Void>> pauseDataWarehouseWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -829,6 +880,9 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL Data Warehouse database to pause.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void beginPauseDataWarehouse(String resourceGroupName, String serverName, String databaseName) {
         beginPauseDataWarehouseWithServiceResponseAsync(resourceGroupName, serverName, databaseName).toBlocking().single().body();
@@ -841,6 +895,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL Data Warehouse database to pause.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<Void> beginPauseDataWarehouseAsync(String resourceGroupName, String serverName, String databaseName, final ServiceCallback<Void> serviceCallback) {
@@ -853,6 +908,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL Data Warehouse database to pause.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<Void> beginPauseDataWarehouseAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -870,6 +926,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL Data Warehouse database to pause.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<ServiceResponse<Void>> beginPauseDataWarehouseWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -904,6 +961,7 @@ public class DatabasesInner {
         return this.client.restClient().responseBuilderFactory().<Void, CloudException>newInstance(this.client.serializerAdapter())
                 .register(200, new TypeToken<Void>() { }.getType())
                 .register(202, new TypeToken<Void>() { }.getType())
+                .registerError(CloudException.class)
                 .build(response);
     }
 
@@ -913,6 +971,9 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL Data Warehouse database to resume.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void resumeDataWarehouse(String resourceGroupName, String serverName, String databaseName) {
         resumeDataWarehouseWithServiceResponseAsync(resourceGroupName, serverName, databaseName).toBlocking().last().body();
@@ -925,6 +986,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL Data Warehouse database to resume.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<Void> resumeDataWarehouseAsync(String resourceGroupName, String serverName, String databaseName, final ServiceCallback<Void> serviceCallback) {
@@ -937,6 +999,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL Data Warehouse database to resume.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable for the request
      */
     public Observable<Void> resumeDataWarehouseAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -954,6 +1017,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL Data Warehouse database to resume.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable for the request
      */
     public Observable<ServiceResponse<Void>> resumeDataWarehouseWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -980,6 +1044,9 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL Data Warehouse database to resume.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void beginResumeDataWarehouse(String resourceGroupName, String serverName, String databaseName) {
         beginResumeDataWarehouseWithServiceResponseAsync(resourceGroupName, serverName, databaseName).toBlocking().single().body();
@@ -992,6 +1059,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL Data Warehouse database to resume.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<Void> beginResumeDataWarehouseAsync(String resourceGroupName, String serverName, String databaseName, final ServiceCallback<Void> serviceCallback) {
@@ -1004,6 +1072,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL Data Warehouse database to resume.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<Void> beginResumeDataWarehouseAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -1021,6 +1090,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL Data Warehouse database to resume.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<ServiceResponse<Void>> beginResumeDataWarehouseWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -1055,6 +1125,7 @@ public class DatabasesInner {
         return this.client.restClient().responseBuilderFactory().<Void, CloudException>newInstance(this.client.serializerAdapter())
                 .register(202, new TypeToken<Void>() { }.getType())
                 .register(200, new TypeToken<Void>() { }.getType())
+                .registerError(CloudException.class)
                 .build(response);
     }
 
@@ -1064,6 +1135,9 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database from which to retrieve available restore points.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the List&lt;RestorePointInner&gt; object if successful.
      */
     public List<RestorePointInner> listRestorePoints(String resourceGroupName, String serverName, String databaseName) {
@@ -1077,6 +1151,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database from which to retrieve available restore points.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<RestorePointInner>> listRestorePointsAsync(String resourceGroupName, String serverName, String databaseName, final ServiceCallback<List<RestorePointInner>> serviceCallback) {
@@ -1089,6 +1164,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database from which to retrieve available restore points.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;RestorePointInner&gt; object
      */
     public Observable<List<RestorePointInner>> listRestorePointsAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -1106,6 +1182,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database from which to retrieve available restore points.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;RestorePointInner&gt; object
      */
     public Observable<ServiceResponse<List<RestorePointInner>>> listRestorePointsWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -1151,6 +1228,9 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be operated on (updated or created).
      * @param parameters The required parameters for creating or updating a database.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the DatabaseInner object if successful.
      */
     public DatabaseInner createOrUpdate(String resourceGroupName, String serverName, String databaseName, DatabaseInner parameters) {
@@ -1165,6 +1245,7 @@ public class DatabasesInner {
      * @param databaseName The name of the Azure SQL database to be operated on (updated or created).
      * @param parameters The required parameters for creating or updating a database.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<DatabaseInner> createOrUpdateAsync(String resourceGroupName, String serverName, String databaseName, DatabaseInner parameters, final ServiceCallback<DatabaseInner> serviceCallback) {
@@ -1178,6 +1259,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be operated on (updated or created).
      * @param parameters The required parameters for creating or updating a database.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable for the request
      */
     public Observable<DatabaseInner> createOrUpdateAsync(String resourceGroupName, String serverName, String databaseName, DatabaseInner parameters) {
@@ -1196,6 +1278,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be operated on (updated or created).
      * @param parameters The required parameters for creating or updating a database.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable for the request
      */
     public Observable<ServiceResponse<DatabaseInner>> createOrUpdateWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName, DatabaseInner parameters) {
@@ -1227,6 +1310,9 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be operated on (updated or created).
      * @param parameters The required parameters for creating or updating a database.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the DatabaseInner object if successful.
      */
     public DatabaseInner beginCreateOrUpdate(String resourceGroupName, String serverName, String databaseName, DatabaseInner parameters) {
@@ -1241,6 +1327,7 @@ public class DatabasesInner {
      * @param databaseName The name of the Azure SQL database to be operated on (updated or created).
      * @param parameters The required parameters for creating or updating a database.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<DatabaseInner> beginCreateOrUpdateAsync(String resourceGroupName, String serverName, String databaseName, DatabaseInner parameters, final ServiceCallback<DatabaseInner> serviceCallback) {
@@ -1254,6 +1341,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be operated on (updated or created).
      * @param parameters The required parameters for creating or updating a database.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DatabaseInner object
      */
     public Observable<DatabaseInner> beginCreateOrUpdateAsync(String resourceGroupName, String serverName, String databaseName, DatabaseInner parameters) {
@@ -1272,6 +1360,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be operated on (updated or created).
      * @param parameters The required parameters for creating or updating a database.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DatabaseInner object
      */
     public Observable<ServiceResponse<DatabaseInner>> beginCreateOrUpdateWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName, DatabaseInner parameters) {
@@ -1321,6 +1410,9 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be deleted.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void delete(String resourceGroupName, String serverName, String databaseName) {
         deleteWithServiceResponseAsync(resourceGroupName, serverName, databaseName).toBlocking().single().body();
@@ -1333,6 +1425,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be deleted.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<Void> deleteAsync(String resourceGroupName, String serverName, String databaseName, final ServiceCallback<Void> serviceCallback) {
@@ -1345,6 +1438,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be deleted.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<Void> deleteAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -1362,6 +1456,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be deleted.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<ServiceResponse<Void>> deleteWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -1396,6 +1491,7 @@ public class DatabasesInner {
         return this.client.restClient().responseBuilderFactory().<Void, CloudException>newInstance(this.client.serializerAdapter())
                 .register(200, new TypeToken<Void>() { }.getType())
                 .register(204, new TypeToken<Void>() { }.getType())
+                .registerError(CloudException.class)
                 .build(response);
     }
 
@@ -1405,6 +1501,9 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be retrieved.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the DatabaseInner object if successful.
      */
     public DatabaseInner get(String resourceGroupName, String serverName, String databaseName) {
@@ -1418,6 +1517,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be retrieved.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<DatabaseInner> getAsync(String resourceGroupName, String serverName, String databaseName, final ServiceCallback<DatabaseInner> serviceCallback) {
@@ -1430,6 +1530,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be retrieved.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DatabaseInner object
      */
     public Observable<DatabaseInner> getAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -1447,6 +1548,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be retrieved.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DatabaseInner object
      */
     public Observable<ServiceResponse<DatabaseInner>> getWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -1485,6 +1587,9 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be retrieved.
      * @param expand The comma separated list of child objects to expand in the response. Possible properties: serviceTierAdvisors, upgradeHint, transparentDataEncryption.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the DatabaseInner object if successful.
      */
     public DatabaseInner get(String resourceGroupName, String serverName, String databaseName, String expand) {
@@ -1499,6 +1604,7 @@ public class DatabasesInner {
      * @param databaseName The name of the Azure SQL database to be retrieved.
      * @param expand The comma separated list of child objects to expand in the response. Possible properties: serviceTierAdvisors, upgradeHint, transparentDataEncryption.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<DatabaseInner> getAsync(String resourceGroupName, String serverName, String databaseName, String expand, final ServiceCallback<DatabaseInner> serviceCallback) {
@@ -1512,6 +1618,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be retrieved.
      * @param expand The comma separated list of child objects to expand in the response. Possible properties: serviceTierAdvisors, upgradeHint, transparentDataEncryption.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DatabaseInner object
      */
     public Observable<DatabaseInner> getAsync(String resourceGroupName, String serverName, String databaseName, String expand) {
@@ -1530,6 +1637,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database to be retrieved.
      * @param expand The comma separated list of child objects to expand in the response. Possible properties: serviceTierAdvisors, upgradeHint, transparentDataEncryption.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the DatabaseInner object
      */
     public Observable<ServiceResponse<DatabaseInner>> getWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName, String expand) {
@@ -1572,6 +1680,9 @@ public class DatabasesInner {
      *
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the List&lt;DatabaseInner&gt; object if successful.
      */
     public List<DatabaseInner> listByServer(String resourceGroupName, String serverName) {
@@ -1584,6 +1695,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<DatabaseInner>> listByServerAsync(String resourceGroupName, String serverName, final ServiceCallback<List<DatabaseInner>> serviceCallback) {
@@ -1595,6 +1707,7 @@ public class DatabasesInner {
      *
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;DatabaseInner&gt; object
      */
     public Observable<List<DatabaseInner>> listByServerAsync(String resourceGroupName, String serverName) {
@@ -1611,6 +1724,7 @@ public class DatabasesInner {
      *
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;DatabaseInner&gt; object
      */
     public Observable<ServiceResponse<List<DatabaseInner>>> listByServerWithServiceResponseAsync(String resourceGroupName, String serverName) {
@@ -1652,6 +1766,9 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the List&lt;DatabaseMetricInner&gt; object if successful.
      */
     public List<DatabaseMetricInner> listUsages(String resourceGroupName, String serverName, String databaseName) {
@@ -1665,6 +1782,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<DatabaseMetricInner>> listUsagesAsync(String resourceGroupName, String serverName, String databaseName, final ServiceCallback<List<DatabaseMetricInner>> serviceCallback) {
@@ -1677,6 +1795,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;DatabaseMetricInner&gt; object
      */
     public Observable<List<DatabaseMetricInner>> listUsagesAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -1694,6 +1813,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;DatabaseMetricInner&gt; object
      */
     public Observable<ServiceResponse<List<DatabaseMetricInner>>> listUsagesWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -1739,6 +1859,9 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of database.
      * @param serviceTierAdvisorName The name of service tier advisor.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the ServiceTierAdvisorInner object if successful.
      */
     public ServiceTierAdvisorInner getServiceTierAdvisor(String resourceGroupName, String serverName, String databaseName, String serviceTierAdvisorName) {
@@ -1753,6 +1876,7 @@ public class DatabasesInner {
      * @param databaseName The name of database.
      * @param serviceTierAdvisorName The name of service tier advisor.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<ServiceTierAdvisorInner> getServiceTierAdvisorAsync(String resourceGroupName, String serverName, String databaseName, String serviceTierAdvisorName, final ServiceCallback<ServiceTierAdvisorInner> serviceCallback) {
@@ -1766,6 +1890,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of database.
      * @param serviceTierAdvisorName The name of service tier advisor.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the ServiceTierAdvisorInner object
      */
     public Observable<ServiceTierAdvisorInner> getServiceTierAdvisorAsync(String resourceGroupName, String serverName, String databaseName, String serviceTierAdvisorName) {
@@ -1784,6 +1909,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of database.
      * @param serviceTierAdvisorName The name of service tier advisor.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the ServiceTierAdvisorInner object
      */
     public Observable<ServiceResponse<ServiceTierAdvisorInner>> getServiceTierAdvisorWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName, String serviceTierAdvisorName) {
@@ -1830,6 +1956,9 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of database.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the List&lt;ServiceTierAdvisorInner&gt; object if successful.
      */
     public List<ServiceTierAdvisorInner> listServiceTierAdvisors(String resourceGroupName, String serverName, String databaseName) {
@@ -1843,6 +1972,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of database.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<ServiceTierAdvisorInner>> listServiceTierAdvisorsAsync(String resourceGroupName, String serverName, String databaseName, final ServiceCallback<List<ServiceTierAdvisorInner>> serviceCallback) {
@@ -1855,6 +1985,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of database.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;ServiceTierAdvisorInner&gt; object
      */
     public Observable<List<ServiceTierAdvisorInner>> listServiceTierAdvisorsAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -1872,6 +2003,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of database.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;ServiceTierAdvisorInner&gt; object
      */
     public Observable<ServiceResponse<List<ServiceTierAdvisorInner>>> listServiceTierAdvisorsWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -1916,6 +2048,9 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database for which setting the Transparent Data Encryption applies.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the TransparentDataEncryptionInner object if successful.
      */
     public TransparentDataEncryptionInner createOrUpdateTransparentDataEncryptionConfiguration(String resourceGroupName, String serverName, String databaseName) {
@@ -1929,6 +2064,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database for which setting the Transparent Data Encryption applies.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<TransparentDataEncryptionInner> createOrUpdateTransparentDataEncryptionConfigurationAsync(String resourceGroupName, String serverName, String databaseName, final ServiceCallback<TransparentDataEncryptionInner> serviceCallback) {
@@ -1941,6 +2077,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database for which setting the Transparent Data Encryption applies.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the TransparentDataEncryptionInner object
      */
     public Observable<TransparentDataEncryptionInner> createOrUpdateTransparentDataEncryptionConfigurationAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -1958,6 +2095,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database for which setting the Transparent Data Encryption applies.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the TransparentDataEncryptionInner object
      */
     public Observable<ServiceResponse<TransparentDataEncryptionInner>> createOrUpdateTransparentDataEncryptionConfigurationWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -1998,6 +2136,9 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database for which setting the Transparent Data Encryption applies.
      * @param status The status of the Azure SQL Database Transparent Data Encryption. Possible values include: 'Enabled', 'Disabled'
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the TransparentDataEncryptionInner object if successful.
      */
     public TransparentDataEncryptionInner createOrUpdateTransparentDataEncryptionConfiguration(String resourceGroupName, String serverName, String databaseName, TransparentDataEncryptionStates status) {
@@ -2012,6 +2153,7 @@ public class DatabasesInner {
      * @param databaseName The name of the Azure SQL database for which setting the Transparent Data Encryption applies.
      * @param status The status of the Azure SQL Database Transparent Data Encryption. Possible values include: 'Enabled', 'Disabled'
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<TransparentDataEncryptionInner> createOrUpdateTransparentDataEncryptionConfigurationAsync(String resourceGroupName, String serverName, String databaseName, TransparentDataEncryptionStates status, final ServiceCallback<TransparentDataEncryptionInner> serviceCallback) {
@@ -2025,6 +2167,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database for which setting the Transparent Data Encryption applies.
      * @param status The status of the Azure SQL Database Transparent Data Encryption. Possible values include: 'Enabled', 'Disabled'
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the TransparentDataEncryptionInner object
      */
     public Observable<TransparentDataEncryptionInner> createOrUpdateTransparentDataEncryptionConfigurationAsync(String resourceGroupName, String serverName, String databaseName, TransparentDataEncryptionStates status) {
@@ -2043,6 +2186,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database for which setting the Transparent Data Encryption applies.
      * @param status The status of the Azure SQL Database Transparent Data Encryption. Possible values include: 'Enabled', 'Disabled'
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the TransparentDataEncryptionInner object
      */
     public Observable<ServiceResponse<TransparentDataEncryptionInner>> createOrUpdateTransparentDataEncryptionConfigurationWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName, TransparentDataEncryptionStates status) {
@@ -2089,6 +2233,9 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database for which the Transparent Data Encryption applies.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the TransparentDataEncryptionInner object if successful.
      */
     public TransparentDataEncryptionInner getTransparentDataEncryptionConfiguration(String resourceGroupName, String serverName, String databaseName) {
@@ -2102,6 +2249,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database for which the Transparent Data Encryption applies.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<TransparentDataEncryptionInner> getTransparentDataEncryptionConfigurationAsync(String resourceGroupName, String serverName, String databaseName, final ServiceCallback<TransparentDataEncryptionInner> serviceCallback) {
@@ -2114,6 +2262,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database for which the Transparent Data Encryption applies.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the TransparentDataEncryptionInner object
      */
     public Observable<TransparentDataEncryptionInner> getTransparentDataEncryptionConfigurationAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -2131,6 +2280,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database for which the Transparent Data Encryption applies.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the TransparentDataEncryptionInner object
      */
     public Observable<ServiceResponse<TransparentDataEncryptionInner>> getTransparentDataEncryptionConfigurationWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -2174,6 +2324,9 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database for which the Transparent Data Encryption applies.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the List&lt;TransparentDataEncryptionActivityInner&gt; object if successful.
      */
     public List<TransparentDataEncryptionActivityInner> listTransparentDataEncryptionActivity(String resourceGroupName, String serverName, String databaseName) {
@@ -2187,6 +2340,7 @@ public class DatabasesInner {
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database for which the Transparent Data Encryption applies.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<TransparentDataEncryptionActivityInner>> listTransparentDataEncryptionActivityAsync(String resourceGroupName, String serverName, String databaseName, final ServiceCallback<List<TransparentDataEncryptionActivityInner>> serviceCallback) {
@@ -2199,6 +2353,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database for which the Transparent Data Encryption applies.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;TransparentDataEncryptionActivityInner&gt; object
      */
     public Observable<List<TransparentDataEncryptionActivityInner>> listTransparentDataEncryptionActivityAsync(String resourceGroupName, String serverName, String databaseName) {
@@ -2216,6 +2371,7 @@ public class DatabasesInner {
      * @param resourceGroupName The name of the resource group that contains the resource. You can obtain this value from the Azure Resource Manager API or the portal.
      * @param serverName The name of the Azure SQL server.
      * @param databaseName The name of the Azure SQL database for which the Transparent Data Encryption applies.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the List&lt;TransparentDataEncryptionActivityInner&gt; object
      */
     public Observable<ServiceResponse<List<TransparentDataEncryptionActivityInner>>> listTransparentDataEncryptionActivityWithServiceResponseAsync(String resourceGroupName, String serverName, String databaseName) {

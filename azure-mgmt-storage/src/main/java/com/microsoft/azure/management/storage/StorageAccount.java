@@ -6,6 +6,7 @@
 
 package com.microsoft.azure.management.storage;
 
+import com.microsoft.azure.management.apigeneration.Beta;
 import com.microsoft.azure.management.apigeneration.Fluent;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.GroupableResource;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.Resource;
@@ -16,10 +17,13 @@ import com.microsoft.azure.management.resources.fluentcore.model.Updatable;
 import com.microsoft.azure.management.storage.implementation.AccountStatuses;
 import com.microsoft.azure.management.storage.implementation.StorageAccountInner;
 import com.microsoft.azure.management.storage.implementation.StorageManager;
-
+import com.microsoft.rest.ServiceCallback;
+import com.microsoft.rest.ServiceFuture;
 import org.joda.time.DateTime;
+import rx.Observable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * An immutable client-side representation of an Azure storage account.
@@ -83,10 +87,22 @@ public interface StorageAccount extends
     PublicEndpoints endPoints();
 
     /**
-     * @return the encryption settings on the account. If unspecified the account
-     * is unencrypted.
+     * @return the encryption settings on the account.
+     * TODO: This getter should be deprecated and removed (the new fully fluent encryption replaces this)
      */
     Encryption encryption();
+
+    /**
+     * @return the source of the key used for encryption.
+     */
+    @Beta(Beta.SinceVersion.V1_2_0)
+    StorageAccountEncryptionKeySource encryptionKeySource();
+
+    /**
+     * @return the encryption statuses indexed by storage service type.
+     */
+    @Beta(Beta.SinceVersion.V1_2_0)
+    Map<StorageService, StorageAccountEncryptionStatus> encryptionStatuses();
 
     /**
      * @return access tier used for billing. Access tier cannot be changed more
@@ -104,12 +120,44 @@ public interface StorageAccount extends
     List<StorageAccountKey> getKeys();
 
     /**
+     * Fetch the up-to-date access keys from Azure for this storage account asynchronously.
+     *
+     * @return a representation of the deferred computation of this call, returning the access keys
+     */
+    Observable<List<StorageAccountKey>> getKeysAsync();
+
+    /**
+     * Fetch the up-to-date access keys from Azure for this storage account asynchronously.
+     *
+     * @param callback the callback to call on success or failure, with access keys as parameter.
+     * @return a handle to cancel the request
+     */
+    ServiceFuture<List<StorageAccountKey>> getKeysAsync(ServiceCallback<List<StorageAccountKey>> callback);
+
+    /**
      * Regenerates the access keys for this storage account.
      *
      * @param keyName if the key name
      * @return the generated access keys for this storage account
      */
     List<StorageAccountKey> regenerateKey(String keyName);
+
+    /**
+     * Regenerates the access keys for this storage account asynchronously.
+     *
+     * @param keyName if the key name
+     * @return a representation of the deferred computation of this call, returning the regenerated access key
+     */
+    Observable<List<StorageAccountKey>> regenerateKeyAsync(String keyName);
+
+    /**
+     * Regenerates the access keys for this storage account asynchronously.
+     *
+     * @param keyName if the key name
+     * @param callback the callback to call on success or failure, with access keys as parameter.
+     * @return a handle to cancel the request
+     */
+    ServiceFuture<List<StorageAccountKey>> regenerateKeyAsync(String keyName, ServiceCallback<List<StorageAccountKey>> callback);
 
     /**
      * Container interface for all the definitions that need to be implemented.
@@ -184,11 +232,21 @@ public interface StorageAccount extends
             /**
              * Specifies the encryption settings on the account. The default
              * setting is unencrypted.
+             * TODO: This overload should be deprecated and removed (the new fully fluent encryption withers replaces this)
              *
              * @param encryption the encryption setting
-             * @return the nest stage of storage account definition
+             * @return the next stage of storage account definition
              */
+            @Beta
             WithCreate withEncryption(Encryption encryption);
+
+            /**
+             * Enables encryption for all storage services in the account that supports encryption.
+             *
+             * @return the next stage of storage account definition
+             */
+            @Beta(Beta.SinceVersion.V1_2_0)
+            WithCreate withEncryption();
         }
 
         /**
@@ -299,13 +357,6 @@ public interface StorageAccount extends
              * @return the next stage of storage account update
              */
             Update withCustomDomain(String name, boolean useSubDomain);
-
-            /**
-             * Clears the existing user domain assigned to the storage account.
-             *
-             * @return the next stage of storage account update
-             */
-            Update withoutCustomDomain();
         }
 
         /**
@@ -316,11 +367,29 @@ public interface StorageAccount extends
              * Specifies the encryption setting on the account.
              * <p>
              * The default setting is unencrypted.
+             * TODO: This overload should be deprecated and removed (the new fully fluent encryption withers replaces this)
              *
              * @param encryption the encryption setting
              * @return the nest stage of storage account update
              */
+            @Beta
             Update withEncryption(Encryption encryption);
+
+            /**
+             * Enables encryption for all storage services in the account that supports encryption.
+             *
+             * @return the next stage of storage account update
+             */
+            @Beta(Beta.SinceVersion.V1_2_0)
+            Update withEncryption();
+
+            /**
+             * Disables encryption for all storage services in the account that supports encryption.
+             *
+             * @return the next stage of storage account update
+             */
+            @Beta(Beta.SinceVersion.V1_2_0)
+            Update withoutEncryption();
         }
 
         /**

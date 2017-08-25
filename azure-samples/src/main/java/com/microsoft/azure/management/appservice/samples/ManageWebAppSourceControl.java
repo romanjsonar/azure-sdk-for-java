@@ -8,8 +8,8 @@ package com.microsoft.azure.management.appservice.samples;
 
 import com.microsoft.azure.management.Azure;
 import com.microsoft.azure.management.appservice.AppServicePlan;
-import com.microsoft.azure.management.appservice.AppServicePricingTier;
 import com.microsoft.azure.management.appservice.JavaVersion;
+import com.microsoft.azure.management.appservice.PricingTier;
 import com.microsoft.azure.management.appservice.PublishingProfile;
 import com.microsoft.azure.management.appservice.WebApp;
 import com.microsoft.azure.management.appservice.WebContainer;
@@ -19,8 +19,6 @@ import com.microsoft.azure.management.samples.Utils;
 import com.microsoft.rest.LogLevel;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.transport.RefSpec;
@@ -28,12 +26,11 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Azure App Service basic sample for managing web apps.
- *  - Create 4 web apps under the same new app service plan:
+ *  - Create 5 web apps under the same new app service plan:
  *    - Deploy to 1 using FTP
  *    - Deploy to 2 using local Git repository
  *    - Deploy to 3 using a publicly available Git repository
@@ -55,11 +52,12 @@ public final class ManageWebAppSourceControl {
         final String app2Name       = SdkContext.randomResourceName("webapp2-", 20);
         final String app3Name       = SdkContext.randomResourceName("webapp3-", 20);
         final String app4Name       = SdkContext.randomResourceName("webapp4-", 20);
+        final String app5Name       = SdkContext.randomResourceName("webapp5-", 20);
         final String app1Url        = app1Name + suffix;
         final String app2Url        = app2Name + suffix;
         final String app3Url        = app3Name + suffix;
         final String app4Url        = app4Name + suffix;
-        final String planName       = SdkContext.randomResourceName("jplan_", 15);
+        final String app5Url        = app5Name + suffix;
         final String rgName         = SdkContext.randomResourceName("rg1NEMV_", 24);
 
         try {
@@ -71,10 +69,9 @@ public final class ManageWebAppSourceControl {
             System.out.println("Creating web app " + app1Name + " in resource group " + rgName + "...");
 
             WebApp app1 = azure.webApps().define(app1Name)
-                    .withNewResourceGroup(rgName)
-                    .withNewAppServicePlan(planName)
                     .withRegion(Region.US_WEST)
-                    .withPricingTier(AppServicePricingTier.STANDARD_S1)
+                    .withNewResourceGroup(rgName)
+                    .withNewWindowsPlan(PricingTier.STANDARD_S1)
                     .withJavaVersion(JavaVersion.JAVA_8_NEWEST)
                     .withWebContainer(WebContainer.TOMCAT_8_0_NEWEST)
                     .create();
@@ -87,7 +84,7 @@ public final class ManageWebAppSourceControl {
 
             System.out.println("Deploying helloworld.war to " + app1Name + " through FTP...");
 
-            uploadFileToFtp(app1.getPublishingProfile(), "helloworld.war", ManageWebAppSourceControl.class.getResourceAsStream("/helloworld.war"));
+            Utils.uploadFileToWebApp(app1.getPublishingProfile(), "helloworld.war", ManageWebAppSourceControl.class.getResourceAsStream("/helloworld.war"));
 
             System.out.println("Deployment helloworld.war to web app " + app1.name() + " completed");
             Utils.print(app1);
@@ -103,10 +100,10 @@ public final class ManageWebAppSourceControl {
             // Create a second web app with local git source control
 
             System.out.println("Creating another web app " + app2Name + " in resource group " + rgName + "...");
-            AppServicePlan plan = azure.appServices().appServicePlans().getByGroup(rgName, planName);
+            AppServicePlan plan = azure.appServices().appServicePlans().getById(app1.appServicePlanId());
             WebApp app2 = azure.webApps().define(app2Name)
+                    .withExistingWindowsPlan(plan)
                     .withExistingResourceGroup(rgName)
-                    .withExistingAppServicePlan(plan)
                     .withLocalGitSourceControl()
                     .withJavaVersion(JavaVersion.JAVA_8_NEWEST)
                     .withWebContainer(WebContainer.TOMCAT_8_0_NEWEST)
@@ -149,8 +146,8 @@ public final class ManageWebAppSourceControl {
 
             System.out.println("Creating another web app " + app3Name + "...");
             WebApp app3 = azure.webApps().define(app3Name)
+                    .withExistingWindowsPlan(plan)
                     .withNewResourceGroup(rgName)
-                    .withExistingAppServicePlan(plan)
                     .defineSourceControl()
                         .withPublicGitRepository("https://github.com/Azure-Samples/app-service-web-dotnet-get-started")
                         .withBranch("master")
@@ -173,8 +170,8 @@ public final class ManageWebAppSourceControl {
             System.out.println("Creating another web app " + app4Name + "...");
             WebApp app4 = azure.webApps()
                     .define(app4Name)
+                    .withExistingWindowsPlan(plan)
                     .withExistingResourceGroup(rgName)
-                    .withExistingAppServicePlan(plan)
                     // Uncomment the following lines to turn on 4th scenario
                     //.defineSourceControl()
                     //    .withContinuouslyIntegratedGitHubRepository("username", "reponame")
@@ -192,6 +189,50 @@ public final class ManageWebAppSourceControl {
             Thread.sleep(5000);
             System.out.println("CURLing " + app4Url + "...");
             System.out.println(curl("http://" + app4Url));
+
+            //============================================================
+            // Create a 5th web app with the existing app service plan
+
+            System.out.println("Creating web app " + app1Name + " in resource group " + rgName + "...");
+
+            WebApp app5 = azure.webApps().define(app5Name)
+                    .withExistingWindowsPlan(plan)
+                    .withExistingResourceGroup(rgName)
+                    .withJavaVersion(JavaVersion.JAVA_8_NEWEST)
+                    .withWebContainer(WebContainer.TOMCAT_8_0_NEWEST)
+                    .create();
+
+            System.out.println("Created web app " + app5.name());
+            Utils.print(app5);
+
+            //============================================================
+            // Deploy to the 5th web app through web deploy
+
+            System.out.println("Deploying helloworld.war to " + app1Name + " through web deploy...");
+
+            app5.deploy()
+                    .withPackageUri("https://github.com/Azure/azure-sdk-for-java/raw/master/azure-samples/src/main/resources/helloworld.zip")
+                    .withExistingDeploymentsDeleted(true)
+                    .execute();
+
+            System.out.println("Deploying coffeeshop.war to " + app1Name + " through web deploy...");
+
+            app5.deploy()
+                    .withPackageUri("https://github.com/Azure/azure-sdk-for-java/raw/master/azure-samples/src/main/resources/coffeeshop.zip")
+                    .withExistingDeploymentsDeleted(false)
+                    .execute();
+
+            System.out.println("Deployments to web app " + app5.name() + " completed");
+            Utils.print(app5);
+
+            // warm up
+            System.out.println("Warming up " + app5Url + "/helloworld...");
+            curl("http://" + app5Url + "/helloworld");
+            Thread.sleep(5000);
+            System.out.println("CURLing " + app5Url + "/helloworld...");
+            System.out.println(curl("http://" + app5Url + "/helloworld"));
+            System.out.println("CURLing " + app5Url + "/coffeeshop...");
+            System.out.println(curl("http://" + app5Url + "/coffeeshop"));
 
             return true;
         } catch (Exception e) {
@@ -249,18 +290,5 @@ public final class ManageWebAppSourceControl {
 
     static {
         httpClient = new OkHttpClient.Builder().readTimeout(1, TimeUnit.MINUTES).build();
-    }
-
-    private static void uploadFileToFtp(PublishingProfile profile, String fileName, InputStream file) throws Exception {
-        FTPClient ftpClient = new FTPClient();
-        String[] ftpUrlSegments = profile.ftpUrl().split("/", 2);
-        String server = ftpUrlSegments[0];
-        String path = "./site/wwwroot/webapps";
-        ftpClient.connect(server);
-        ftpClient.login(profile.ftpUsername(), profile.ftpPassword());
-        ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-        ftpClient.changeWorkingDirectory(path);
-        ftpClient.storeFile(fileName, file);
-        ftpClient.disconnect();
     }
 }

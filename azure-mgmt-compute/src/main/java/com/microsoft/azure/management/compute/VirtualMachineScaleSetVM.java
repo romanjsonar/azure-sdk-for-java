@@ -13,9 +13,9 @@ import com.microsoft.azure.management.compute.implementation.VirtualMachineScale
 import com.microsoft.azure.management.network.VirtualMachineScaleSetNetworkInterface;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.ChildResource;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.Resource;
-import com.microsoft.azure.management.resources.fluentcore.model.Refreshable;
 import com.microsoft.azure.management.resources.fluentcore.model.HasInner;
-import rx.Observable;
+import com.microsoft.azure.management.resources.fluentcore.model.Refreshable;
+import rx.Completable;
 
 import java.util.List;
 import java.util.Map;
@@ -30,12 +30,12 @@ public interface VirtualMachineScaleSetVM extends
         Refreshable<VirtualMachineScaleSetVM>,
         HasInner<VirtualMachineScaleSetVMInner> {
     /**
-     * @return the instance id assigned to this virtual machine instance
+     * @return the instance ID assigned to this virtual machine instance
      */
     String instanceId();
 
     /**
-     * @return the sku of the virtual machine instance, this will be sku used while creating the parent
+     * @return the SKU of the virtual machine instance, this will be SKU used while creating the parent
      * virtual machine scale set
      */
     Sku sku();
@@ -84,7 +84,7 @@ public interface VirtualMachineScaleSetVM extends
     VirtualMachineCustomImage getOSCustomImage();
 
     /**
-     * @return vhd uri of the custom image that the virtual machine instance operating system is based on,
+     * @return VHD URI of the custom image that the virtual machine instance operating system is based on,
      * null will be returned if the operating system is based on platform image
      */
     String storedImageUnmanagedVhdUri();
@@ -95,22 +95,22 @@ public interface VirtualMachineScaleSetVM extends
     String osDiskName();
 
     /**
-     * @return vhd uri to the operating system disk
+     * @return VHD URI to the operating system disk
      */
     String osUnmanagedDiskVhdUri();
 
     /**
-     * @return resource id of the managed disk backing OS disk
+     * @return resource ID of the managed disk backing OS disk
      */
     String osDiskId();
 
     /**
-     * @return the unmanaged data disks associated with this virtual machine instance, indexed by lun
+     * @return the unmanaged data disks associated with this virtual machine instance, indexed by LUN
      */
     Map<Integer, VirtualMachineUnmanagedDataDisk> unmanagedDataDisks();
 
     /**
-     * @return the managed data disks associated with this virtual machine instance, indexed by lun
+     * @return the managed data disks associated with this virtual machine instance, indexed by LUN
      */
     Map<Integer, VirtualMachineDataDisk> dataDisks();
 
@@ -125,7 +125,7 @@ public interface VirtualMachineScaleSetVM extends
     int osDiskSizeInGB();
 
     /**
-     * @return the virtual machine instance computer name with prefix {@link VirtualMachineScaleSet#computerNamePrefix()}
+     * @return the virtual machine instance computer name with the VM scale set prefix.
      */
     String computerName();
 
@@ -145,7 +145,7 @@ public interface VirtualMachineScaleSetVM extends
     boolean isLinuxPasswordAuthenticationEnabled();
 
     /**
-     * @return true if this is a Windows virtual machine and Vm agent is provisioned, false otherwise
+     * @return true if this is a Windows virtual machine and VM agent is provisioned, false otherwise
      */
     boolean isWindowsVMAgentProvisioned();
 
@@ -165,22 +165,22 @@ public interface VirtualMachineScaleSetVM extends
     boolean bootDiagnosticEnabled();
 
     /**
-     * @return the uri to the storage account storing boot diagnostics log
+     * @return the URI to the storage account storing boot diagnostics log
      */
     String bootDiagnosticStorageAccountUri();
 
     /**
-     * @return the resource id of the availability set that this virtual machine instance belongs to
+     * @return the resource ID of the availability set that this virtual machine instance belongs to
      */
     String availabilitySetId();
 
     /**
-     * @return the list of resource id of network interface associated with the virtual machine instance
+     * @return the list of resource ID of network interface associated with the virtual machine instance
      */
     List<String> networkInterfaceIds();
 
     /**
-     * @return resource id of primary network interface associated with virtual machine instance
+     * @return resource ID of primary network interface associated with virtual machine instance
      */
     String primaryNetworkInterfaceId();
 
@@ -217,10 +217,10 @@ public interface VirtualMachineScaleSetVM extends
     /**
      * Updates the version of the installed operating system in the virtual machine instance.
      *
-     * @return the observable to the reimage action
+     * @return a representation of the deferred computation of this call
      */
     @Method
-    Observable<Void> reimageAsync();
+    Completable reimageAsync();
 
     /**
      * Shuts down the virtual machine instance and releases the associated compute resources.
@@ -230,10 +230,10 @@ public interface VirtualMachineScaleSetVM extends
     /**
      * Shuts down the virtual machine instance and releases the associated compute resources.
      *
-     * @return the observable to the deallocate action
+     * @return a representation of the deferred computation of this call
      */
     @Method
-    Observable<Void> deallocateAsync();
+    Completable deallocateAsync();
 
     /**
      * Stops the virtual machine instance.
@@ -243,10 +243,10 @@ public interface VirtualMachineScaleSetVM extends
     /**
      * Stops the virtual machine instance.
      *
-     * @return the observable to the poweroff action
+     * @return a representation of the deferred computation of this call
      */
     @Method
-    Observable<Void> powerOffAsync();
+    Completable powerOffAsync();
 
     /**
      * Starts the virtual machine instance.
@@ -256,10 +256,10 @@ public interface VirtualMachineScaleSetVM extends
     /**
      * Starts the virtual machine instance.
      *
-     * @return the observable to the start action
+     * @return a representation of the deferred computation of this call
      */
     @Method
-    Observable<Void> startAsync();
+    Completable startAsync();
 
     /**
      * Restarts the virtual machine instance.
@@ -269,10 +269,10 @@ public interface VirtualMachineScaleSetVM extends
     /**
      * Restarts the virtual machine instance.
      *
-     * @return the observable to the restart action
+     * @return a representation of the deferred computation of this call
      */
     @Method
-    Observable<Void> restartAsync();
+    Completable restartAsync();
 
     /**
      * Deletes the virtual machine instance.
@@ -282,15 +282,15 @@ public interface VirtualMachineScaleSetVM extends
     /**
      * Deletes the virtual machine instance.
      *
-     * @return the observable to the delete action
+     * @return a representation of the deferred computation of this call
      */
     @Method
-    Observable<Void> deleteAsync();
+    Completable deleteAsync();
 
     /**
      * Gets the instance view of the virtual machine instance.
      * <p>
-     * To get the latest instance view use {@link VirtualMachineScaleSetVM#refreshInstanceView()}.
+     * To get the latest instance view use <code>refreshInstanceView()</code>.
      *
      * @return the instance view
      */

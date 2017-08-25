@@ -47,6 +47,11 @@ final class ResourceGroupsImpl
     }
 
     @Override
+    public Observable<ResourceGroup> listByTagAsync(String tagName, String tagValue) {
+        return wrapPageAsync(client.listAsync(Utils.createOdataFilterForTags(tagName, tagValue), null));
+    }
+
+    @Override
     public ResourceGroupImpl getByName(String name) {
         return wrapModel(client.get(name));
     }
@@ -109,5 +114,10 @@ final class ResourceGroupsImpl
     @Override
     public Completable deleteByIdAsync(String id) {
         return deleteByNameAsync(ResourceUtils.nameFromResourceId(id));
+    }
+
+    @Override
+    public Observable<ResourceGroup> listAsync() {
+        return wrapPageAsync(this.client.listAsync());
     }
 }

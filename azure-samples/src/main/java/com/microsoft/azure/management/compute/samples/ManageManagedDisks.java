@@ -84,20 +84,20 @@ public final class ManageManagedDisks {
             final String vmScaleSetName = SdkContext.randomResourceName("vmss" + "-", 18);
             VirtualMachineScaleSet vmScaleSet = azure.virtualMachineScaleSets()
                     .define(vmScaleSetName)
-                    .withRegion(region)
-                    .withExistingResourceGroup(rgName)
-                    .withSku(VirtualMachineScaleSetSkuTypes.STANDARD_D5_V2)
-                    .withExistingPrimaryNetworkSubnet(prepareNetwork(azure, region, rgName), "subnet1")
-                    .withExistingPrimaryInternetFacingLoadBalancer(prepareLoadBalancer(azure, region, rgName))
-                    .withoutPrimaryInternalLoadBalancer()
-                    .withPopularLinuxImage(KnownLinuxVirtualMachineImage.UBUNTU_SERVER_16_04_LTS)
-                    .withRootUsername("tirekicker")
-                    .withSsh(sshkey)
-                    .withNewDataDisk(100)
-                    .withNewDataDisk(100, 1, CachingTypes.READ_WRITE)
-                    .withNewDataDisk(100, 2, CachingTypes.READ_ONLY)
-                    .withCapacity(3)
-                    .create();
+                        .withRegion(region)
+                        .withExistingResourceGroup(rgName)
+                        .withSku(VirtualMachineScaleSetSkuTypes.STANDARD_D5_V2)
+                        .withExistingPrimaryNetworkSubnet(prepareNetwork(azure, region, rgName), "subnet1")
+                        .withExistingPrimaryInternetFacingLoadBalancer(prepareLoadBalancer(azure, region, rgName))
+                        .withoutPrimaryInternalLoadBalancer()
+                        .withPopularLinuxImage(KnownLinuxVirtualMachineImage.UBUNTU_SERVER_16_04_LTS)
+                        .withRootUsername("tirekicker")
+                        .withSsh(sshkey)
+                        .withNewDataDisk(100)
+                        .withNewDataDisk(100, 1, CachingTypes.READ_WRITE)
+                        .withNewDataDisk(100, 2, CachingTypes.READ_ONLY)
+                        .withCapacity(3)
+                        .create();
 
             System.out.println("Created VMSS [with implicit managed OS disks and explicit managed data disks]");
 
@@ -138,13 +138,7 @@ public final class ManageManagedDisks {
 
             System.out.println("Created VM [with new managed data disks and disk attached]");
 
-            // Upate a VM
-
-            System.out.println("De-allocating VM");
-
-            linuxVM2.deallocate();
-
-            System.out.println("De-allocated VM");
+            // Update a VM
 
             System.out.println("Updating VM [by detaching a disk and adding empty disk]");
 
@@ -168,10 +162,10 @@ public final class ManageManagedDisks {
             final String customImageName = SdkContext.randomResourceName("cimg" + "-", 10);
             VirtualMachineCustomImage virtualMachineCustomImage = azure.virtualMachineCustomImages()
                     .define(customImageName)
-                    .withRegion(region)
-                    .withExistingResourceGroup(rgName)
-                    .fromVirtualMachine(linuxVM) // from a deallocated and generalized VM
-                    .create();
+                        .withRegion(region)
+                        .withExistingResourceGroup(rgName)
+                        .fromVirtualMachine(linuxVM) // from a deallocated and generalized VM
+                        .create();
 
             System.out.println("Created custom image from specialized virtual machine");
 
@@ -194,26 +188,26 @@ public final class ManageManagedDisks {
 
             // Create a VM from a VHD (Create Virtual Machine Using Specialized VHD)
 
-            final String linuxVmName4 = SdkContext.randomResourceName("vm" + "-", 10);
+            final String linuxVMName4 = SdkContext.randomResourceName("vm" + "-", 10);
             final String specializedVhd = linuxVM.osUnmanagedDiskVhdUri();
 
             azure.virtualMachines().deleteById(linuxVM.id());
 
             System.out.println("Creating VM [by attaching un-managed disk]");
 
-            VirtualMachine linuxVM4 = azure.virtualMachines().define(linuxVmName4)
+            VirtualMachine linuxVM4 = azure.virtualMachines().define(linuxVMName4)
                     .withRegion(region)
                     .withExistingResourceGroup(rgName)
                     .withNewPrimaryNetwork("10.0.0.0/28")
                     .withPrimaryPrivateIPAddressDynamic()
                     .withoutPrimaryPublicIPAddress()
-                    .withSpecializedOsUnmanagedDisk(specializedVhd, OperatingSystemTypes.LINUX)
+                    .withSpecializedOSUnmanagedDisk(specializedVhd, OperatingSystemTypes.LINUX)
                     .withSize(VirtualMachineSizeTypes.STANDARD_D3_V2)
                     .create();
 
             System.out.println("Created VM [by attaching un-managed disk]");
 
-            // Create a Snapshot (Create Virtual Machine Using Specilaized Disks from Snapshot)
+            // Create a Snapshot (Create Virtual Machine using specialized disks from snapshot)
 
             System.out.println("Preparing specialized virtual machine with managed disks");
 
@@ -284,14 +278,14 @@ public final class ManageManagedDisks {
 
             System.out.println("Creating VM [with specialized OS managed disk]");
 
-            final String linuxVm6Name = SdkContext.randomResourceName("vm" + "-", 10);
-            VirtualMachine linuxVM6 = azure.virtualMachines().define(linuxVm6Name)
+            final String linuxVM6Name = SdkContext.randomResourceName("vm" + "-", 10);
+            VirtualMachine linuxVM6 = azure.virtualMachines().define(linuxVM6Name)
                     .withRegion(region)
                     .withExistingResourceGroup(rgName)
                     .withNewPrimaryNetwork("10.0.0.0/28")
                     .withPrimaryPrivateIPAddressDynamic()
                     .withoutPrimaryPublicIPAddress()
-                    .withSpecializedOsDisk(newOSDisk, OperatingSystemTypes.LINUX)
+                    .withSpecializedOSDisk(newOSDisk, OperatingSystemTypes.LINUX)
                     .withExistingDataDisk(newDataDisk)
                     .withSize(VirtualMachineSizeTypes.STANDARD_D3_V2)
                     .create();
@@ -383,10 +377,10 @@ public final class ManageManagedDisks {
     private static VirtualMachine prepareSpecializedUnmanagedVirtualMachine(Azure azure, Region region, String rgName) {
         final String userName = "tirekicker";
         final String password = "12NewPA$$w0rd!";
-        final String linuxVmName1 = SdkContext.randomResourceName("vm" + "-", 10);
+        final String linuxVMName1 = SdkContext.randomResourceName("vm" + "-", 10);
         final String publicIpDnsLabel = SdkContext.randomResourceName("pip" + "-", 20);
 
-        VirtualMachine linuxVM = azure.virtualMachines().define(linuxVmName1)
+        VirtualMachine linuxVM = azure.virtualMachines().define(linuxVMName1)
                 .withRegion(region)
                 .withNewResourceGroup(rgName)
                 .withNewPrimaryNetwork("10.0.0.0/28")
@@ -421,15 +415,15 @@ public final class ManageManagedDisks {
     private static VirtualMachine prepareSpecializedManagedVirtualMachine(Azure azure, Region region, String rgName) {
         final String userName = "tirekicker";
         final String password = "12NewPA$$w0rd!";
-        final String linuxVmName1 = SdkContext.randomResourceName("vm" + "-", 10);
-        final String publicIpDnsLabel = SdkContext.randomResourceName("pip" + "-", 20);
+        final String linuxVMName1 = SdkContext.randomResourceName("vm" + "-", 10);
+        final String publicIPDnsLabel = SdkContext.randomResourceName("pip" + "-", 20);
 
-        VirtualMachine linuxVM = azure.virtualMachines().define(linuxVmName1)
+        VirtualMachine linuxVM = azure.virtualMachines().define(linuxVMName1)
                 .withRegion(region)
                 .withNewResourceGroup(rgName)
                 .withNewPrimaryNetwork("10.0.0.0/28")
                 .withPrimaryPrivateIPAddressDynamic()
-                .withNewPrimaryPublicIPAddress(publicIpDnsLabel)
+                .withNewPrimaryPublicIPAddress(publicIPDnsLabel)
                 .withPopularLinuxImage(KnownLinuxVirtualMachineImage.UBUNTU_SERVER_16_04_LTS)
                 .withRootUsername(userName)
                 .withRootPassword(password)
@@ -506,14 +500,39 @@ public final class ManageManagedDisks {
         LoadBalancer loadBalancer = azure.loadBalancers().define(loadBalancerName1)
                 .withRegion(region)
                 .withExistingResourceGroup(rgName)
+                // Add two rules that uses above backend and probe
+                .defineLoadBalancingRule(httpLoadBalancingRule)
+                    .withProtocol(TransportProtocol.TCP)
+                    .fromFrontend(frontendName)
+                    .fromFrontendPort(80)
+                    .toBackend(backendPoolName1)
+                    .withProbe(httpProbe)
+                    .attach()
+                .defineLoadBalancingRule(httpsLoadBalancingRule)
+                    .withProtocol(TransportProtocol.TCP)
+                    .fromFrontend(frontendName)
+                    .fromFrontendPort(443)
+                    .toBackend(backendPoolName2)
+                    .withProbe(httpsProbe)
+                    .attach()
+                // Add nat pools to enable direct VM connectivity for
+                //  SSH to port 22 and TELNET to port 23
+                .defineInboundNatPool(natPool50XXto22)
+                    .withProtocol(TransportProtocol.TCP)
+                    .fromFrontend(frontendName)
+                    .fromFrontendPortRange(5000, 5099)
+                    .toBackendPort(22)
+                    .attach()
+                .defineInboundNatPool(natPool60XXto23)
+                    .withProtocol(TransportProtocol.TCP)
+                    .fromFrontend(frontendName)
+                    .fromFrontendPortRange(6000, 6099)
+                    .toBackendPort(23)
+                    .attach()
+                // Explicitly define a frontend
                 .definePublicFrontend(frontendName)
-                .withExistingPublicIPAddress(publicIPAddress)
-                .attach()
-                // Add two backend one per rule
-                .defineBackend(backendPoolName1)
-                .attach()
-                .defineBackend(backendPoolName2)
-                .attach()
+                    .withExistingPublicIPAddress(publicIPAddress)
+                    .attach()
                 // Add two probes one per rule
                 .defineHttpProbe(httpProbe)
                     .withRequestPath("/")
@@ -523,35 +542,7 @@ public final class ManageManagedDisks {
                     .withRequestPath("/")
                     .withPort(443)
                     .attach()
-                // Add two rules that uses above backend and probe
-                .defineLoadBalancingRule(httpLoadBalancingRule)
-                    .withProtocol(TransportProtocol.TCP)
-                    .withFrontend(frontendName)
-                    .withFrontendPort(80)
-                    .withProbe(httpProbe)
-                    .withBackend(backendPoolName1)
-                    .attach()
-                .defineLoadBalancingRule(httpsLoadBalancingRule)
-                    .withProtocol(TransportProtocol.TCP)
-                    .withFrontend(frontendName)
-                    .withFrontendPort(443)
-                    .withProbe(httpsProbe)
-                    .withBackend(backendPoolName2)
-                    .attach()
-                // Add nat pools to enable direct VM connectivity for
-                //  SSH to port 22 and TELNET to port 23
-                .defineInboundNatPool(natPool50XXto22)
-                    .withProtocol(TransportProtocol.TCP)
-                    .withFrontend(frontendName)
-                    .withFrontendPortRange(5000, 5099)
-                    .withBackendPort(22)
-                    .attach()
-                .defineInboundNatPool(natPool60XXto23)
-                    .withProtocol(TransportProtocol.TCP)
-                    .withFrontend(frontendName)
-                    .withFrontendPortRange(6000, 6099)
-                    .withBackendPort(23)
-                    .attach()
+
                 .create();
         return loadBalancer;
     }

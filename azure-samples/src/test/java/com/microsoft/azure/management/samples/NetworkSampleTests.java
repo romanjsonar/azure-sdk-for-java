@@ -23,6 +23,11 @@ public class NetworkSampleTests extends SamplesTestBase {
     }
 
     @Test
+    public void testCreateSimpleInternetFacingLoadBalancer() {
+        Assert.assertTrue(CreateSimpleInternetFacingLoadBalancer.runSample(azure));
+    }
+
+    @Test
     public void testManageInternetFacingLoadBalancer() {
         Assert.assertTrue(ManageInternetFacingLoadBalancer.runSample(azure));
     }
@@ -55,5 +60,10 @@ public class NetworkSampleTests extends SamplesTestBase {
     @Test
     public void testManageVirtualNetwork() {
         Assert.assertTrue(ManageVirtualNetwork.runSample(azure));
+    }
+
+    @Test
+    public void testManageVirtualNetworkAsync() {
+        Assert.assertTrue(ManageVirtualNetworkAsync.runSample(azure));
     }
 }

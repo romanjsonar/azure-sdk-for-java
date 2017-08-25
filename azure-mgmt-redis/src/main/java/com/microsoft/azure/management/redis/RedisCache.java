@@ -5,7 +5,6 @@
  */
 
 package com.microsoft.azure.management.redis;
-
 import org.joda.time.Period;
 
 import com.microsoft.azure.management.apigeneration.Fluent;
@@ -96,6 +95,12 @@ public interface RedisCache extends
      * @return the staticIP value
      */
     String staticIP();
+
+    /**
+     * @return a Redis Cache's access keys. This operation requires write permission to the Cache resource.
+     */
+    @Method
+    RedisAccessKeys getKeys();
 
     /**
      * @return a Redis Cache's access keys. This operation requires write permission to the Cache resource.

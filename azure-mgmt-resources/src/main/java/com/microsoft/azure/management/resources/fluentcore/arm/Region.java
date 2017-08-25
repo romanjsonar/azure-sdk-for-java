@@ -19,7 +19,7 @@ public final class Region {
     // This needs to be at the beginning for the initialization to happen correctly
     private static final Map<String, Region> VALUES_BY_NAME = new HashMap<>();
 
-    // CHECKSTYLE IGNORE Javadoc FOR NEXT 48 LINES
+    // CHECKSTYLE IGNORE Javadoc FOR NEXT 50 LINES
     /**************************************************
      * Azure Cloud - Americas
      **************************************************/
@@ -53,6 +53,8 @@ public final class Region {
     public static final Region INDIA_CENTRAL = new Region("centralindia", "Central India");
     public static final Region INDIA_SOUTH = new Region("southindia", "South India");
     public static final Region INDIA_WEST = new Region("westindia", "West India");
+    public static final Region KOREA_CENTRAL = new Region("koreacentral", "Korea Central");
+    public static final Region KOREA_SOUTH = new Region("koreasouth", "Korea South");
     /**************************************************
      * Azure China Cloud
      **************************************************/
@@ -73,8 +75,7 @@ public final class Region {
     private final String label;
 
     /**
-     * Get an array of pre-defined regions.
-     * @return an array of pre-defined regions.
+     * @return predefined Azure regions
      */
     public static Region[] values() {
         Collection<Region> valuesCollection = VALUES_BY_NAME.values();
@@ -159,7 +160,7 @@ public final class Region {
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return this.name.hashCode();
     }
 
     @Override
@@ -170,7 +171,7 @@ public final class Region {
             return true;
         } else {
             Region rhs = (Region) obj;
-            return name.equalsIgnoreCase(rhs.name);
+            return this.name.equalsIgnoreCase(rhs.name);
         }
     }
 }

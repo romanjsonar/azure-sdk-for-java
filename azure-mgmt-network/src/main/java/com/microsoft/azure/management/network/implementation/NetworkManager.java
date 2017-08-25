@@ -5,16 +5,13 @@
  */
 package com.microsoft.azure.management.network.implementation;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.microsoft.azure.AzureEnvironment;
-import com.microsoft.rest.RestClient;
+import com.microsoft.azure.AzureResponseBuilder;
 import com.microsoft.azure.SubResource;
 import com.microsoft.azure.credentials.AzureTokenCredentials;
+import com.microsoft.azure.management.apigeneration.Beta;
+import com.microsoft.azure.management.network.ApplicationGateway;
+import com.microsoft.azure.management.network.ApplicationGatewayBackend;
 import com.microsoft.azure.management.network.ApplicationGateways;
 import com.microsoft.azure.management.network.LoadBalancers;
 import com.microsoft.azure.management.network.Network;
@@ -25,10 +22,22 @@ import com.microsoft.azure.management.network.Networks;
 import com.microsoft.azure.management.network.PublicIPAddresses;
 import com.microsoft.azure.management.network.RouteTables;
 import com.microsoft.azure.management.network.Subnet;
+import com.microsoft.azure.management.network.NetworkWatchers;
 import com.microsoft.azure.management.resources.fluentcore.arm.AzureConfigurable;
 import com.microsoft.azure.management.resources.fluentcore.arm.ResourceUtils;
 import com.microsoft.azure.management.resources.fluentcore.arm.implementation.AzureConfigurableImpl;
 import com.microsoft.azure.management.resources.fluentcore.arm.implementation.Manager;
+import com.microsoft.azure.management.resources.fluentcore.utils.ProviderRegistrationInterceptor;
+import com.microsoft.azure.management.resources.fluentcore.utils.ResourceManagerThrottlingInterceptor;
+import com.microsoft.azure.serializer.AzureJacksonAdapter;
+import com.microsoft.rest.RestClient;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Entry point to Azure network management.
@@ -44,6 +53,7 @@ public final class NetworkManager extends Manager<NetworkManager, NetworkManagem
     private RouteTables routeTables;
     private ApplicationGateways applicationGateways;
     private NetworkUsages networkUsages;
+    private NetworkWatchers networkWatchers;
 
     /**
      * Get a Configurable instance that can be used to create {@link NetworkManager}
@@ -66,6 +76,10 @@ public final class NetworkManager extends Manager<NetworkManager, NetworkManagem
         return new NetworkManager(new RestClient.Builder()
                 .withBaseUrl(credentials.environment(), AzureEnvironment.Endpoint.RESOURCE_MANAGER)
                 .withCredentials(credentials)
+                .withSerializerAdapter(new AzureJacksonAdapter())
+                .withResponseBuilderFactory(new AzureResponseBuilder.Factory())
+                .withInterceptor(new ProviderRegistrationInterceptor(credentials))
+                .withInterceptor(new ResourceManagerThrottlingInterceptor())
                 .build(), subscriptionId);
     }
 
@@ -164,7 +178,7 @@ public final class NetworkManager extends Manager<NetworkManager, NetworkManagem
     }
 
     /**
-     * @return entry point to appplication gateway management
+     * @return entry point to application gateway management
      */
     public ApplicationGateways applicationGateways() {
         if (this.applicationGateways == null) {
@@ -176,6 +190,7 @@ public final class NetworkManager extends Manager<NetworkManager, NetworkManagem
     /**
      * @return entry point to load balancer management
      */
+    @Beta
     public LoadBalancers loadBalancers() {
         if (this.loadBalancers == null) {
             this.loadBalancers = new LoadBalancersImpl(this);
@@ -193,7 +208,17 @@ public final class NetworkManager extends Manager<NetworkManager, NetworkManagem
         return this.networkUsages;
     }
 
-    // Internal utility funtion
+    /**
+     * @return entry point to network watchers management API entry point
+     */
+    public NetworkWatchers networkWatchers() {
+        if (this.networkWatchers == null) {
+            this.networkWatchers = new NetworkWatchersImpl(this);
+        }
+        return this.networkWatchers;
+    }
+
+    // Internal utility function
     Subnet getAssociatedSubnet(SubResource subnetRef) {
         if (subnetRef == null) {
             return null;
@@ -222,10 +247,10 @@ public final class NetworkManager extends Manager<NetworkManager, NetworkManagem
         if (subnetRefs != null) {
             for (SubnetInner subnetRef : subnetRefs) {
                 String networkId = ResourceUtils.parentResourceIdFromResourceId(subnetRef.id());
-                Network network = networks.get(networkId);
+                Network network = networks.get(networkId.toLowerCase());
                 if (network == null) {
                     network = this.networks().getById(networkId);
-                    networks.put(networkId, network);
+                    networks.put(networkId.toLowerCase(), network);
                 }
 
                 String subnetName = ResourceUtils.nameFromResourceId(subnetRef.id());
@@ -234,5 +259,27 @@ public final class NetworkManager extends Manager<NetworkManager, NetworkManagem
         }
 
         return Collections.unmodifiableList(subnets);
+    }
+
+    // Internal utility function
+    Collection<ApplicationGatewayBackend> listAssociatedApplicationGatewayBackends(List<ApplicationGatewayBackendAddressPoolInner> backendRefs) {
+        final Map<String, ApplicationGateway> appGateways = new HashMap<>();
+        final List<ApplicationGatewayBackend> backends = new ArrayList<>();
+
+        if (backendRefs != null) {
+            for (ApplicationGatewayBackendAddressPoolInner backendRef : backendRefs) {
+                String appGatewayId = ResourceUtils.parentResourceIdFromResourceId(backendRef.id());
+                ApplicationGateway appGateway = appGateways.get(appGatewayId.toLowerCase());
+                if (appGateway == null) {
+                    appGateway = this.applicationGateways().getById(appGatewayId);
+                    appGateways.put(appGatewayId.toLowerCase(), appGateway);
+                }
+
+                String backendName = ResourceUtils.nameFromResourceId(backendRef.id());
+                backends.add(appGateway.backends().get(backendName));
+            }
+        }
+
+        return Collections.unmodifiableCollection(backends);
     }
 }

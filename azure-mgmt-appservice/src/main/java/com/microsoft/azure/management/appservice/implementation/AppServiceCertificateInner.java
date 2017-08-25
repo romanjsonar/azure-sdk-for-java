@@ -8,26 +8,23 @@
 
 package com.microsoft.azure.management.appservice.implementation;
 
-import com.microsoft.azure.management.appservice.KeyVaultSecretStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.microsoft.rest.serializer.JsonFlatten;
-import com.microsoft.azure.Resource;
+import com.microsoft.azure.management.appservice.KeyVaultSecretStatus;
 
 /**
  * Key Vault container for a certificate that is purchased through Azure.
  */
-@JsonFlatten
-public class AppServiceCertificateInner extends Resource {
+public class AppServiceCertificateInner {
     /**
-     * Key Vault Csm resource Id.
+     * Key Vault resource Id.
      */
-    @JsonProperty(value = "properties.keyVaultId")
+    @JsonProperty(value = "keyVaultId")
     private String keyVaultId;
 
     /**
      * Key Vault secret name.
      */
-    @JsonProperty(value = "properties.keyVaultSecretName")
+    @JsonProperty(value = "keyVaultSecretName")
     private String keyVaultSecretName;
 
     /**
@@ -38,7 +35,7 @@ public class AppServiceCertificateInner extends Resource {
      * 'KeyVaultSecretDoesNotExist', 'UnknownError', 'ExternalPrivateKey',
      * 'Unknown'.
      */
-    @JsonProperty(value = "properties.provisioningState", access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(value = "provisioningState", access = JsonProperty.Access.WRITE_ONLY)
     private KeyVaultSecretStatus provisioningState;
 
     /**
@@ -54,7 +51,7 @@ public class AppServiceCertificateInner extends Resource {
      * Set the keyVaultId value.
      *
      * @param keyVaultId the keyVaultId value to set
-     * @return the AppServiceCertificateInner object itself.
+     * @return the AppServiceCertificate object itself.
      */
     public AppServiceCertificateInner withKeyVaultId(String keyVaultId) {
         this.keyVaultId = keyVaultId;
@@ -74,7 +71,7 @@ public class AppServiceCertificateInner extends Resource {
      * Set the keyVaultSecretName value.
      *
      * @param keyVaultSecretName the keyVaultSecretName value to set
-     * @return the AppServiceCertificateInner object itself.
+     * @return the AppServiceCertificate object itself.
      */
     public AppServiceCertificateInner withKeyVaultSecretName(String keyVaultSecretName) {
         this.keyVaultSecretName = keyVaultSecretName;

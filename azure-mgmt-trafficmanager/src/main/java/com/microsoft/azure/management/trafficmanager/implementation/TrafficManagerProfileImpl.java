@@ -8,6 +8,8 @@ package com.microsoft.azure.management.trafficmanager.implementation;
 import com.microsoft.azure.management.apigeneration.LangDefinition;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.implementation.GroupableResourceImpl;
 import com.microsoft.azure.management.resources.fluentcore.utils.Utils;
+import com.microsoft.azure.management.trafficmanager.MonitorProtocol;
+import com.microsoft.azure.management.trafficmanager.ProfileStatus;
 import com.microsoft.azure.management.trafficmanager.TrafficManagerAzureEndpoint;
 import com.microsoft.azure.management.trafficmanager.TrafficManagerExternalEndpoint;
 import com.microsoft.azure.management.trafficmanager.TrafficManagerNestedProfileEndpoint;
@@ -34,8 +36,6 @@ class TrafficManagerProfileImpl
             TrafficManagerProfile,
             TrafficManagerProfile.Definition,
             TrafficManagerProfile.Update {
-    private final String profileStatusDisabled = "Disabled";
-    private final String profileStatusEnabled = "Enabled";
     private TrafficManagerEndpointsImpl endpoints;
 
     TrafficManagerProfileImpl(String name, final ProfileInner innerModel, final TrafficManager trafficManager) {
@@ -60,17 +60,17 @@ class TrafficManagerProfileImpl
 
     @Override
     public boolean isEnabled() {
-        return this.inner().profileStatus().equalsIgnoreCase(this.profileStatusEnabled);
+        return this.inner().profileStatus().equals(ProfileStatus.ENABLED);
     }
 
     @Override
     public TrafficRoutingMethod trafficRoutingMethod() {
-        return TrafficRoutingMethod.fromValue(this.inner().trafficRoutingMethod());
+        return this.inner().trafficRoutingMethod();
     }
 
     @Override
     public ProfileMonitorStatus monitorStatus() {
-        return new ProfileMonitorStatus(this.inner().monitorConfig().profileMonitorStatus());
+        return this.inner().monitorConfig().profileMonitorStatus();
     }
 
     @Override
@@ -101,12 +101,21 @@ class TrafficManagerProfileImpl
     }
 
     @Override
-    public TrafficManagerProfile refresh() {
-        ProfileInner inner = this.manager().inner().profiles().get(
+    public Observable<TrafficManagerProfile> refreshAsync() {
+        return super.refreshAsync().map(new Func1<TrafficManagerProfile, TrafficManagerProfile>() {
+            @Override
+            public TrafficManagerProfile call(TrafficManagerProfile trafficManagerProfile) {
+                TrafficManagerProfileImpl impl = (TrafficManagerProfileImpl) trafficManagerProfile;
+                impl.endpoints.refresh();
+                return impl;
+            }
+        });
+    }
+
+    @Override
+    protected Observable<ProfileInner> getInnerAsync() {
+        return this.manager().inner().profiles().getByResourceGroupAsync(
                 this.resourceGroupName(), this.name());
-        this.setInner(inner);
-        this.endpoints.refresh();
-        return this;
     }
 
     @Override
@@ -117,25 +126,27 @@ class TrafficManagerProfileImpl
 
     @Override
     public TrafficManagerProfileImpl withPriorityBasedRouting() {
-        this.withTrafficRoutingMethod(TrafficRoutingMethod.PRIORITY);
-        return this;
+        return this.withTrafficRoutingMethod(TrafficRoutingMethod.PRIORITY);
     }
 
     @Override
     public TrafficManagerProfileImpl withWeightBasedRouting() {
-        this.withTrafficRoutingMethod(TrafficRoutingMethod.WEIGHTED);
-        return this;
+        return this.withTrafficRoutingMethod(TrafficRoutingMethod.WEIGHTED);
     }
 
     @Override
     public TrafficManagerProfileImpl withPerformanceBasedRouting() {
-        this.withTrafficRoutingMethod(TrafficRoutingMethod.PERFORMANCE);
-        return this;
+        return this.withTrafficRoutingMethod(TrafficRoutingMethod.PERFORMANCE);
+    }
+
+    @Override
+    public TrafficManagerProfileImpl withGeographicBasedRouting() {
+        return this.withTrafficRoutingMethod(TrafficRoutingMethod.GEOGRAPHIC);
     }
 
     @Override
     public TrafficManagerProfileImpl withTrafficRoutingMethod(TrafficRoutingMethod routingMethod) {
-        this.inner().withTrafficRoutingMethod(routingMethod.toString());
+        this.inner().withTrafficRoutingMethod(routingMethod);
         return this;
     }
 
@@ -190,7 +201,7 @@ class TrafficManagerProfileImpl
         this.inner().monitorConfig()
             .withPort(new Long(port))
             .withPath(path)
-            .withProtocol("http");
+            .withProtocol(MonitorProtocol.HTTP);
         return this;
     }
 
@@ -199,19 +210,19 @@ class TrafficManagerProfileImpl
         this.inner().monitorConfig()
             .withPort(new Long(port))
             .withPath(path)
-            .withProtocol("https");
+            .withProtocol(MonitorProtocol.HTTPS);
         return this;
     }
 
     @Override
     public TrafficManagerProfileImpl withProfileStatusDisabled() {
-        this.inner().withProfileStatus(this.profileStatusDisabled);
+        this.inner().withProfileStatus(ProfileStatus.DISABLED);
         return this;
     }
 
     @Override
     public TrafficManagerProfileImpl withProfileStatusEnabled() {
-        this.inner().withProfileStatus(this.profileStatusEnabled);
+        this.inner().withProfileStatus(ProfileStatus.ENABLED);
         return this;
     }
 

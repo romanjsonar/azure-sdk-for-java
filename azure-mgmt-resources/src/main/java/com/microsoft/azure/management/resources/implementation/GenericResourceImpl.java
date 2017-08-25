@@ -77,8 +77,14 @@ final class GenericResourceImpl
     }
 
     @Override
-    public GenericResource refresh() {
-        return null;
+    protected Observable<GenericResourceInner> getInnerAsync() {
+        return this.manager().inner().resources().getAsync(
+                resourceGroupName(),
+                resourceProviderNamespace(),
+                parentResourcePath(),
+                resourceType(),
+                name(),
+                apiVersion());
     }
 
     public GenericResourceImpl withProperties(Object properties) {

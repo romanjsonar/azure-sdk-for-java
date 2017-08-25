@@ -17,11 +17,16 @@ import com.microsoft.azure.management.cdn.Sku;
 import com.microsoft.azure.management.cdn.SkuName;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.implementation.GroupableResourceImpl;
 import com.microsoft.azure.management.resources.fluentcore.utils.PagedListConverter;
+import com.microsoft.rest.ServiceCallback;
+import com.microsoft.rest.ServiceFuture;
+import rx.Completable;
 import rx.Observable;
 import rx.functions.Func1;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation for CdnProfile.
@@ -52,23 +57,57 @@ class CdnProfileImpl
 
     @Override
     public String generateSsoUri() {
-        SsoUriInner ssoUri = this.manager().inner().profiles().generateSsoUri(
+        return this.generateSsoUriAsync().toBlocking().last();
+    }
+
+    @Override
+    public Observable<String> generateSsoUriAsync() {
+        return this.manager().inner().profiles().generateSsoUriAsync(
                 this.resourceGroupName(),
-                this.name());
-        if (ssoUri != null) {
-            return ssoUri.ssoUriValue();
-        }
-        return null;
+                this.name()).map(new Func1<SsoUriInner, String>() {
+            @Override
+            public String call(SsoUriInner ssoUriInner) {
+                if (ssoUriInner != null) {
+                    return ssoUriInner.ssoUriValue();
+                }
+                return null;
+            }
+        });
+    }
+
+    @Override
+    public ServiceFuture<String> generateSsoUriAsync(ServiceCallback<String> callback) {
+        return ServiceFuture.fromBody(this.generateSsoUriAsync(), callback);
     }
 
     @Override
     public void startEndpoint(String endpointName) {
-        this.manager().inner().endpoints().start(this.resourceGroupName(), this.name(), endpointName);
+        this.startEndpointAsync(endpointName).await();
+    }
+
+    @Override
+    public Completable startEndpointAsync(String endpointName) {
+        return this.manager().inner().endpoints().startAsync(this.resourceGroupName(), this.name(), endpointName).toCompletable();
+    }
+
+    @Override
+    public ServiceFuture<Void> startEndpointAsync(String endpointName, ServiceCallback<Void> callback) {
+        return ServiceFuture.fromBody(this.startEndpointAsync(endpointName).<Void>toObservable(), callback);
     }
 
     @Override
     public void stopEndpoint(String endpointName) {
-        this.manager().inner().endpoints().stop(this.resourceGroupName(), this.name(), endpointName);
+        this.stopEndpointAsync(endpointName).await();
+    }
+
+    @Override
+    public Completable stopEndpointAsync(String endpointName) {
+        return this.manager().inner().endpoints().stopAsync(this.resourceGroupName(), this.name(), endpointName).toCompletable();
+    }
+
+    @Override
+    public ServiceFuture<Void> stopEndpointAsync(String endpointName, ServiceCallback<Void> callback) {
+        return ServiceFuture.fromBody(this.stopEndpointAsync(endpointName).<Void>toObservable(), callback);
     }
 
     @Override
@@ -84,28 +123,80 @@ class CdnProfileImpl
     }
 
     @Override
-    public void purgeEndpointContent(String endpointName, List<String> contentPaths) {
-        this.manager().inner().endpoints().purgeContent(this.resourceGroupName(), this.name(), endpointName, contentPaths);
+    public void purgeEndpointContent(String endpointName, Set<String> contentPaths) {
+        this.purgeEndpointContentAsync(endpointName, contentPaths).await();
     }
 
     @Override
-    public void loadEndpointContent(String endpointName, List<String> contentPaths) {
-        this.manager().inner().endpoints().loadContent(this.resourceGroupName(), this.name(), endpointName, contentPaths);
+    public Completable purgeEndpointContentAsync(String endpointName, Set<String> contentPaths) {
+        if (contentPaths != null) {
+            return this.manager().inner().endpoints().purgeContentAsync(this.resourceGroupName(), this.name(), endpointName, new ArrayList<>(contentPaths)).toCompletable();
+        } else {
+            return Observable.empty().toCompletable();
+        }
+    }
+
+    @Override
+    public ServiceFuture<Void> purgeEndpointContentAsync(String endpointName, Set<String> contentPaths, ServiceCallback<Void> callback) {
+        return ServiceFuture.fromBody(this.purgeEndpointContentAsync(endpointName, contentPaths).<Void>toObservable(), callback);
+    }
+
+    @Override
+    public void loadEndpointContent(String endpointName, Set<String> contentPaths) {
+        this.loadEndpointContentAsync(endpointName, contentPaths).await();
+    }
+
+    @Override
+    public Completable loadEndpointContentAsync(String endpointName, Set<String> contentPaths) {
+        if (contentPaths != null) {
+            return this.manager().inner().endpoints().loadContentAsync(this.resourceGroupName(), this.name(), endpointName, new ArrayList<>(contentPaths)).toCompletable();
+        } else {
+            return Observable.empty().toCompletable();
+        }
+    }
+
+    @Override
+    public ServiceFuture<Void> loadEndpointContentAsync(String endpointName, Set<String> contentPaths, ServiceCallback<Void> callback) {
+        return ServiceFuture.fromBody(this.loadEndpointContentAsync(endpointName, contentPaths).<Void>toObservable(), callback);
     }
 
     @Override
     public CustomDomainValidationResult validateEndpointCustomDomain(String endpointName, String hostName) {
-        return new CustomDomainValidationResult(
-                this.manager().inner().endpoints().validateCustomDomain(
-                        this.resourceGroupName(),
-                        this.name(),
-                        endpointName,
-                        hostName));
+        return this.validateEndpointCustomDomainAsync(endpointName, hostName).toBlocking().last();
+    }
+
+    @Override
+    public Observable<CustomDomainValidationResult> validateEndpointCustomDomainAsync(String endpointName, String hostName) {
+        return this.manager().inner().endpoints().validateCustomDomainAsync(
+                this.resourceGroupName(),
+                this.name(),
+                endpointName,
+                hostName).map(new Func1<ValidateCustomDomainOutputInner, CustomDomainValidationResult>() {
+            @Override
+            public CustomDomainValidationResult call(ValidateCustomDomainOutputInner validateCustomDomainOutputInner) {
+                return new CustomDomainValidationResult(validateCustomDomainOutputInner);
+            }
+        });
+    }
+
+    @Override
+    public ServiceFuture<CustomDomainValidationResult> validateEndpointCustomDomainAsync(String endpointName, String hostName, ServiceCallback<CustomDomainValidationResult> callback) {
+        return ServiceFuture.fromBody(this.validateEndpointCustomDomainAsync(endpointName, hostName), callback);
     }
 
     @Override
     public CheckNameAvailabilityResult checkEndpointNameAvailability(String name) {
-        return this.manager().profiles().checkEndpointNameAvailability(name);
+        return this.checkEndpointNameAvailabilityAsync(name).toBlocking().last();
+    }
+
+    @Override
+    public Observable<CheckNameAvailabilityResult> checkEndpointNameAvailabilityAsync(String name) {
+        return this.manager().profiles().checkEndpointNameAvailabilityAsync(name);
+    }
+
+    @Override
+    public ServiceFuture<CheckNameAvailabilityResult> checkEndpointNameAvailabilityAsync(String name, ServiceCallback<CheckNameAvailabilityResult> callback) {
+        return ServiceFuture.fromBody(this.checkEndpointNameAvailabilityAsync(name), callback);
     }
 
     @Override
@@ -134,11 +225,8 @@ class CdnProfileImpl
     }
 
     @Override
-    public CdnProfileImpl refresh() {
-        ProfileInner cdnProfileInner =
-                this.manager().inner().profiles().get(this.resourceGroupName(), this.name());
-        this.setInner(cdnProfileInner);
-        return this;
+    protected Observable<ProfileInner> getInnerAsync() {
+        return this.manager().inner().profiles().getByResourceGroupAsync(this.resourceGroupName(), this.name());
     }
 
     @Override

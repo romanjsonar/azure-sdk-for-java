@@ -30,7 +30,6 @@ public class TestRouteTables {
      * Test of minimal route tables.
      */
     public static class Minimal extends TestTemplate<RouteTable, RouteTables> {
-
         @Override
         public RouteTable createResource(RouteTables routeTables) throws Exception {
             final String newName = "rt" + this.testId;
@@ -108,7 +107,7 @@ public class TestRouteTables {
             Assert.assertTrue(routeTable.routes().containsKey(ROUTE2_NAME));
             Assert.assertTrue(routeTable.routes().containsKey(ROUTE_ADDED_NAME));
 
-            routeTable.manager().networks().getByGroup(routeTable.resourceGroupName(), "net" + this.testId).update()
+            routeTable.manager().networks().getByResourceGroup(routeTable.resourceGroupName(), "net" + this.testId).update()
                 .updateSubnet("subnet1")
                     .withoutRouteTable()
                         .parent()
@@ -126,11 +125,11 @@ public class TestRouteTables {
         }
     }
 
-	/**
-	 * Outputs info about a route table
-	 * @param resource a route table
-	 */
-	public static void printRouteTable(RouteTable resource) {
+    /**
+     * Outputs info about a route table
+     * @param resource a route table
+     */
+    public static void printRouteTable(RouteTable resource) {
         StringBuilder info = new StringBuilder();
         info.append("Route table: ").append(resource.id())
                 .append("\n\tName: ").append(resource.name())
@@ -159,5 +158,5 @@ public class TestRouteTables {
         }
 
         System.out.println(info.toString());
-	}
+    }
 }

@@ -12,6 +12,8 @@ import com.microsoft.azure.management.compute.VirtualMachineExtensionImage;
 import com.microsoft.azure.management.compute.VirtualMachineExtensionInstanceView;
 import com.microsoft.azure.management.resources.fluentcore.arm.ResourceUtils;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.implementation.ExternalChildResourceImpl;
+import com.microsoft.azure.management.resources.fluentcore.utils.RXMapper;
+
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -213,17 +215,14 @@ class VirtualMachineExtensionImpl
     }
 
     @Override
-    public VirtualMachineExtensionImpl refresh() {
+    protected Observable<VirtualMachineExtensionInner> getInnerAsync() {
         String name;
         if (this.isReference()) {
             name = ResourceUtils.nameFromResourceId(this.inner().id());
         } else {
             name = this.inner().name();
         }
-        VirtualMachineExtensionInner inner =
-                this.client.get(this.parent().resourceGroupName(), this.parent().name(), name);
-        this.setInner(inner);
-        return this;
+        return this.client.getAsync(this.parent().resourceGroupName(), this.parent().name(), name);
     }
 
     // Implementation of ExternalChildResourceImpl createAsyncStreaming,  updateAsync and deleteAsync
@@ -288,15 +287,10 @@ class VirtualMachineExtensionImpl
 
     @Override
     public Observable<Void> deleteAsync() {
-        return this.client.deleteAsync(this.parent().resourceGroupName(),
+        return RXMapper.mapToVoid(this.client.deleteAsync(
+                this.parent().resourceGroupName(),
                 this.parent().name(),
-                this.name())
-                .map(new Func1<Object, Void>() {
-                    @Override
-                    public Void call(Object o) {
-                        return null;
-                    }
-                });
+                this.name()));
     }
 
     /**

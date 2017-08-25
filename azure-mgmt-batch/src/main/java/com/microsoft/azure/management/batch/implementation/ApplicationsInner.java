@@ -64,7 +64,7 @@ public class ApplicationsInner {
     interface ApplicationsService {
         @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.batch.Applications create" })
         @PUT("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/applications/{applicationId}")
-        Observable<Response<ResponseBody>> create(@Path("resourceGroupName") String resourceGroupName, @Path("accountName") String accountName, @Path("applicationId") String applicationId, @Path("subscriptionId") String subscriptionId, @Body AddApplicationParametersInner parameters, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        Observable<Response<ResponseBody>> create(@Path("resourceGroupName") String resourceGroupName, @Path("accountName") String accountName, @Path("applicationId") String applicationId, @Path("subscriptionId") String subscriptionId, @Body ApplicationCreateParametersInner parameters, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
         @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.batch.Applications delete" })
         @HTTP(path = "subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/applications/{applicationId}", method = "DELETE", hasBody = true)
@@ -76,7 +76,7 @@ public class ApplicationsInner {
 
         @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.batch.Applications update" })
         @PATCH("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/applications/{applicationId}")
-        Observable<Response<ResponseBody>> update(@Path("resourceGroupName") String resourceGroupName, @Path("accountName") String accountName, @Path("applicationId") String applicationId, @Path("subscriptionId") String subscriptionId, @Body UpdateApplicationParametersInner parameters, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
+        Observable<Response<ResponseBody>> update(@Path("resourceGroupName") String resourceGroupName, @Path("accountName") String accountName, @Path("applicationId") String applicationId, @Path("subscriptionId") String subscriptionId, @Body ApplicationUpdateParametersInner parameters, @Query("api-version") String apiVersion, @Header("accept-language") String acceptLanguage, @Header("User-Agent") String userAgent);
 
         @Headers({ "Content-Type: application/json; charset=utf-8", "x-ms-logging-context: com.microsoft.azure.management.batch.Applications list" })
         @GET("subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Batch/batchAccounts/{accountName}/applications")
@@ -94,6 +94,9 @@ public class ApplicationsInner {
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the ApplicationInner object if successful.
      */
     public ApplicationInner create(String resourceGroupName, String accountName, String applicationId) {
@@ -107,6 +110,7 @@ public class ApplicationsInner {
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<ApplicationInner> createAsync(String resourceGroupName, String accountName, String applicationId, final ServiceCallback<ApplicationInner> serviceCallback) {
@@ -119,6 +123,7 @@ public class ApplicationsInner {
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the ApplicationInner object
      */
     public Observable<ApplicationInner> createAsync(String resourceGroupName, String accountName, String applicationId) {
@@ -136,6 +141,7 @@ public class ApplicationsInner {
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the ApplicationInner object
      */
     public Observable<ServiceResponse<ApplicationInner>> createWithServiceResponseAsync(String resourceGroupName, String accountName, String applicationId) {
@@ -154,7 +160,7 @@ public class ApplicationsInner {
         if (this.client.apiVersion() == null) {
             throw new IllegalArgumentException("Parameter this.client.apiVersion() is required and cannot be null.");
         }
-        final AddApplicationParametersInner parameters = null;
+        final ApplicationCreateParametersInner parameters = null;
         return service.create(resourceGroupName, accountName, applicationId, this.client.subscriptionId(), parameters, this.client.apiVersion(), this.client.acceptLanguage(), this.client.userAgent())
             .flatMap(new Func1<Response<ResponseBody>, Observable<ServiceResponse<ApplicationInner>>>() {
                 @Override
@@ -176,9 +182,12 @@ public class ApplicationsInner {
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
      * @param parameters The parameters for the request.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the ApplicationInner object if successful.
      */
-    public ApplicationInner create(String resourceGroupName, String accountName, String applicationId, AddApplicationParametersInner parameters) {
+    public ApplicationInner create(String resourceGroupName, String accountName, String applicationId, ApplicationCreateParametersInner parameters) {
         return createWithServiceResponseAsync(resourceGroupName, accountName, applicationId, parameters).toBlocking().single().body();
     }
 
@@ -190,9 +199,10 @@ public class ApplicationsInner {
      * @param applicationId The ID of the application.
      * @param parameters The parameters for the request.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<ApplicationInner> createAsync(String resourceGroupName, String accountName, String applicationId, AddApplicationParametersInner parameters, final ServiceCallback<ApplicationInner> serviceCallback) {
+    public ServiceFuture<ApplicationInner> createAsync(String resourceGroupName, String accountName, String applicationId, ApplicationCreateParametersInner parameters, final ServiceCallback<ApplicationInner> serviceCallback) {
         return ServiceFuture.fromResponse(createWithServiceResponseAsync(resourceGroupName, accountName, applicationId, parameters), serviceCallback);
     }
 
@@ -203,9 +213,10 @@ public class ApplicationsInner {
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
      * @param parameters The parameters for the request.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the ApplicationInner object
      */
-    public Observable<ApplicationInner> createAsync(String resourceGroupName, String accountName, String applicationId, AddApplicationParametersInner parameters) {
+    public Observable<ApplicationInner> createAsync(String resourceGroupName, String accountName, String applicationId, ApplicationCreateParametersInner parameters) {
         return createWithServiceResponseAsync(resourceGroupName, accountName, applicationId, parameters).map(new Func1<ServiceResponse<ApplicationInner>, ApplicationInner>() {
             @Override
             public ApplicationInner call(ServiceResponse<ApplicationInner> response) {
@@ -221,9 +232,10 @@ public class ApplicationsInner {
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
      * @param parameters The parameters for the request.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the ApplicationInner object
      */
-    public Observable<ServiceResponse<ApplicationInner>> createWithServiceResponseAsync(String resourceGroupName, String accountName, String applicationId, AddApplicationParametersInner parameters) {
+    public Observable<ServiceResponse<ApplicationInner>> createWithServiceResponseAsync(String resourceGroupName, String accountName, String applicationId, ApplicationCreateParametersInner parameters) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -267,6 +279,9 @@ public class ApplicationsInner {
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
     public void delete(String resourceGroupName, String accountName, String applicationId) {
         deleteWithServiceResponseAsync(resourceGroupName, accountName, applicationId).toBlocking().single().body();
@@ -279,6 +294,7 @@ public class ApplicationsInner {
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<Void> deleteAsync(String resourceGroupName, String accountName, String applicationId, final ServiceCallback<Void> serviceCallback) {
@@ -291,6 +307,7 @@ public class ApplicationsInner {
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<Void> deleteAsync(String resourceGroupName, String accountName, String applicationId) {
@@ -308,6 +325,7 @@ public class ApplicationsInner {
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
     public Observable<ServiceResponse<Void>> deleteWithServiceResponseAsync(String resourceGroupName, String accountName, String applicationId) {
@@ -353,6 +371,9 @@ public class ApplicationsInner {
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the ApplicationInner object if successful.
      */
     public ApplicationInner get(String resourceGroupName, String accountName, String applicationId) {
@@ -366,6 +387,7 @@ public class ApplicationsInner {
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<ApplicationInner> getAsync(String resourceGroupName, String accountName, String applicationId, final ServiceCallback<ApplicationInner> serviceCallback) {
@@ -378,6 +400,7 @@ public class ApplicationsInner {
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the ApplicationInner object
      */
     public Observable<ApplicationInner> getAsync(String resourceGroupName, String accountName, String applicationId) {
@@ -395,6 +418,7 @@ public class ApplicationsInner {
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the ApplicationInner object
      */
     public Observable<ServiceResponse<ApplicationInner>> getWithServiceResponseAsync(String resourceGroupName, String accountName, String applicationId) {
@@ -441,8 +465,11 @@ public class ApplicationsInner {
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
      * @param parameters The parameters for the request.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      */
-    public void update(String resourceGroupName, String accountName, String applicationId, UpdateApplicationParametersInner parameters) {
+    public void update(String resourceGroupName, String accountName, String applicationId, ApplicationUpdateParametersInner parameters) {
         updateWithServiceResponseAsync(resourceGroupName, accountName, applicationId, parameters).toBlocking().single().body();
     }
 
@@ -454,9 +481,10 @@ public class ApplicationsInner {
      * @param applicationId The ID of the application.
      * @param parameters The parameters for the request.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
-    public ServiceFuture<Void> updateAsync(String resourceGroupName, String accountName, String applicationId, UpdateApplicationParametersInner parameters, final ServiceCallback<Void> serviceCallback) {
+    public ServiceFuture<Void> updateAsync(String resourceGroupName, String accountName, String applicationId, ApplicationUpdateParametersInner parameters, final ServiceCallback<Void> serviceCallback) {
         return ServiceFuture.fromResponse(updateWithServiceResponseAsync(resourceGroupName, accountName, applicationId, parameters), serviceCallback);
     }
 
@@ -467,9 +495,10 @@ public class ApplicationsInner {
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
      * @param parameters The parameters for the request.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
-    public Observable<Void> updateAsync(String resourceGroupName, String accountName, String applicationId, UpdateApplicationParametersInner parameters) {
+    public Observable<Void> updateAsync(String resourceGroupName, String accountName, String applicationId, ApplicationUpdateParametersInner parameters) {
         return updateWithServiceResponseAsync(resourceGroupName, accountName, applicationId, parameters).map(new Func1<ServiceResponse<Void>, Void>() {
             @Override
             public Void call(ServiceResponse<Void> response) {
@@ -485,9 +514,10 @@ public class ApplicationsInner {
      * @param accountName The name of the Batch account.
      * @param applicationId The ID of the application.
      * @param parameters The parameters for the request.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceResponse} object if successful.
      */
-    public Observable<ServiceResponse<Void>> updateWithServiceResponseAsync(String resourceGroupName, String accountName, String applicationId, UpdateApplicationParametersInner parameters) {
+    public Observable<ServiceResponse<Void>> updateWithServiceResponseAsync(String resourceGroupName, String accountName, String applicationId, ApplicationUpdateParametersInner parameters) {
         if (resourceGroupName == null) {
             throw new IllegalArgumentException("Parameter resourceGroupName is required and cannot be null.");
         }
@@ -533,6 +563,9 @@ public class ApplicationsInner {
      *
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;ApplicationInner&gt; object if successful.
      */
     public PagedList<ApplicationInner> list(final String resourceGroupName, final String accountName) {
@@ -551,6 +584,7 @@ public class ApplicationsInner {
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<ApplicationInner>> listAsync(final String resourceGroupName, final String accountName, final ListOperationCallback<ApplicationInner> serviceCallback) {
@@ -570,6 +604,7 @@ public class ApplicationsInner {
      *
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;ApplicationInner&gt; object
      */
     public Observable<Page<ApplicationInner>> listAsync(final String resourceGroupName, final String accountName) {
@@ -587,6 +622,7 @@ public class ApplicationsInner {
      *
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;ApplicationInner&gt; object
      */
     public Observable<ServiceResponse<Page<ApplicationInner>>> listWithServiceResponseAsync(final String resourceGroupName, final String accountName) {
@@ -608,6 +644,7 @@ public class ApplicationsInner {
      *
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;ApplicationInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<ApplicationInner>>> listSinglePageAsync(final String resourceGroupName, final String accountName) {
@@ -644,6 +681,9 @@ public class ApplicationsInner {
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
      * @param maxresults The maximum number of items to return in the response.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;ApplicationInner&gt; object if successful.
      */
     public PagedList<ApplicationInner> list(final String resourceGroupName, final String accountName, final Integer maxresults) {
@@ -663,6 +703,7 @@ public class ApplicationsInner {
      * @param accountName The name of the Batch account.
      * @param maxresults The maximum number of items to return in the response.
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<ApplicationInner>> listAsync(final String resourceGroupName, final String accountName, final Integer maxresults, final ListOperationCallback<ApplicationInner> serviceCallback) {
@@ -683,6 +724,7 @@ public class ApplicationsInner {
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
      * @param maxresults The maximum number of items to return in the response.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;ApplicationInner&gt; object
      */
     public Observable<Page<ApplicationInner>> listAsync(final String resourceGroupName, final String accountName, final Integer maxresults) {
@@ -701,6 +743,7 @@ public class ApplicationsInner {
      * @param resourceGroupName The name of the resource group that contains the Batch account.
      * @param accountName The name of the Batch account.
      * @param maxresults The maximum number of items to return in the response.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;ApplicationInner&gt; object
      */
     public Observable<ServiceResponse<Page<ApplicationInner>>> listWithServiceResponseAsync(final String resourceGroupName, final String accountName, final Integer maxresults) {
@@ -723,6 +766,7 @@ public class ApplicationsInner {
     ServiceResponse<PageImpl<ApplicationInner>> * @param resourceGroupName The name of the resource group that contains the Batch account.
     ServiceResponse<PageImpl<ApplicationInner>> * @param accountName The name of the Batch account.
     ServiceResponse<PageImpl<ApplicationInner>> * @param maxresults The maximum number of items to return in the response.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;ApplicationInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<ApplicationInner>>> listSinglePageAsync(final String resourceGroupName, final String accountName, final Integer maxresults) {
@@ -763,6 +807,9 @@ public class ApplicationsInner {
      * Lists all of the applications in the specified account.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
+     * @throws CloudException thrown if the request is rejected by server
+     * @throws RuntimeException all other wrapped checked exceptions if the request fails to be sent
      * @return the PagedList&lt;ApplicationInner&gt; object if successful.
      */
     public PagedList<ApplicationInner> listNext(final String nextPageLink) {
@@ -781,6 +828,7 @@ public class ApplicationsInner {
      * @param nextPageLink The NextLink from the previous successful call to List operation.
      * @param serviceFuture the ServiceFuture object tracking the Retrofit calls
      * @param serviceCallback the async ServiceCallback to handle successful and failed responses.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the {@link ServiceFuture} object
      */
     public ServiceFuture<List<ApplicationInner>> listNextAsync(final String nextPageLink, final ServiceFuture<List<ApplicationInner>> serviceFuture, final ListOperationCallback<ApplicationInner> serviceCallback) {
@@ -799,6 +847,7 @@ public class ApplicationsInner {
      * Lists all of the applications in the specified account.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;ApplicationInner&gt; object
      */
     public Observable<Page<ApplicationInner>> listNextAsync(final String nextPageLink) {
@@ -815,6 +864,7 @@ public class ApplicationsInner {
      * Lists all of the applications in the specified account.
      *
      * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the observable to the PagedList&lt;ApplicationInner&gt; object
      */
     public Observable<ServiceResponse<Page<ApplicationInner>>> listNextWithServiceResponseAsync(final String nextPageLink) {
@@ -835,6 +885,7 @@ public class ApplicationsInner {
      * Lists all of the applications in the specified account.
      *
     ServiceResponse<PageImpl<ApplicationInner>> * @param nextPageLink The NextLink from the previous successful call to List operation.
+     * @throws IllegalArgumentException thrown if parameters fail the validation
      * @return the PagedList&lt;ApplicationInner&gt; object wrapped in {@link ServiceResponse} if successful.
      */
     public Observable<ServiceResponse<Page<ApplicationInner>>> listNextSinglePageAsync(final String nextPageLink) {

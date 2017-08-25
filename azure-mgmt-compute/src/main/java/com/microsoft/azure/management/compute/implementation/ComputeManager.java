@@ -7,22 +7,30 @@
 package com.microsoft.azure.management.compute.implementation;
 
 import com.microsoft.azure.AzureEnvironment;
+import com.microsoft.azure.AzureResponseBuilder;
+import com.microsoft.azure.credentials.AzureTokenCredentials;
+import com.microsoft.azure.management.apigeneration.Beta;
+import com.microsoft.azure.management.apigeneration.Beta.SinceVersion;
+import com.microsoft.azure.management.compute.AvailabilitySets;
+import com.microsoft.azure.management.compute.ComputeUsages;
 import com.microsoft.azure.management.compute.Disks;
 import com.microsoft.azure.management.compute.Snapshots;
 import com.microsoft.azure.management.compute.VirtualMachineCustomImages;
-import com.microsoft.rest.RestClient;
-import com.microsoft.azure.credentials.AzureTokenCredentials;
-import com.microsoft.azure.management.compute.AvailabilitySets;
-import com.microsoft.azure.management.compute.ComputeUsages;
 import com.microsoft.azure.management.compute.VirtualMachineExtensionImages;
 import com.microsoft.azure.management.compute.VirtualMachineImages;
 import com.microsoft.azure.management.compute.VirtualMachineScaleSets;
 import com.microsoft.azure.management.compute.VirtualMachines;
+import com.microsoft.azure.management.compute.ContainerServices;
+import com.microsoft.azure.management.graphrbac.implementation.GraphRbacManager;
 import com.microsoft.azure.management.network.implementation.NetworkManager;
 import com.microsoft.azure.management.resources.fluentcore.arm.AzureConfigurable;
 import com.microsoft.azure.management.resources.fluentcore.arm.implementation.AzureConfigurableImpl;
 import com.microsoft.azure.management.resources.fluentcore.arm.implementation.Manager;
+import com.microsoft.azure.management.resources.fluentcore.utils.ProviderRegistrationInterceptor;
+import com.microsoft.azure.management.resources.fluentcore.utils.ResourceManagerThrottlingInterceptor;
 import com.microsoft.azure.management.storage.implementation.StorageManager;
+import com.microsoft.azure.serializer.AzureJacksonAdapter;
+import com.microsoft.rest.RestClient;
 
 /**
  * Entry point to Azure compute resource management.
@@ -31,6 +39,8 @@ public final class ComputeManager extends Manager<ComputeManager, ComputeManagem
     // The service managers
     private StorageManager storageManager;
     private NetworkManager networkManager;
+    private GraphRbacManager rbacManager;
+
     // The collections
     private AvailabilitySets availabilitySets;
     private VirtualMachines virtualMachines;
@@ -41,6 +51,7 @@ public final class ComputeManager extends Manager<ComputeManager, ComputeManagem
     private VirtualMachineCustomImages virtualMachineCustomImages;
     private Disks disks;
     private Snapshots snapshots;
+    private ContainerServices containerServices;
 
     /**
      * Get a Configurable instance that can be used to create ComputeManager with optional configuration.
@@ -62,6 +73,10 @@ public final class ComputeManager extends Manager<ComputeManager, ComputeManagem
         return new ComputeManager(new RestClient.Builder()
                 .withBaseUrl(credentials.environment(), AzureEnvironment.Endpoint.RESOURCE_MANAGER)
                 .withCredentials(credentials)
+                .withSerializerAdapter(new AzureJacksonAdapter())
+                .withResponseBuilderFactory(new AzureResponseBuilder.Factory())
+                .withInterceptor(new ProviderRegistrationInterceptor(credentials))
+                .withInterceptor(new ResourceManagerThrottlingInterceptor())
                 .build(), subscriptionId);
     }
 
@@ -107,6 +122,7 @@ public final class ComputeManager extends Manager<ComputeManager, ComputeManagem
                 new ComputeManagementClientImpl(restClient).withSubscriptionId(subscriptionId));
         storageManager = StorageManager.authenticate(restClient, subscriptionId);
         networkManager = NetworkManager.authenticate(restClient, subscriptionId);
+        rbacManager = GraphRbacManager.authenticate(restClient, ((AzureTokenCredentials) (restClient.credentials())).domain());
     }
 
     /**
@@ -120,6 +136,17 @@ public final class ComputeManager extends Manager<ComputeManager, ComputeManagem
     }
 
     /**
+     * @return the availability set resource management API entry point
+     */
+    @Beta(SinceVersion.V1_1_0)
+    public ContainerServices containerServices() {
+        if (containerServices == null) {
+            containerServices = new ContainerServicesImpl(this);
+        }
+        return containerServices;
+    }
+
+    /**
      * @return the virtual machine resource management API entry point
      */
     public VirtualMachines virtualMachines() {
@@ -127,7 +154,8 @@ public final class ComputeManager extends Manager<ComputeManager, ComputeManagem
             virtualMachines = new VirtualMachinesImpl(
                     this,
                     storageManager,
-                    networkManager);
+                    networkManager,
+                    rbacManager);
         }
         return virtualMachines;
     }
@@ -163,7 +191,8 @@ public final class ComputeManager extends Manager<ComputeManager, ComputeManagem
             virtualMachineScaleSets = new VirtualMachineScaleSetsImpl(
                     this,
                     storageManager,
-                    networkManager);
+                    networkManager,
+                    this.rbacManager);
         }
         return virtualMachineScaleSets;
     }

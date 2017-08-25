@@ -6,13 +6,16 @@
 package com.microsoft.azure.management.storage.implementation;
 
 import com.microsoft.azure.PagedList;
+import com.microsoft.azure.management.apigeneration.LangDefinition;
 import com.microsoft.azure.management.resources.fluentcore.arm.collection.implementation.ReadableWrappersImpl;
 import com.microsoft.azure.management.storage.StorageUsage;
 import com.microsoft.azure.management.storage.Usages;
+import rx.Observable;
 
 /**
  * The implementation of {@link Usages}.
  */
+@LangDefinition
 class UsagesImpl extends ReadableWrappersImpl<StorageUsage, UsageImpl, UsageInner>
         implements Usages {
     private final StorageManagementClientImpl client;
@@ -24,6 +27,11 @@ class UsagesImpl extends ReadableWrappersImpl<StorageUsage, UsageImpl, UsageInne
     @Override
     public PagedList<StorageUsage> list() {
         return wrapList(client.usages().list());
+    }
+
+    @Override
+    public Observable<StorageUsage> listAsync() {
+        return wrapPageAsync(client.usages().listAsync());
     }
 
     @Override

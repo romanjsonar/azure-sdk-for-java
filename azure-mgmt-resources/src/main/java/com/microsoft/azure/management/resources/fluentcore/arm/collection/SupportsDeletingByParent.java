@@ -13,6 +13,8 @@ import rx.Completable;
 
 /**
  * Provides access to getting a specific Azure resource based on its resource group and parent.
+ * <p>
+ * (Note this interface is not intended to be implemented by user code.)
  */
 @LangDefinition(ContainerName = "CollectionActions", CreateAsyncMethods = true, MethodConversionType = LangDefinition.MethodConversion.OnlyMethod)
 public interface SupportsDeletingByParent {
@@ -42,7 +44,7 @@ public interface SupportsDeletingByParent {
      * @param groupName The group the resource is part of
      * @param parentName the name of parent resource.
      * @param name The name of the resource
-     * @return a completable indicates completion or exception of the request
+     * @return a representation of the deferred computation of this call
      */
     Completable deleteByParentAsync(String groupName, String parentName, String name);
 }
