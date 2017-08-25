@@ -6,20 +6,23 @@
 
 package com.microsoft.azure.management.compute;
 
+import com.microsoft.azure.management.apigeneration.Fluent;
+
 import rx.Observable;
 
 /**
  * Virtual machine encryption related operations.
  */
+@Fluent
 public interface VirtualMachineEncryption {
     /**
      * Enable encryption for virtual machine disks.
      *
-     * @param keyVaultId resource id of the key vault to store the disk encryption key
-     * @param aadClientId  client id of an AAD application which has permission to the key vault
+     * @param keyVaultId resource ID of the key vault to store the disk encryption key
+     * @param aadClientId  client ID of an AAD application which has permission to the key vault
      * @param aadSecret client secret corresponding to the aadClientId
      *
-     * @return observable that emits current volume encryption status
+     * @return a representation of the deferred computation of this call, returning the current volume encryption status
      */
     Observable<DiskVolumeEncryptionMonitor> enableAsync(String keyVaultId, String aadClientId, String aadSecret);
 
@@ -28,7 +31,7 @@ public interface VirtualMachineEncryption {
      *
      * @param encryptionSettings encryption settings for windows virtual machine
 
-     * @return observable that emits current volume encryption status
+     * @return a representation of the deferred computation of this call, returning the current volume encryption status
      */
     Observable<DiskVolumeEncryptionMonitor> enableAsync(WindowsVMDiskEncryptionConfiguration encryptionSettings);
 
@@ -37,27 +40,27 @@ public interface VirtualMachineEncryption {
      *
      * @param encryptionSettings encryption settings for windows virtual machine
      *
-     * @return observable that emits current volume encryption status
+     * @return a representation of the deferred computation of this call, returning the current volume encryption status
      */
     Observable<DiskVolumeEncryptionMonitor> enableAsync(LinuxVMDiskEncryptionConfiguration encryptionSettings);
 
     /**
      * Disable encryption for virtual machine disks.
      * @param volumeType volume type to disable encryption
-     * @return observable that emits current volume decryption status
+     * @return a representation of the deferred computation of this call, returning the current volume decryption status
      */
-    Observable<DiskVolumeEncryptionMonitor> disableAsync(final DiskVolumeType volumeType);
+    Observable<DiskVolumeEncryptionMonitor> disableAsync(DiskVolumeType volumeType);
 
     /**
-     * @return observable that emits current volume decryption status
+     * @return observable that emits current volume encryption/decryption status
      */
     Observable<DiskVolumeEncryptionMonitor> getMonitorAsync();
 
     /**
      * Enable encryption for virtual machine disks.
      *
-     * @param keyVaultId resource id of the key vault to store the disk encryption key
-     * @param aadClientId  client id of an AAD application which has permission to the key vault
+     * @param keyVaultId resource ID of the key vault to store the disk encryption key
+     * @param aadClientId  client ID of an AAD application which has permission to the key vault
      * @param aadSecret client secret corresponding to the aadClientId
      *
      * @return current volume decryption status
@@ -88,7 +91,7 @@ public interface VirtualMachineEncryption {
      *
      * @return current volume encryption status
      */
-    DiskVolumeEncryptionMonitor disable(final DiskVolumeType volumeType);
+    DiskVolumeEncryptionMonitor disable(DiskVolumeType volumeType);
 
     /**
      * @return current volume decryption status

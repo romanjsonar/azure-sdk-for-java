@@ -44,8 +44,8 @@ public final class ManageVirtualMachineWithUnmanagedDisks {
      */
     public static boolean runSample(Azure azure) {
         final Region region = Region.US_WEST_CENTRAL;
-        final String windowsVmName = Utils.createRandomName("wVM");
-        final String linuxVmName = Utils.createRandomName("lVM");
+        final String windowsVMName = Utils.createRandomName("wVM");
+        final String linuxVMName = Utils.createRandomName("lVM");
         final String rgName = Utils.createRandomName("rgCOMV");
         final String userName = "tirekicker";
         final String password = "12NewPA$$w0rd!";
@@ -60,7 +60,7 @@ public final class ManageVirtualMachineWithUnmanagedDisks {
 
             Date t1 = new Date();
 
-            VirtualMachine windowsVM = azure.virtualMachines().define(windowsVmName)
+            VirtualMachine windowsVM = azure.virtualMachines().define(windowsVMName)
                     .withRegion(region)
                     .withNewResourceGroup(rgName)
                     .withNewPrimaryNetwork("10.0.0.0/28")
@@ -96,9 +96,9 @@ public final class ManageVirtualMachineWithUnmanagedDisks {
             windowsVM.update()
                     .withNewUnmanagedDataDisk(10)
                     .defineUnmanagedDataDisk(dataDiskName)
-                    .withNewVhd(20)
-                    .withCaching(CachingTypes.READ_WRITE)
-                    .attach()
+                        .withNewVhd(20)
+                        .withCaching(CachingTypes.READ_WRITE)
+                        .attach()
                     .apply();
 
 
@@ -130,8 +130,8 @@ public final class ManageVirtualMachineWithUnmanagedDisks {
 
             windowsVM.update()
                     .updateUnmanagedDataDisk(dataDisk.name())
-                    .withSizeInGB(30)
-                    .parent()
+                        .withSizeInGB(30)
+                        .parent()
                     .apply();
 
             System.out.println("Expanded VM " + windowsVM.id() + "'s data disk to 30GB");
@@ -193,7 +193,7 @@ public final class ManageVirtualMachineWithUnmanagedDisks {
 
             System.out.println("Creating a Linux VM in the network");
 
-            VirtualMachine linuxVM = azure.virtualMachines().define(linuxVmName)
+            VirtualMachine linuxVM = azure.virtualMachines().define(linuxVMName)
                     .withRegion(region)
                     .withExistingResourceGroup(rgName)
                     .withExistingPrimaryNetwork(network)
@@ -217,7 +217,7 @@ public final class ManageVirtualMachineWithUnmanagedDisks {
 
             System.out.println("Printing list of VMs =======");
 
-            for (VirtualMachine virtualMachine : azure.virtualMachines().listByGroup(resourceGroupName)) {
+            for (VirtualMachine virtualMachine : azure.virtualMachines().listByResourceGroup(resourceGroupName)) {
                 Utils.print(virtualMachine);
             }
 

@@ -18,6 +18,7 @@ import com.microsoft.azure.management.appservice.DomainPurchaseConsent;
 import com.microsoft.azure.management.appservice.DomainStatus;
 import com.microsoft.azure.management.appservice.HostName;
 import org.joda.time.DateTime;
+import rx.Completable;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -64,7 +65,7 @@ class AppServiceDomainImpl
         String[] domainParts = this.name().split("\\.");
         String topLevel = domainParts[domainParts.length - 1];
         final DomainsInner client = this.manager().inner().domains();
-        return this.manager().inner().topLevelDomains().listAgreementsAsync(topLevel)
+        return this.manager().inner().topLevelDomains().listAgreementsAsync(topLevel, new TopLevelDomainAgreementOptionInner())
                 // Step 1: Consent to agreements
                 .flatMap(new Func1<Page<TldLegalAgreementInner>, Observable<List<String>>>() {
                     @Override
@@ -95,9 +96,8 @@ class AppServiceDomainImpl
     }
 
     @Override
-    public AppServiceDomainImpl refresh() {
-        this.setInner(this.manager().inner().domains().get(resourceGroupName(), name()));
-        return this;
+    protected Observable<DomainInner> getInnerAsync() {
+        return this.manager().inner().domains().getByResourceGroupAsync(resourceGroupName(), name());
     }
 
     @Override
@@ -175,11 +175,11 @@ class AppServiceDomainImpl
 
     @Override
     public void verifyDomainOwnership(String certificateOrderName, String domainVerificationToken) {
-        verifyDomainOwnershipAsync(certificateOrderName, domainVerificationToken).toBlocking().subscribe();
+        verifyDomainOwnershipAsync(certificateOrderName, domainVerificationToken).toObservable().toBlocking().subscribe();
     }
 
     @Override
-    public Observable<Void> verifyDomainOwnershipAsync(String certificateOrderName, String domainVerificationToken) {
+    public Completable verifyDomainOwnershipAsync(String certificateOrderName, String domainVerificationToken) {
         DomainOwnershipIdentifierInner identifierInner = new DomainOwnershipIdentifierInner().withOwnershipId(domainVerificationToken);
         identifierInner.withLocation("global");
         return this.manager().inner().domains().createOrUpdateOwnershipIdentifierAsync(resourceGroupName(), name(), certificateOrderName, identifierInner)
@@ -188,7 +188,7 @@ class AppServiceDomainImpl
                     public Void call(DomainOwnershipIdentifierInner domainOwnershipIdentifierInner) {
                         return null;
                     }
-                });
+                }).toCompletable();
     }
 
     @Override

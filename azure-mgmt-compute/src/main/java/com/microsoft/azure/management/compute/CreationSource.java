@@ -12,7 +12,7 @@ import com.microsoft.azure.management.resources.fluentcore.arm.ResourceUtils;
 /**
  * The source from which managed disk or snapshot is created.
  */
-@LangDefinition
+@LangDefinition(ContainerName = "/Microsoft.Azure.Management.Compute.Fluent.Models")
 public class CreationSource {
     private final CreationData creationData;
 
@@ -69,7 +69,7 @@ public class CreationSource {
     }
 
     /**
-     * @return id of the source
+     * @return ID of the source
      */
     public String sourceId() {
         if (this.type() == CreationSourceType.FROM_OS_DISK_IMAGE
@@ -97,7 +97,7 @@ public class CreationSource {
     }
 
     /**
-     * @return the lun value of the data disk image if this disk or snapshot is created from
+     * @return the LUN value of the data disk image if this disk or snapshot is created from
      * a data disk image, -1 otherwise
      */
     public int sourceDataDiskImageLun() {

@@ -28,7 +28,6 @@ import java.util.Date;
  *  - Stop a virtual machine
  *  - Restart a virtual machine
  *  - Update a virtual machine
- *    - Expand the OS drive
  *    - Tag a virtual machine (there are many possible variations here)
  *    - Attach data disks
  *    - Detach data disks
@@ -44,8 +43,8 @@ public final class ManageVirtualMachine {
      */
     public static boolean runSample(Azure azure) {
         final Region region = Region.US_WEST_CENTRAL;
-        final String windowsVmName = Utils.createRandomName("wVM");
-        final String linuxVmName = Utils.createRandomName("lVM");
+        final String windowsVMName = Utils.createRandomName("wVM");
+        final String linuxVMName = Utils.createRandomName("lVM");
         final String rgName = Utils.createRandomName("rgCOMV");
         final String userName = "tirekicker";
         final String password = "12NewPA$$w0rd!";
@@ -65,31 +64,33 @@ public final class ManageVirtualMachine {
 
             // Create a data disk to attach to VM
             //
-            Disk dataDisk = azure.disks().define(Utils.createRandomName("dsk-"))
-                    .withRegion(region)
-                    .withNewResourceGroup(rgName)
-                    .withData()
-                    .withSizeInGB(50)
-                    .create();
+            Disk dataDisk = azure.disks()
+                    .define(Utils.createRandomName("dsk-"))
+                        .withRegion(region)
+                        .withNewResourceGroup(rgName)
+                        .withData()
+                        .withSizeInGB(50)
+                        .create();
 
             System.out.println("Creating a Windows VM");
 
             Date t1 = new Date();
 
-            VirtualMachine windowsVM = azure.virtualMachines().define(windowsVmName)
-                    .withRegion(region)
-                    .withNewResourceGroup(rgName)
-                    .withNewPrimaryNetwork("10.0.0.0/28")
-                    .withPrimaryPrivateIPAddressDynamic()
-                    .withoutPrimaryPublicIPAddress()
-                    .withPopularWindowsImage(KnownWindowsVirtualMachineImage.WINDOWS_SERVER_2012_R2_DATACENTER)
-                    .withAdminUsername(userName)
-                    .withAdminPassword(password)
-                    .withNewDataDisk(10)
-                    .withNewDataDisk(dataDiskCreatable)
-                    .withExistingDataDisk(dataDisk)
-                    .withSize(VirtualMachineSizeTypes.STANDARD_D3_V2)
-                    .create();
+            VirtualMachine windowsVM = azure.virtualMachines()
+                    .define(windowsVMName)
+                        .withRegion(region)
+                        .withNewResourceGroup(rgName)
+                        .withNewPrimaryNetwork("10.0.0.0/28")
+                        .withPrimaryPrivateIPAddressDynamic()
+                        .withoutPrimaryPublicIPAddress()
+                        .withPopularWindowsImage(KnownWindowsVirtualMachineImage.WINDOWS_SERVER_2012_R2_DATACENTER)
+                        .withAdminUsername(userName)
+                        .withAdminPassword(password)
+                        .withNewDataDisk(10)
+                        .withNewDataDisk(dataDiskCreatable)
+                        .withExistingDataDisk(dataDisk)
+                        .withSize(VirtualMachineSizeTypes.STANDARD_D3_V2)
+                        .create();
 
             Date t2 = new Date();
             System.out.println("Created VM: (took " + ((t2.getTime() - t1.getTime()) / 1000) + " seconds) " + windowsVM.id());
@@ -131,38 +132,6 @@ public final class ManageVirtualMachine {
 
 
             //=============================================================
-            // Update - Resize (expand) the data disk
-            // First, deallocate the virtual machine and then proceed with resize
-
-            System.out.println("De-allocating VM: " + windowsVM.id());
-
-            windowsVM.deallocate();
-
-            System.out.println("De-allocated VM: " + windowsVM.id());
-
-            //=============================================================
-            // Update - Expand the OS and data disks
-
-            System.out.println("Resize OS and data disks");
-
-            windowsVM.update()
-                    .withOSDiskSizeInGB(200)
-                    .withDataDiskUpdated(1, 200)
-                    .withDataDiskUpdated(2, 200)
-                    .apply();
-
-            System.out.println("Expanded VM " + windowsVM.id() + "'s OS and data disks");
-
-            // Start the virtual machine
-
-            System.out.println("Starting VM " + windowsVM.id());
-
-            windowsVM.start();
-
-            System.out.println("Started VM: " + windowsVM.id() + "; state = " + windowsVM.powerState());
-
-
-            //=============================================================
             // Restart the virtual machine
 
             System.out.println("Restarting VM: " + windowsVM.id());
@@ -190,18 +159,19 @@ public final class ManageVirtualMachine {
 
             System.out.println("Creating a Linux VM in the network");
 
-            VirtualMachine linuxVM = azure.virtualMachines().define(linuxVmName)
-                    .withRegion(region)
-                    .withExistingResourceGroup(rgName)
-                    .withExistingPrimaryNetwork(network)
-                    .withSubnet("subnet1") // Referencing the default subnet name when no name specified at creation
-                    .withPrimaryPrivateIPAddressDynamic()
-                    .withoutPrimaryPublicIPAddress()
-                    .withPopularLinuxImage(KnownLinuxVirtualMachineImage.UBUNTU_SERVER_16_04_LTS)
-                    .withRootUsername(userName)
-                    .withRootPassword(password)
-                    .withSize(VirtualMachineSizeTypes.STANDARD_D3_V2)
-                    .create();
+            VirtualMachine linuxVM = azure.virtualMachines()
+                    .define(linuxVMName)
+                        .withRegion(region)
+                        .withExistingResourceGroup(rgName)
+                        .withExistingPrimaryNetwork(network)
+                        .withSubnet("subnet1") // Referencing the default subnet name when no name specified at creation
+                        .withPrimaryPrivateIPAddressDynamic()
+                        .withoutPrimaryPublicIPAddress()
+                        .withPopularLinuxImage(KnownLinuxVirtualMachineImage.UBUNTU_SERVER_16_04_LTS)
+                        .withRootUsername(userName)
+                        .withRootPassword(password)
+                        .withSize(VirtualMachineSizeTypes.STANDARD_D3_V2)
+                        .create();
 
             System.out.println("Created a Linux VM (in the same virtual network): " + linuxVM.id());
             Utils.print(linuxVM);
@@ -213,7 +183,7 @@ public final class ManageVirtualMachine {
 
             System.out.println("Printing list of VMs =======");
 
-            for (VirtualMachine virtualMachine : azure.virtualMachines().listByGroup(resourceGroupName)) {
+            for (VirtualMachine virtualMachine : azure.virtualMachines().listByResourceGroup(resourceGroupName)) {
                 Utils.print(virtualMachine);
             }
 

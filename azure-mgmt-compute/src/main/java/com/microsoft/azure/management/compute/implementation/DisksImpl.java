@@ -6,26 +6,29 @@
 
 package com.microsoft.azure.management.compute.implementation;
 
-import com.microsoft.azure.PagedList;
 import com.microsoft.azure.management.apigeneration.LangDefinition;
 import com.microsoft.azure.management.compute.AccessLevel;
 import com.microsoft.azure.management.compute.Disk;
 import com.microsoft.azure.management.compute.Disks;
-import com.microsoft.azure.management.resources.fluentcore.arm.collection.implementation.GroupableResourcesImpl;
+import com.microsoft.azure.management.resources.fluentcore.arm.collection.implementation.TopLevelModifiableResourcesImpl;
+import com.microsoft.rest.ServiceCallback;
+import com.microsoft.rest.ServiceFuture;
 import rx.Completable;
+import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * The implementation for Disks.
  */
 @LangDefinition
 class DisksImpl
-        extends GroupableResourcesImpl<
-            Disk,
-            DiskImpl,
-            DiskInner,
-            DisksInner,
-            ComputeManager>
-        implements Disks {
+    extends TopLevelModifiableResourcesImpl<
+        Disk,
+        DiskImpl,
+        DiskInner,
+        DisksInner,
+        ComputeManager>
+    implements Disks {
 
     DisksImpl(ComputeManager computeManager) {
         super(computeManager.inner().disks(), computeManager);
@@ -36,12 +39,28 @@ class DisksImpl
                               String diskName,
                               AccessLevel accessLevel,
                               int accessDuration) {
+        return this.grantAccessAsync(resourceGroupName, diskName, accessLevel, accessDuration)
+                .toBlocking()
+                .last();
+    }
+
+    @Override
+    public Observable<String> grantAccessAsync(String resourceGroupName, String diskName, AccessLevel accessLevel, int accessDuration) {
         GrantAccessDataInner grantAccessDataInner = new GrantAccessDataInner();
         grantAccessDataInner.withAccess(accessLevel)
                 .withDurationInSeconds(accessDuration);
-        AccessUriInner accessUriInner = this.inner().grantAccess(resourceGroupName,
-                diskName, grantAccessDataInner);
-        return accessUriInner.accessSAS();
+        return this.inner().grantAccessAsync(resourceGroupName, diskName, grantAccessDataInner)
+                .map(new Func1<AccessUriInner, String>() {
+                    @Override
+                    public String call(AccessUriInner accessUriInner) {
+                        return accessUriInner.accessSAS();
+                    }
+                });
+    }
+
+    @Override
+    public ServiceFuture<String> grantAccessAsync(String resourceGroupName, String diskName, AccessLevel accessLevel, int accessDuration, ServiceCallback<String> callback) {
+        return ServiceFuture.fromBody(this.grantAccessAsync(resourceGroupName, diskName, accessLevel, accessDuration), callback);
     }
 
     @Override
@@ -50,24 +69,13 @@ class DisksImpl
     }
 
     @Override
-    public Completable deleteByGroupAsync(String groupName, String name) {
-        return this.inner().deleteAsync(groupName, name).toCompletable();
+    public Completable revokeAccessAsync(String resourceGroupName, String diskName) {
+        return this.inner().revokeAccessAsync(resourceGroupName, diskName).toCompletable();
     }
 
     @Override
-    public Disk getByGroup(String resourceGroupName, String name) {
-        DiskInner inner = this.inner().get(resourceGroupName, name);
-        return wrapModel(inner);
-    }
-
-    @Override
-    public PagedList<Disk> listByGroup(String resourceGroupName) {
-        return wrapList(this.inner().listByResourceGroup(resourceGroupName));
-    }
-
-    @Override
-    public PagedList<Disk> list() {
-        return wrapList(this.inner().list());
+    public ServiceFuture<Void> revokeAccessAsync(String resourceGroupName, String diskName, ServiceCallback<Void> callback) {
+        return ServiceFuture.fromBody(this.revokeAccessAsync(resourceGroupName, diskName).<Void>toObservable(), callback);
     }
 
     @Override
@@ -77,6 +85,9 @@ class DisksImpl
 
     @Override
     protected DiskImpl wrapModel(DiskInner inner) {
+        if (inner == null) {
+            return null;
+        }
         return new DiskImpl(inner.name(), inner, this.manager());
     }
 

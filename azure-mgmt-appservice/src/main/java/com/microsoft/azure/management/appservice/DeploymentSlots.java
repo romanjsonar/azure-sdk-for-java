@@ -6,6 +6,7 @@
 
 package com.microsoft.azure.management.appservice;
 
+import com.microsoft.azure.management.apigeneration.Beta;
 import com.microsoft.azure.management.apigeneration.Fluent;
 import com.microsoft.azure.management.appservice.implementation.AppServiceManager;
 import com.microsoft.azure.management.resources.fluentcore.arm.collection.SupportsGettingById;
@@ -18,15 +19,16 @@ import com.microsoft.azure.management.resources.fluentcore.collection.SupportsDe
 import com.microsoft.azure.management.resources.fluentcore.collection.SupportsListing;
 
 /**
- * Entry point for storage accounts management API.
+ * Entry point for Azure web app deployment slot management API.
  */
 @Fluent(ContainerName = "/Microsoft.Azure.Management.AppService.Fluent")
+@Beta
 public interface DeploymentSlots extends
         SupportsCreating<DeploymentSlot.DefinitionStages.Blank>,
         SupportsListing<DeploymentSlot>,
         SupportsGettingByName<DeploymentSlot>,
-        SupportsDeletingById,
         SupportsGettingById<DeploymentSlot>,
+        SupportsDeletingById,
         SupportsDeletingByName,
         HasManager<AppServiceManager>,
         HasParent<WebApp> {

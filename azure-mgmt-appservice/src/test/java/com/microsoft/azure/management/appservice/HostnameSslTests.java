@@ -12,6 +12,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.net.ssl.SSLPeerUnverifiedException;
@@ -37,13 +38,13 @@ public class HostnameSslTests extends AppServiceTest {
     }
 
     @Test
+    @Ignore("Need a domain and a certificate")
     public void canBindHostnameAndSsl() throws Exception {
         // hostname binding
         appServiceManager.webApps().define(WEBAPP_NAME)
-                .withNewResourceGroup(RG_NAME)
-                .withNewAppServicePlan(APP_SERVICE_PLAN_NAME)
                 .withRegion(Region.US_WEST)
-                .withPricingTier(AppServicePricingTier.BASIC_B1)
+                .withNewResourceGroup(RG_NAME)
+                .withNewWindowsPlan(PricingTier.BASIC_B1)
                 .defineHostnameBinding()
                     .withAzureManagedDomain(domain)
                     .withSubDomain(WEBAPP_NAME)
@@ -51,9 +52,9 @@ public class HostnameSslTests extends AppServiceTest {
                     .attach()
                 .create();
 
-        WebApp webApp = appServiceManager.webApps().getByGroup(RG_NAME, WEBAPP_NAME);
+        WebApp webApp = appServiceManager.webApps().getByResourceGroup(RG_NAME, WEBAPP_NAME);
         Assert.assertNotNull(webApp);
-        if (!IS_MOCKED) {
+        if (!isPlaybackMode()) {
             Response response = curl("http://" + WEBAPP_NAME + "." + DOMAIN);
             Assert.assertEquals(200, response.code());
             Assert.assertNotNull(response.body().string());
@@ -62,7 +63,7 @@ public class HostnameSslTests extends AppServiceTest {
         webApp.update()
                 .withManagedHostnameBindings(domain, WEBAPP_NAME + "-1", WEBAPP_NAME + "-2")
                 .apply();
-        if (!IS_MOCKED) {
+        if (!isPlaybackMode()) {
             Response response = curl("http://" + WEBAPP_NAME + "-1." + DOMAIN);
             Assert.assertEquals(200, response.code());
             Assert.assertNotNull(response.body().string());
@@ -78,7 +79,7 @@ public class HostnameSslTests extends AppServiceTest {
                     .withSniBasedSsl()
                     .attach()
                 .apply();
-        if (!IS_MOCKED) {
+        if (!isPlaybackMode()) {
             Response response = null;
             int retryCount = 3;
             while (response == null && retryCount > 0) {

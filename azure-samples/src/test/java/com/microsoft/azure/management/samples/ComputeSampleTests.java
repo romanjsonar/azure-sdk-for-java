@@ -12,13 +12,20 @@ import com.microsoft.azure.management.compute.samples.CreateVirtualMachineUsingS
 import com.microsoft.azure.management.compute.samples.CreateVirtualMachineUsingSpecializedDiskFromVhd;
 import com.microsoft.azure.management.compute.samples.CreateVirtualMachinesInParallel;
 import com.microsoft.azure.management.compute.samples.CreateVirtualMachinesUsingCustomImageOrSpecializedVHD;
+import com.microsoft.azure.management.compute.samples.DeployImageFromContainerRegistryToKubernetes;
 import com.microsoft.azure.management.compute.samples.ListVirtualMachineExtensionImages;
 import com.microsoft.azure.management.compute.samples.ListVirtualMachineImages;
 import com.microsoft.azure.management.compute.samples.ManageAvailabilitySet;
 import com.microsoft.azure.management.compute.samples.ManageManagedDisks;
+import com.microsoft.azure.management.compute.samples.ManageContainerServiceUsingDockerSwarm;
+import com.microsoft.azure.management.compute.samples.ManageContainerServiceUsingKubernetes;
+import com.microsoft.azure.management.compute.samples.ManageResourceFromMSIEnabledVirtualMachineBelongsToAADGroup;
+import com.microsoft.azure.management.compute.samples.ManageStorageFromMSIEnabledVirtualMachine;
 import com.microsoft.azure.management.compute.samples.ManageVirtualMachine;
+import com.microsoft.azure.management.compute.samples.ManageVirtualMachineAsync;
 import com.microsoft.azure.management.compute.samples.ManageVirtualMachineExtension;
 import com.microsoft.azure.management.compute.samples.ManageVirtualMachineScaleSet;
+import com.microsoft.azure.management.compute.samples.ManageVirtualMachineScaleSetAsync;
 import com.microsoft.azure.management.compute.samples.ManageVirtualMachineScaleSetWithUnmanagedDisks;
 import com.microsoft.azure.management.compute.samples.ManageVirtualMachineWithDisk;
 import com.microsoft.azure.management.compute.samples.ManageVirtualMachineWithUnmanagedDisks;
@@ -86,6 +93,11 @@ public class ComputeSampleTests extends SamplesTestBase {
     }
 
     @Test
+    public void testManageVirtualMachineAsync() {
+        Assert.assertTrue(ManageVirtualMachineAsync.runSample(azure));
+    }
+
+    @Test
     public void testManageVirtualMachineExtension() {
         Assert.assertTrue(ManageVirtualMachineExtension.runSample(azure));
     }
@@ -93,6 +105,11 @@ public class ComputeSampleTests extends SamplesTestBase {
     @Test
     public void testManageVirtualMachineScaleSet() {
         Assert.assertTrue(ManageVirtualMachineScaleSet.runSample(azure));
+    }
+
+    @Test
+    public void testManageVirtualMachineScaleSetAsync() {
+        Assert.assertTrue(ManageVirtualMachineScaleSetAsync.runSample(azure));
     }
 
     @Test
@@ -106,7 +123,6 @@ public class ComputeSampleTests extends SamplesTestBase {
     }
 
     @Test
-    @Ignore("Server bug: disk size cannot be resized down [This sample will not be published]")
     public void testManageVirtualMachineWithDisk() {
         Assert.assertTrue(ManageVirtualMachineWithDisk.runSample(azure));
     }
@@ -119,5 +135,37 @@ public class ComputeSampleTests extends SamplesTestBase {
     @Test
     public void testManageManagedDisks() {
       Assert.assertTrue(ManageManagedDisks.runSample(azure));
+    }
+
+    @Test
+    public void testManageContainerServiceUsingKubernetes() {
+        if (isPlaybackMode()) {
+            Assert.assertTrue(ManageContainerServiceUsingKubernetes.runSample(azure, "client id", "secret"));
+        } else {
+            Assert.assertTrue(ManageContainerServiceUsingKubernetes.runSample(azure, "", ""));
+        }
+    }
+
+    @Test
+    public void testManageContainerServiceUsingDockerSwarm() {
+        Assert.assertTrue(ManageContainerServiceUsingDockerSwarm.runSample(azure));
+    }
+
+    @Test
+    public void testDeployImageFromContainerRegistryToKubernetes() {
+        if (!isPlaybackMode()) {
+            Assert.assertTrue(DeployImageFromContainerRegistryToKubernetes.runSample(azure, "", ""));
+        }
+    }
+
+    @Test
+    public void testManageStorageFromMSIEnabledVirtualMachine() {
+        Assert.assertTrue(ManageStorageFromMSIEnabledVirtualMachine.runSample(azure));
+    }
+
+    @Test
+    @Ignore("Mock service reporting that unexpected PUT request found, need investigation")
+    public void testManageResourceFromMSIEnabledVirtualMachineBelongsToAADGroup() {
+        Assert.assertTrue(ManageResourceFromMSIEnabledVirtualMachineBelongsToAADGroup.runSample(azure));
     }
 }

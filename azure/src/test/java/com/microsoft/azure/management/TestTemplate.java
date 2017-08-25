@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Microsoft Corporation. All rights reserved.
  * Licensed under the MIT License. See License.txt in the project root for
  * license information.
@@ -8,7 +8,7 @@ package com.microsoft.azure.management;
 import com.microsoft.azure.CloudException;
 import com.microsoft.azure.PagedList;
 import com.microsoft.azure.management.resources.ResourceGroups;
-import com.microsoft.azure.management.resources.fluentcore.arm.collection.SupportsGettingByGroup;
+import com.microsoft.azure.management.resources.fluentcore.arm.collection.SupportsGettingByResourceGroup;
 import com.microsoft.azure.management.resources.fluentcore.arm.collection.SupportsGettingById;
 import com.microsoft.azure.management.resources.fluentcore.arm.implementation.ManagerBase;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.GroupableResource;
@@ -30,19 +30,19 @@ public abstract class TestTemplate<
     ResourceT extends GroupableResource<? extends ManagerBase, ?>,
     CollectionT extends
         SupportsListing<ResourceT>
-        & SupportsGettingByGroup<ResourceT>
+        & SupportsGettingByResourceGroup<ResourceT>
         & SupportsDeletingById
         & SupportsGettingById<ResourceT>
         & HasInner<?>
         & HasManager<? extends ManagerBase>> {
 
-    protected String testId = "";
+    protected final String testId;
     private ResourceT resource;
     private CollectionT collection;
     private ResourceGroups resourceGroups;
 
     protected TestTemplate() {
-        testId = SdkContext.randomResourceName("", 8);
+        this.testId = SdkContext.randomResourceName("", 8);
     }
 
     /**
@@ -82,7 +82,7 @@ public abstract class TestTemplate<
      * @throws IOException if anything goes wrong
      */
     public ResourceT verifyGetting() throws CloudException, IOException {
-        ResourceT resourceByGroup = this.collection.getByGroup(this.resource.resourceGroupName(), this.resource.name());
+        ResourceT resourceByGroup = this.collection.getByResourceGroup(this.resource.resourceGroupName(), this.resource.name());
         ResourceT resourceById = this.collection.getById(resourceByGroup.id());
         Assert.assertTrue(resourceById.id().equalsIgnoreCase(resourceByGroup.id()));
         return resourceById;
@@ -95,7 +95,7 @@ public abstract class TestTemplate<
     public void verifyDeleting() throws Exception {
         final String groupName = this.resource.resourceGroupName();
         this.collection.deleteById(this.resource.id());
-        this.resourceGroups.deleteByName(groupName);
+        this.resourceGroups.beginDeleteByName(groupName);
     }
 
     /**

@@ -9,6 +9,7 @@
 package com.microsoft.azure.management.appservice;
 
 import org.joda.time.DateTime;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Performance monitor sample in a set.
@@ -17,17 +18,26 @@ public class PerfMonSample {
     /**
      * Point in time for which counter was measured.
      */
+    @JsonProperty(value = "time")
     private DateTime time;
 
     /**
      * Name of the server on which the measurement is made.
      */
+    @JsonProperty(value = "instanceName")
     private String instanceName;
 
     /**
      * Value of counter at a certain time.
      */
+    @JsonProperty(value = "value")
     private Double value;
+
+    /**
+     * Core Count of worker. Not a data member.
+     */
+    @JsonProperty(value = "coreCount")
+    private Integer coreCount;
 
     /**
      * Get the time value.
@@ -86,6 +96,26 @@ public class PerfMonSample {
      */
     public PerfMonSample withValue(Double value) {
         this.value = value;
+        return this;
+    }
+
+    /**
+     * Get the coreCount value.
+     *
+     * @return the coreCount value
+     */
+    public Integer coreCount() {
+        return this.coreCount;
+    }
+
+    /**
+     * Set the coreCount value.
+     *
+     * @param coreCount the coreCount value to set
+     * @return the PerfMonSample object itself.
+     */
+    public PerfMonSample withCoreCount(Integer coreCount) {
+        this.coreCount = coreCount;
         return this;
     }
 

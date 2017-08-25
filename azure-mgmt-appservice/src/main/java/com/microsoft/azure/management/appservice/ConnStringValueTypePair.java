@@ -17,15 +17,15 @@ public class ConnStringValueTypePair {
     /**
      * Value of pair.
      */
-    @JsonProperty(required = true)
+    @JsonProperty(value = "value", required = true)
     private String value;
 
     /**
      * Type of database. Possible values include: 'MySql', 'SQLServer',
      * 'SQLAzure', 'Custom', 'NotificationHub', 'ServiceBus', 'EventHub',
-     * 'ApiHub', 'DocDb', 'RedisCache'.
+     * 'ApiHub', 'DocDb', 'RedisCache', 'PostgreSQL'.
      */
-    @JsonProperty(required = true)
+    @JsonProperty(value = "type", required = true)
     private ConnectionStringType type;
 
     /**

@@ -16,7 +16,7 @@ import com.microsoft.rest.RestClient;
 /**
  * Initializes a new instance of the GraphRbacManagementClientImpl class.
  */
-public final class GraphRbacManagementClientImpl extends AzureServiceClient {
+public class GraphRbacManagementClientImpl extends AzureServiceClient {
     /** the {@link AzureClient} used for long running operations. */
     private AzureClient azureClient;
 
@@ -198,6 +198,19 @@ public final class GraphRbacManagementClientImpl extends AzureServiceClient {
     }
 
     /**
+     * The DomainsInner object to access its operations.
+     */
+    private DomainsInner domains;
+
+    /**
+     * Gets the DomainsInner object to access its operations.
+     * @return the DomainsInner object.
+     */
+    public DomainsInner domains() {
+        return this.domains;
+    }
+
+    /**
      * Initializes an instance of GraphRbacManagementClient client.
      *
      * @param credentials the management credentials for Azure
@@ -237,6 +250,7 @@ public final class GraphRbacManagementClientImpl extends AzureServiceClient {
         this.groups = new GroupsInner(restClient().retrofit(), this);
         this.servicePrincipals = new ServicePrincipalsInner(restClient().retrofit(), this);
         this.users = new UsersInner(restClient().retrofit(), this);
+        this.domains = new DomainsInner(restClient().retrofit(), this);
         this.azureClient = new AzureClient(this);
     }
 
@@ -247,8 +261,6 @@ public final class GraphRbacManagementClientImpl extends AzureServiceClient {
      */
     @Override
     public String userAgent() {
-        return String.format("Azure-SDK-For-Java/%s (%s)",
-                getClass().getPackage().getImplementationVersion(),
-                "GraphRbacManagementClient, 1.6");
+        return String.format("%s (%s, %s)", super.userAgent(), "GraphRbacManagementClient", "1.6");
     }
 }

@@ -182,17 +182,17 @@ public interface SqlDatabase extends
     }
 
     /**
-     * Grouping of all the storage account definition stages.
+     * Grouping of all the SQL database definition stages.
      */
     interface DefinitionStages {
         /**
-         * The first stage of the SQL Server definition.
+         * The first stage of the SQL database definition.
          */
         interface Blank extends WithAllDifferentOptions {
         }
 
         /**
-         * The SQL Database interface with all starting options for definition.
+         * The SQL database interface with all starting options for definition.
          */
         interface WithAllDifferentOptions extends
                 WithElasticPoolName,
@@ -367,7 +367,7 @@ public interface SqlDatabase extends
 
         /**
          * A SQL Database definition with sufficient inputs to create a new
-         * SQL Server in the cloud, but exposing additional optional inputs to
+         * SQL database in the cloud, but exposing additional optional settings to
          * specify.
          */
         interface WithCreate extends
@@ -401,7 +401,7 @@ public interface SqlDatabase extends
     }
 
     /**
-     * Grouping of all the SQLDatabase modifyState stages.
+     * Grouping of all the SQL database update stages.
      */
     interface UpdateStages {
         /**

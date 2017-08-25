@@ -6,7 +6,11 @@
 
 package com.microsoft.azure.management.resources.fluentcore.utils;
 
+import com.google.common.primitives.Ints;
+import com.microsoft.azure.Page;
+import com.microsoft.azure.PagedList;
 import com.microsoft.azure.management.resources.fluentcore.model.Indexable;
+import com.microsoft.azure.management.resources.implementation.PageImpl;
 import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import retrofit2.http.GET;
@@ -16,6 +20,7 @@ import rx.exceptions.Exceptions;
 import rx.functions.Func1;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Defines a few utilities.
@@ -45,6 +50,21 @@ public final class Utils {
             return 0;
         }
         return value;
+    }
+
+    /**
+     * Converts an object Long to a primitive int.
+     *
+     * @param value the <tt>Long</tt> value
+     * @return <tt>0</tt> if the given Long value is null else <tt>integer value</tt>
+     */
+    public static int toPrimitiveInt(Long value) {
+        if (value == null) {
+            return 0;
+        }
+        // throws IllegalArgumentException - if value is greater than Integer.MAX_VALUE
+        // or less than Integer.MIN_VALUE
+        return Ints.checkedCast(value);
     }
 
     /**
@@ -113,6 +133,34 @@ public final class Utils {
                 }
             }
         });
+    }
+
+    /**
+     * Converts the given list of a type to paged list of a different type.
+     *
+     * @param list the list to convert to paged list
+     * @param mapper the mapper to map type in input list to output list
+     * @param <OutT> the type of items in output paged list
+     * @param <InT> the type of items in input paged list
+     * @return the paged list
+     */
+    public static <OutT, InT> PagedList<OutT> toPagedList(List<InT> list, final Func1<InT, OutT> mapper) {
+        PageImpl<InT> page = new PageImpl<>();
+        page.setItems(list);
+        page.setNextPageLink(null);
+        PagedList<InT> pagedList = new PagedList<InT>(page) {
+            @Override
+            public Page<InT> nextPage(String nextPageLink) {
+                return null;
+            }
+        };
+        PagedListConverter<InT, OutT> converter = new PagedListConverter<InT, OutT>() {
+            @Override
+            public OutT typeConvert(InT inner) {
+                return mapper.call(inner);
+            }
+        };
+        return converter.convert(pagedList);
     }
 
     /**

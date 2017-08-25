@@ -72,11 +72,9 @@ public class SqlServerImpl
     }
 
     @Override
-    public SqlServer refresh() {
-        ServerInner response = this.manager().inner().servers().getByResourceGroup(
+    protected Observable<ServerInner> getInnerAsync() {
+        return this.manager().inner().servers().getByResourceGroupAsync(
                 this.resourceGroupName(), this.name());
-        this.setInner(response);
-        return this;
     }
 
     @Override
@@ -223,11 +221,6 @@ public class SqlServerImpl
     public SqlServerImpl withAdministratorPassword(String administratorLoginPassword) {
         this.inner().withAdministratorLoginPassword(administratorLoginPassword);
         return this;
-    }
-
-    @Override
-    public SqlServerManager manager() {
-        return this.myManager;
     }
 
     @Override

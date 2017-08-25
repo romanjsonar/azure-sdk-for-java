@@ -6,10 +6,15 @@
 
 package com.microsoft.azure.management.storage.implementation;
 
+import com.microsoft.azure.management.apigeneration.LangDefinition;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.implementation.GroupableResourceImpl;
 import com.microsoft.azure.management.storage.AccessTier;
 import com.microsoft.azure.management.storage.CustomDomain;
 import com.microsoft.azure.management.storage.Encryption;
+import com.microsoft.azure.management.storage.EncryptionService;
+import com.microsoft.azure.management.storage.EncryptionServices;
+import com.microsoft.azure.management.storage.StorageAccountEncryptionKeySource;
+import com.microsoft.azure.management.storage.StorageAccountEncryptionStatus;
 import com.microsoft.azure.management.storage.Kind;
 import com.microsoft.azure.management.storage.ProvisioningState;
 import com.microsoft.azure.management.storage.PublicEndpoints;
@@ -17,16 +22,22 @@ import com.microsoft.azure.management.storage.Sku;
 import com.microsoft.azure.management.storage.SkuName;
 import com.microsoft.azure.management.storage.StorageAccount;
 import com.microsoft.azure.management.storage.StorageAccountKey;
+import com.microsoft.azure.management.storage.StorageService;
+import com.microsoft.rest.ServiceCallback;
+import com.microsoft.rest.ServiceFuture;
 import org.joda.time.DateTime;
 import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation for StorageAccount and its parent interfaces.
  */
+@LangDefinition
 class StorageAccountImpl
         extends GroupableResourceImpl<
             StorageAccount,
@@ -102,34 +113,91 @@ class StorageAccountImpl
     }
 
     @Override
+    public StorageAccountEncryptionKeySource encryptionKeySource() {
+        if (this.inner().encryption() == null
+                || this.inner().encryption().keySource() == null) {
+            return null;
+        }
+        return StorageAccountEncryptionKeySource.fromString(this.inner().encryption().keySource());
+    }
+
+    @Override
+    public Map<StorageService, StorageAccountEncryptionStatus> encryptionStatuses() {
+        HashMap<StorageService, StorageAccountEncryptionStatus> statuses = new HashMap<>();
+        if (this.inner().encryption() != null
+                && this.inner().encryption().services() != null) {
+            // Status of blob service
+            //
+            // Status for other service needs to be added as storage starts supporting it
+            statuses.put(StorageService.BLOB, new BlobServiceEncryptionStatusImpl(this.inner().encryption().services()));
+        } else {
+            statuses.put(StorageService.BLOB, new BlobServiceEncryptionStatusImpl(new EncryptionServices()));
+        }
+        return statuses;
+    }
+
+    @Override
     public AccessTier accessTier() {
         return inner().accessTier();
     }
 
     @Override
     public List<StorageAccountKey> getKeys() {
-        StorageAccountListKeysResultInner response =
-                this.manager().inner().storageAccounts().listKeys(
-                        this.resourceGroupName(), this.name());
-        return response.keys();
+        return this.getKeysAsync().toBlocking().last();
+    }
+
+    @Override
+    public Observable<List<StorageAccountKey>> getKeysAsync() {
+        return this.manager().inner().storageAccounts().listKeysAsync(
+                this.resourceGroupName(), this.name()).map(new Func1<StorageAccountListKeysResultInner, List<StorageAccountKey>>() {
+            @Override
+            public List<StorageAccountKey> call(StorageAccountListKeysResultInner storageAccountListKeysResultInner) {
+                return storageAccountListKeysResultInner.keys();
+            }
+        });
+    }
+
+    @Override
+    public ServiceFuture<List<StorageAccountKey>> getKeysAsync(ServiceCallback<List<StorageAccountKey>> callback) {
+        return ServiceFuture.fromBody(this.getKeysAsync(), callback);
     }
 
     @Override
     public List<StorageAccountKey> regenerateKey(String keyName) {
-        StorageAccountListKeysResultInner response =
-                this.manager().inner().storageAccounts().regenerateKey(
-                        this.resourceGroupName(), this.name(), keyName);
-        return response.keys();
+        return this.regenerateKeyAsync(keyName).toBlocking().last();
     }
 
     @Override
-    public StorageAccountImpl refresh() {
-        StorageAccountInner response =
-            this.manager().inner().storageAccounts().getProperties(
-                    this.resourceGroupName(), this.name());
-        this.setInner(response);
-        clearWrapperProperties();
-        return this;
+    public Observable<List<StorageAccountKey>> regenerateKeyAsync(String keyName) {
+        return this.manager().inner().storageAccounts().regenerateKeyAsync(
+                this.resourceGroupName(), this.name(), keyName).map(new Func1<StorageAccountListKeysResultInner, List<StorageAccountKey>>() {
+            @Override
+            public List<StorageAccountKey> call(StorageAccountListKeysResultInner storageAccountListKeysResultInner) {
+                return storageAccountListKeysResultInner.keys();
+            }
+        });
+    }
+
+    @Override
+    public ServiceFuture<List<StorageAccountKey>> regenerateKeyAsync(String keyName, ServiceCallback<List<StorageAccountKey>> callback) {
+        return ServiceFuture.fromBody(this.regenerateKeyAsync(keyName), callback);
+    }
+
+    @Override
+    public Observable<StorageAccount> refreshAsync() {
+        return super.refreshAsync().map(new Func1<StorageAccount, StorageAccount>() {
+            @Override
+            public StorageAccount call(StorageAccount storageAccount) {
+                StorageAccountImpl impl = (StorageAccountImpl) storageAccount;
+                impl.clearWrapperProperties();
+                return impl;
+            }
+        });
+    }
+
+    @Override
+    protected Observable<StorageAccountInner> getInnerAsync() {
+        return this.manager().inner().storageAccounts().getByResourceGroupAsync(this.resourceGroupName(), this.name());
     }
 
     @Override
@@ -164,6 +232,55 @@ class StorageAccountImpl
         return this;
     }
 
+    @Override
+    public StorageAccountImpl withEncryption() {
+        Encryption encryption;
+        if (this.inner().encryption() != null) {
+            encryption = this.inner().encryption();
+        } else {
+            encryption = new Encryption();
+        }
+        if (encryption.services() == null) {
+            encryption.withServices(new EncryptionServices());
+        }
+        if (encryption.keySource() == null) {
+            encryption.withKeySource("Microsoft.Storage");
+        }
+        // Enable encryption for blob service
+        //
+        if (encryption.services().blob() == null) {
+            encryption.services().withBlob(new EncryptionService());
+        }
+        encryption.services().blob().withEnabled(true);
+        // Code for enabling encryption for other service will be added as storage start supporting them.
+        //
+        if (isInCreateMode()) {
+            createParameters.withEncryption(encryption);
+        } else {
+            updateParameters.withEncryption(encryption);
+        }
+        return this;
+    }
+
+    @Override
+    public StorageAccountImpl withoutEncryption() {
+        if (this.inner().encryption() == null
+                || this.inner().encryption().services() == null) {
+            return this;
+        }
+        Encryption encryption = this.inner().encryption();
+        // Disable encryption for blob service
+        //
+        if (encryption.services().blob() == null) {
+            return this;
+        }
+        encryption.services().blob().withEnabled(false);
+        // Code for disabling encryption for other service will be added as storage start supporting them.
+        //
+        updateParameters.withEncryption(encryption);
+        return this;
+    }
+
     private void clearWrapperProperties() {
         accountStatuses = null;
         publicEndpoints = null;
@@ -177,6 +294,7 @@ class StorageAccountImpl
 
     @Override
     public Observable<StorageAccount> updateResourceAsync() {
+        updateParameters.withTags(this.inner().getTags());
         return this.manager().inner().storageAccounts().updateAsync(
                 resourceGroupName(), name(), updateParameters)
                 .map(innerToFluentMap(this));
@@ -203,11 +321,6 @@ class StorageAccountImpl
     }
 
     @Override
-    public StorageAccountImpl withoutCustomDomain() {
-        return withCustomDomain(new CustomDomain().withName(""));
-    }
-
-    @Override
     public StorageAccountImpl withAccessTier(AccessTier accessTier) {
         if (isInCreateMode()) {
             createParameters.withAccessTier(accessTier);
@@ -231,7 +344,7 @@ class StorageAccountImpl
                 .flatMap(new Func1<StorageAccountInner, Observable<StorageAccountInner>>() {
                     @Override
                     public Observable<StorageAccountInner> call(StorageAccountInner storageAccountInner) {
-                        return client.getPropertiesAsync(resourceGroupName(), name());
+                        return client.getByResourceGroupAsync(resourceGroupName(), name());
                     }
                 })
                 .map(innerToFluentMap(this))

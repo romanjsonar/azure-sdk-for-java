@@ -5,6 +5,8 @@
  */
 package com.microsoft.azure.management.network.implementation;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -18,18 +20,19 @@ import com.microsoft.azure.management.network.LoadBalancerBackend;
 import com.microsoft.azure.management.network.LoadBalancer;
 import com.microsoft.azure.management.network.LoadBalancingRule;
 import com.microsoft.azure.management.network.NetworkInterface;
+import com.microsoft.azure.management.network.model.HasNetworkInterfaces;
 import com.microsoft.azure.management.resources.fluentcore.arm.ResourceUtils;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.implementation.ChildResourceImpl;
 
 /**
- *  Implementation for {@link LoadBalancerBackend}.
+ *  Implementation for LoadBalancerBackend.
  */
 @LangDefinition
 class LoadBalancerBackendImpl
     extends ChildResourceImpl<BackendAddressPoolInner, LoadBalancerImpl, LoadBalancer>
     implements
         LoadBalancerBackend,
-        LoadBalancerBackend.Definition<LoadBalancer.DefinitionStages.WithBackendOrProbe>,
+        LoadBalancerBackend.Definition<LoadBalancer.DefinitionStages.WithCreate>,
         LoadBalancerBackend.UpdateDefinition<LoadBalancer.Update>,
         LoadBalancerBackend.Update {
 
@@ -40,7 +43,7 @@ class LoadBalancerBackendImpl
     // Getters
 
     @Override
-    public Map<String, String> backendNicIpConfigurationNames() {
+    public Map<String, String> backendNicIPConfigurationNames() {
         // This assumes a NIC can only have one IP config associated with the backend of an LB,
         // which is correct at the time of this implementation and seems unlikely to ever change
         final Map<String, String> ipConfigNames = new TreeMap<>();
@@ -79,7 +82,7 @@ class LoadBalancerBackendImpl
     @Override
     public Set<String> getVirtualMachineIds() {
         Set<String> vmIds = new HashSet<>();
-        Map<String, String> nicConfigs = this.backendNicIpConfigurationNames();
+        Map<String, String> nicConfigs = this.backendNicIPConfigurationNames();
         if (nicConfigs != null) {
             for (String nicId : nicConfigs.keySet()) {
                 try {
@@ -104,5 +107,21 @@ class LoadBalancerBackendImpl
     public LoadBalancerImpl attach() {
         this.parent().withBackend(this);
         return this.parent();
+    }
+
+    // Withers
+    @Override
+    public LoadBalancerBackendImpl withExistingVirtualMachines(HasNetworkInterfaces... vms) {
+        return (vms != null) ? this.withExistingVirtualMachines(Arrays.asList(vms)) : this;
+    }
+
+    @Override
+    public LoadBalancerBackendImpl withExistingVirtualMachines(Collection<HasNetworkInterfaces> vms) {
+        if (vms != null) {
+            for (HasNetworkInterfaces vm : vms) {
+                this.parent().withExistingVirtualMachine(vm, this.name());
+            }
+        }
+        return this;
     }
 }

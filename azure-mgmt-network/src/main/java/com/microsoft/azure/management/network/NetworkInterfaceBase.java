@@ -7,6 +7,8 @@
 package com.microsoft.azure.management.network;
 
 import com.microsoft.azure.management.apigeneration.Fluent;
+import com.microsoft.azure.management.apigeneration.Beta;
+import com.microsoft.azure.management.apigeneration.Beta.SinceVersion;
 import com.microsoft.azure.management.network.implementation.NetworkInterfaceInner;
 import com.microsoft.azure.management.network.implementation.NetworkManager;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.HasManager;
@@ -21,10 +23,17 @@ import java.util.List;
 public interface NetworkInterfaceBase extends
     HasManager<NetworkManager>,
     HasInner<NetworkInterfaceInner> {
+
     /**
-     * @return <tt>true</tt> if IP forwarding is enabled in this network interface
+     * @return true if accelerated networkin is enabled for this network interface
      */
-    boolean isIpForwardingEnabled();
+    @Beta(SinceVersion.V1_2_0)
+    boolean isAcceleratedNetworkingEnabled();
+
+    /**
+     * @return true if IP forwarding is enabled in this network interface
+     */
+    boolean isIPForwardingEnabled();
 
     /**
      * @return the MAC Address of the network interface

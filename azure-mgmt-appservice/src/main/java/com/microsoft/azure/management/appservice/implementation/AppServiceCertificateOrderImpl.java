@@ -8,6 +8,7 @@ package com.microsoft.azure.management.appservice.implementation;
 
 import com.microsoft.azure.Page;
 import com.microsoft.azure.management.apigeneration.LangDefinition;
+import com.microsoft.azure.management.appservice.CertificateDetails;
 import com.microsoft.azure.management.keyvault.SecretPermissions;
 import com.microsoft.azure.management.keyvault.Vault;
 import com.microsoft.azure.management.resources.fluentcore.arm.Region;
@@ -22,6 +23,7 @@ import com.microsoft.azure.management.appservice.CertificateOrderStatus;
 import com.microsoft.azure.management.appservice.CertificateProductType;
 import com.microsoft.azure.management.appservice.WebAppBase;
 import org.joda.time.DateTime;
+import rx.Completable;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -54,9 +56,8 @@ class AppServiceCertificateOrderImpl
     }
 
     @Override
-    public AppServiceCertificateOrder refresh() {
-        this.setInner(this.manager().inner().appServiceCertificateOrders().get(resourceGroupName(), name()));
-        return this;
+    protected Observable<AppServiceCertificateOrderInner> getInnerAsync() {
+        return this.manager().inner().appServiceCertificateOrders().getByResourceGroupAsync(resourceGroupName(), name());
     }
 
     @Override
@@ -68,9 +69,9 @@ class AppServiceCertificateOrderImpl
     public Observable<AppServiceCertificateKeyVaultBinding> getKeyVaultBindingAsync() {
         final AppServiceCertificateOrderImpl self = this;
         return this.manager().inner().appServiceCertificateOrders().listCertificatesAsync(resourceGroupName(), name())
-                .map(new Func1<Page<AppServiceCertificateInner>, AppServiceCertificateKeyVaultBinding>() {
+                .map(new Func1<Page<AppServiceCertificateResourceInner>, AppServiceCertificateKeyVaultBinding>() {
                     @Override
-                    public AppServiceCertificateKeyVaultBinding call(Page<AppServiceCertificateInner> appServiceCertificateInnerPage) {
+                    public AppServiceCertificateKeyVaultBinding call(Page<AppServiceCertificateResourceInner> appServiceCertificateInnerPage) {
                         // There can only be one binding associated with an order
                         if (appServiceCertificateInnerPage.items() == null || appServiceCertificateInnerPage.items().isEmpty()) {
                             return null;
@@ -83,11 +84,11 @@ class AppServiceCertificateOrderImpl
 
     @Override
     public void verifyDomainOwnership(AppServiceDomain domain) {
-        verifyDomainOwnershipAsync(domain).toBlocking().subscribe();
+        verifyDomainOwnershipAsync(domain).toObservable().toBlocking().subscribe();
     }
 
     @Override
-    public Observable<Void> verifyDomainOwnershipAsync(AppServiceDomain domain) {
+    public Completable verifyDomainOwnershipAsync(AppServiceDomain domain) {
         return domain.verifyDomainOwnershipAsync(name(), domainVerificationToken());
     }
 
@@ -127,11 +128,8 @@ class AppServiceCertificateOrderImpl
     }
 
     @Override
-    public CertificateDetailsImpl signedCertificate() {
-        if (inner().signedCertificate() == null) {
-            return null;
-        }
-        return new CertificateDetailsImpl(inner().signedCertificate());
+    public CertificateDetails signedCertificate() {
+        return inner().signedCertificate();
     }
 
     @Override
@@ -140,19 +138,13 @@ class AppServiceCertificateOrderImpl
     }
 
     @Override
-    public CertificateDetailsImpl intermediate() {
-        if (inner().intermediate() == null) {
-            return null;
-        }
-        return new CertificateDetailsImpl(inner().intermediate());
+    public CertificateDetails intermediate() {
+        return inner().intermediate();
     }
 
     @Override
-    public CertificateDetailsImpl root() {
-        if (inner().root() == null) {
-            return null;
-        }
-        return new CertificateDetailsImpl(inner().root());
+    public CertificateDetails root() {
+        return inner().root();
     }
 
     @Override
@@ -177,16 +169,16 @@ class AppServiceCertificateOrderImpl
 
     @Override
     public Observable<AppServiceCertificateKeyVaultBinding> createKeyVaultBindingAsync(String certificateName, Vault vault) {
-        AppServiceCertificateInner certInner = new AppServiceCertificateInner();
+        AppServiceCertificateResourceInner certInner = new AppServiceCertificateResourceInner();
         certInner.withLocation(vault.regionName());
         certInner.withKeyVaultId(vault.id());
         certInner.withKeyVaultSecretName(certificateName);
         final AppServiceCertificateOrderImpl self = this;
         return this.manager().inner().appServiceCertificateOrders().createOrUpdateCertificateAsync(
                 resourceGroupName(), name(), certificateName, certInner)
-                .map(new Func1<AppServiceCertificateInner, AppServiceCertificateKeyVaultBinding>() {
+                .map(new Func1<AppServiceCertificateResourceInner, AppServiceCertificateKeyVaultBinding>() {
                     @Override
-                    public AppServiceCertificateKeyVaultBinding call(AppServiceCertificateInner appServiceCertificateInner) {
+                    public AppServiceCertificateKeyVaultBinding call(AppServiceCertificateResourceInner appServiceCertificateInner) {
                         return new AppServiceCertificateKeyVaultBindingImpl(appServiceCertificateInner, self);
                     }
                 });
@@ -226,9 +218,9 @@ class AppServiceCertificateOrderImpl
                     @Override
                     public Observable<Void> call(AppServiceCertificateOrder certificateOrder) {
                         if (domainVerifyWebApp != null) {
-                            return domainVerifyWebApp.verifyDomainOwnershipAsync(name(), domainVerificationToken());
+                            return domainVerifyWebApp.verifyDomainOwnershipAsync(name(), domainVerificationToken()).toObservable();
                         } else if (domainVerifyDomain != null) {
-                            return domainVerifyDomain.verifyDomainOwnershipAsync(name(), domainVerificationToken());
+                            return domainVerifyDomain.verifyDomainOwnershipAsync(name(), domainVerificationToken()).toObservable();
                         } else {
                             throw new IllegalArgumentException(
                                     "Please specify a non-null web app or domain to verify the domain ownership "

@@ -38,8 +38,8 @@ public class CreateVirtualMachineUsingSpecializedDiskFromVhd {
      * @return true if sample runs successfully
      */
     public static boolean runSample(Azure azure) {
-        final String linuxVmName1 = Utils.createRandomName("VM1");
-        final String linuxVmName2 = Utils.createRandomName("VM2");
+        final String linuxVMName1 = Utils.createRandomName("VM1");
+        final String linuxVMName2 = Utils.createRandomName("VM2");
         final String managedOSDiskName = Utils.createRandomName("ds-os-");
         final String managedDataDiskNamePrefix = Utils.createRandomName("ds-data-");
         final String rgName = Utils.createRandomName("rgCOMV");
@@ -58,7 +58,7 @@ public class CreateVirtualMachineUsingSpecializedDiskFromVhd {
 
             System.out.println("Creating a un-managed Linux VM");
 
-            VirtualMachine linuxVM = azure.virtualMachines().define(linuxVmName1)
+            VirtualMachine linuxVM = azure.virtualMachines().define(linuxVMName1)
                     .withRegion(region)
                     .withNewResourceGroup(rgName)
                     .withNewPrimaryNetwork("10.0.0.0/28")
@@ -149,13 +149,13 @@ public class CreateVirtualMachineUsingSpecializedDiskFromVhd {
 
             System.out.println("Creating a Linux VM using specialized OS and data disks");
 
-            VirtualMachine linuxVM2 = azure.virtualMachines().define(linuxVmName2)
+            VirtualMachine linuxVM2 = azure.virtualMachines().define(linuxVMName2)
                     .withRegion(region)
                     .withExistingResourceGroup(rgName)
                     .withNewPrimaryNetwork("10.0.0.0/28")
                     .withPrimaryPrivateIPAddressDynamic()
                     .withoutPrimaryPublicIPAddress()
-                    .withSpecializedOsDisk(osDisk, OperatingSystemTypes.LINUX)
+                    .withSpecializedOSDisk(osDisk, OperatingSystemTypes.LINUX)
                     .withExistingDataDisk(dataDisks.get(0))
                     .withExistingDataDisk(dataDisks.get(1), 1, CachingTypes.READ_WRITE)
                     .withSize(VirtualMachineSizeTypes.STANDARD_D3_V2)
@@ -197,7 +197,7 @@ public class CreateVirtualMachineUsingSpecializedDiskFromVhd {
         } finally {
             try {
                 System.out.println("Deleting Resource Group: " + rgName);
-                azure.resourceGroups().deleteByName(rgName);
+                azure.resourceGroups().beginDeleteByName(rgName);
                 System.out.println("Deleted Resource Group: " + rgName);
             } catch (NullPointerException npe) {
                 System.out.println("Did not create any resources in Azure. No clean up is necessary");

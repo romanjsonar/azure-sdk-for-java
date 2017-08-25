@@ -16,6 +16,6 @@ import com.microsoft.azure.management.resources.fluentcore.model.HasInner;
  */
 @Fluent
 public interface VirtualMachineScaleSetVMs extends
-    SupportsListing<VirtualMachineScaleSetVM>,
+        SupportsListing<VirtualMachineScaleSetVM>,
     HasInner<VirtualMachineScaleSetVMsInner> {
 }

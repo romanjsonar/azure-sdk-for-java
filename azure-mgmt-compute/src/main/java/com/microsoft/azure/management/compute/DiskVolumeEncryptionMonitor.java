@@ -6,19 +6,15 @@
 
 package com.microsoft.azure.management.compute;
 
+import com.microsoft.azure.management.apigeneration.LangDefinition;
+import com.microsoft.azure.management.apigeneration.Method;
 import com.microsoft.azure.management.resources.fluentcore.model.Refreshable;
 import rx.Observable;
 
 /**
  * Type that can be used to monitor encryption enable and disable status of a virtual machine.
- *
- * User get access to implementation of this interface from following methods:
- *  1. VirtualMachineEncryption.[enable|disable]{1}[Async]{0-1}
- *  2. VirtualMachineEncryption.getMonitor[Async]{0-1}
- * It is possible that user first get monitor instance via 2 then starts encrypting the virtual
- * machine, in this case he can still use the same monitor instance to monitor the encryption
- * progress.
  */
+@LangDefinition
 public interface DiskVolumeEncryptionMonitor
         extends Refreshable<DiskVolumeEncryptionMonitor> {
     /**
@@ -38,7 +34,8 @@ public interface DiskVolumeEncryptionMonitor
      */
     EncryptionStatus dataDiskStatus();
     /**
-     * @return observable that emits encryption status once the refresh is done
+     * @return a representation of the deferred computation of this call returning the encryption status once the refresh is done
      */
+    @Method
     Observable<DiskVolumeEncryptionMonitor> refreshAsync();
 }

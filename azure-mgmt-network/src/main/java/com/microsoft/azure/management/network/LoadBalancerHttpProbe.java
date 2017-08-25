@@ -5,14 +5,16 @@
  */
 package com.microsoft.azure.management.network;
 
+import com.microsoft.azure.management.apigeneration.Beta;
 import com.microsoft.azure.management.apigeneration.Fluent;
 import com.microsoft.azure.management.resources.fluentcore.model.Attachable;
 import com.microsoft.azure.management.resources.fluentcore.model.Settable;
 
 /**
- * An immutable client-side representation of an HTTP load balancing probe.
+ * A client-side representation of an HTTP load balancing probe.
  */
 @Fluent()
+@Beta
 public interface LoadBalancerHttpProbe extends LoadBalancerProbe {
 
     /**
@@ -26,7 +28,7 @@ public interface LoadBalancerHttpProbe extends LoadBalancerProbe {
     interface DefinitionStages {
         /**
          * The first stage of the probe definition.
-         * @param <ParentT> the return type of the final {@link WithAttach#attach()}
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface Blank<ParentT> extends WithRequestPath<ParentT> {
         }
@@ -34,8 +36,8 @@ public interface LoadBalancerHttpProbe extends LoadBalancerProbe {
         /** The final stage of the probe definition.
          * <p>
          * At this stage, any remaining optional settings can be specified, or the probe definition
-         * can be attached to the parent load balancer definition using {@link WithAttach#attach()}.
-         * @param <ParentT> the return type of {@link WithAttach#attach()}
+         * can be attached to the parent load balancer definition.
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface WithAttach<ParentT> extends
             Attachable.InDefinition<ParentT>,
@@ -46,7 +48,7 @@ public interface LoadBalancerHttpProbe extends LoadBalancerProbe {
 
         /**
          * The stage of the probe definition allowing to specify the HTTP request path for the probe to monitor.
-         * @param <ParentT> the parent type
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface WithRequestPath<ParentT> {
             WithAttach<ParentT> withRequestPath(String requestPath);
@@ -54,7 +56,7 @@ public interface LoadBalancerHttpProbe extends LoadBalancerProbe {
 
         /**
          * The stage of the HTTP probe definition allowing to specify the probe interval.
-         * @param <ParentT> the parent resource type
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface WithIntervalInSeconds<ParentT> {
             /**
@@ -67,7 +69,7 @@ public interface LoadBalancerHttpProbe extends LoadBalancerProbe {
 
         /**
          * The stage of the probe definition allowing to specify the port to monitor.
-         * @param <ParentT> the parent type
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface WithPort<ParentT> {
             /**
@@ -80,7 +82,7 @@ public interface LoadBalancerHttpProbe extends LoadBalancerProbe {
 
         /**
          * The stage of the HTTP probe definition allowing to specify the number of unsuccessful probes before failure is determined.
-         * @param <ParentT> the parent type
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface WithNumberOfProbes<ParentT> {
             /**
@@ -93,7 +95,7 @@ public interface LoadBalancerHttpProbe extends LoadBalancerProbe {
     }
 
     /** The entirety of a probe definition.
-     * @param <ParentT> the return type of the final {@link DefinitionStages.WithAttach#attach()}
+     * @param <ParentT> the stage of the parent definition to return to after attaching this definition
      */
     interface Definition<ParentT> extends
         DefinitionStages.Blank<ParentT>,
@@ -145,6 +147,11 @@ public interface LoadBalancerHttpProbe extends LoadBalancerProbe {
          * The stage of the HTTP probe update allowing to modify the HTTP request path for the probe to monitor.
          */
         interface WithRequestPath {
+            /**
+             * Specifies the HTTP request path for the probe to monitor.
+             * @param requestPath a request path
+             * @return the next stage of the definition
+             */
             Update withRequestPath(String requestPath);
         }
     }
@@ -166,7 +173,7 @@ public interface LoadBalancerHttpProbe extends LoadBalancerProbe {
     interface UpdateDefinitionStages {
         /**
          * The first stage of the probe definition.
-         * @param <ParentT> the return type of the final {@link WithAttach#attach()}
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface Blank<ParentT> extends WithRequestPath<ParentT> {
         }
@@ -174,8 +181,8 @@ public interface LoadBalancerHttpProbe extends LoadBalancerProbe {
         /** The final stage of the probe definition.
          * <p>
          * At this stage, any remaining optional settings can be specified, or the probe definition
-         * can be attached to the parent load balancer definition using {@link WithAttach#attach()}.
-         * @param <ParentT> the return type of {@link WithAttach#attach()}
+         * can be attached to the parent load balancer definition.
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface WithAttach<ParentT> extends
             Attachable.InUpdate<ParentT>,
@@ -186,15 +193,20 @@ public interface LoadBalancerHttpProbe extends LoadBalancerProbe {
 
         /**
          * The stage of the probe definition allowing to specify the HTTP request path for the probe to monitor.
-         * @param <ParentT> the parent type
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface WithRequestPath<ParentT> {
+            /**
+             * Specifies the HTTP request path for the probe to monitor.
+             * @param requestPath a request path
+             * @return the next stage of the definition
+             */
             WithAttach<ParentT> withRequestPath(String requestPath);
         }
 
         /**
          * The stage of the HTTP probe definition allowing to specify the probe interval.
-         * @param <ParentT> the parent resource type
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface WithIntervalInSeconds<ParentT> {
             /**
@@ -207,7 +219,7 @@ public interface LoadBalancerHttpProbe extends LoadBalancerProbe {
 
         /**
          * The stage of the probe definition allowing to specify the port to monitor.
-         * @param <ParentT> the parent type
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface WithPort<ParentT> {
             /**
@@ -220,7 +232,7 @@ public interface LoadBalancerHttpProbe extends LoadBalancerProbe {
 
         /**
          * The stage of the HTTP probe definition allowing to specify the number of unsuccessful probes before failure is determined.
-         * @param <ParentT> the parent type
+         * @param <ParentT> the stage of the parent definition to return to after attaching this definition
          */
         interface WithNumberOfProbes<ParentT> {
             /**
@@ -234,7 +246,7 @@ public interface LoadBalancerHttpProbe extends LoadBalancerProbe {
     }
 
     /** The entirety of a probe definition as part of a load balancer update.
-     * @param <ParentT> the return type of the final {@link UpdateDefinitionStages.WithAttach#attach()}
+     * @param <ParentT> the stage of the parent definition to return to after attaching this definition
      */
     interface UpdateDefinition<ParentT> extends
         UpdateDefinitionStages.Blank<ParentT>,

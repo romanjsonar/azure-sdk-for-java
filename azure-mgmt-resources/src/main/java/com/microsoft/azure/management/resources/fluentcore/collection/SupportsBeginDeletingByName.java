@@ -41,7 +41,7 @@ public interface SupportsBeginDeletingByName {
      * The resource will stay until get() returns null.
      *
      * @param name the name the resource to delete
-     * @return an observable of the request
+     * @return a representation of the deferred computation of this call
      */
     Observable<Void> beginDeleteByNameAsync(String name);
 }

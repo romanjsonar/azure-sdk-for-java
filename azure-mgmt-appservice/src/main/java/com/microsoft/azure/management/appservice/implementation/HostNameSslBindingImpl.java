@@ -45,7 +45,7 @@ class HostNameSslBindingImpl<
     extends IndexableWrapperImpl<HostNameSslState>
     implements
         HostNameSslBinding,
-        HostNameSslBinding.Definition<WebAppBase.DefinitionStages.WithHostNameSslBinding<FluentT>>,
+        HostNameSslBinding.Definition<WebAppBase.DefinitionStages.WithCreate<FluentT>>,
         HostNameSslBinding.UpdateDefinition<WebAppBase.Update<FluentT>> {
 
     private Observable<AppServiceCertificate> newCertificate;
@@ -98,6 +98,27 @@ class HostNameSslBindingImpl<
     }
 
     @Override
+    public HostNameSslBindingImpl<FluentT, FluentImplT> withExistingCertificate(final String certificateNameOrThumbprint) {
+        newCertificate = this.parent().manager().certificates().getByResourceGroupAsync(parent().resourceGroupName(), certificateNameOrThumbprint)
+                .onErrorReturn(new Func1<Throwable, AppServiceCertificate>() {
+                    @Override
+                    public AppServiceCertificate call(Throwable throwable) {
+                        return null;
+                    }
+                })
+                .map(new Func1<AppServiceCertificate, AppServiceCertificate>() {
+                    @Override
+                    public AppServiceCertificate call(AppServiceCertificate appServiceCertificate) {
+                        if (appServiceCertificate == null) {
+                            withCertificateThumbprint(certificateNameOrThumbprint);
+                        }
+                        return appServiceCertificate;
+                    }
+                });
+        return this;
+    }
+
+    @Override
     public HostNameSslBindingImpl<FluentT, FluentImplT> withNewStandardSslCertificateOrder(final String certificateOrderName) {
         this.certificateInDefinition = this.parent().manager().certificateOrders().define(certificateOrderName)
                 .withExistingResourceGroup(parent().resourceGroupName())
@@ -139,7 +160,9 @@ class HostNameSslBindingImpl<
         return newCertificate.doOnNext(new Action1<AppServiceCertificate>() {
             @Override
             public void call(AppServiceCertificate appServiceCertificate) {
-                withCertificateThumbprint(appServiceCertificate.thumbprint());
+                if (appServiceCertificate != null) {
+                    withCertificateThumbprint(appServiceCertificate.thumbprint());
+                }
             }
         });
     }

@@ -5,6 +5,7 @@
  */
 package com.microsoft.azure.management.trafficmanager;
 
+import com.microsoft.azure.management.apigeneration.Beta;
 import com.microsoft.azure.management.apigeneration.Fluent;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.GroupableResource;
 import com.microsoft.azure.management.resources.fluentcore.arm.models.Resource;
@@ -115,7 +116,7 @@ public interface TrafficManagerProfile extends
              * will be constructed automatically by appending the rest of the domain to this label.
              *
              * @param dnsLabel the relative DNS name of the profile
-             * @return the next stage of the traffic manager profile definition
+             * @return the next stage of the definition
              */
             WithTrafficRoutingMethod withLeafDomainLabel(String dnsLabel);
         }
@@ -130,7 +131,7 @@ public interface TrafficManagerProfile extends
              * i.e. use the endpoint with highest priority and if it is not available fallback to next highest
              * priority endpoint.
              *
-             * @return the next stage of the traffic manager profile definition
+             * @return the next stage of the definition
              */
             WithEndpoint withPriorityBasedRouting();
 
@@ -138,23 +139,32 @@ public interface TrafficManagerProfile extends
              * Specifies that end user traffic should be distributed to the endpoints based on the weight assigned
              * to the endpoint.
              *
-             * @return the next stage of the traffic manager profile definition
+             * @return the next stage of the definition
              */
             WithEndpoint withWeightBasedRouting();
 
             /**
-             * Specifies that end user traffic should be routed based on the geographic location of the endpoint
-             * close to user.
+             * Specifies that end user traffic should be routed based on the closest available endpoint in terms
+             * of the lowest network latency.
              *
-             * @return the next stage of the traffic manager profile definition
+             * @return the next stage of the definition
              */
             WithEndpoint withPerformanceBasedRouting();
+
+            /**
+             * Specifies that end user traffic should be routed to the endpoint that is designated to serve users
+             * geographic region.
+             *
+             * @return the next stage of the definition
+             */
+            @Beta(Beta.SinceVersion.V1_2_0)
+            WithEndpoint withGeographicBasedRouting();
 
             /**
              * Specify the traffic routing method for the profile.
              *
              * @param routingMethod the traffic routing method for the profile
-             * @return the next stage of the traffic manager profile definition
+             * @return the next stage of the definition
              */
             WithEndpoint withTrafficRoutingMethod(TrafficRoutingMethod routingMethod);
         }
@@ -196,7 +206,7 @@ public interface TrafficManagerProfile extends
              * Specify to use HTTP monitoring for the endpoints that checks for HTTP 200 response from the path '/'
              * at regular intervals, using port 80.
              *
-             * @return the next stage of the traffic manager profile definition
+             * @return the next stage of the definition
              */
             WithCreate withHttpMonitoring();
 
@@ -204,7 +214,7 @@ public interface TrafficManagerProfile extends
              * Specify to use HTTPS monitoring for the endpoints that checks for HTTPS 200 response from the path '/'
              * at regular intervals, using port 443.
              *
-             * @return the next stage of the traffic manager profile definition
+             * @return the next stage of the definition
              */
             WithCreate withHttpsMonitoring();
 
@@ -214,7 +224,7 @@ public interface TrafficManagerProfile extends
              *
              * @param port the monitoring port
              * @param path  the monitoring path
-             * @return the next stage of the traffic manager profile definition
+             * @return the next stage of the definition
              */
             WithCreate withHttpMonitoring(int port, String path);
 
@@ -224,7 +234,7 @@ public interface TrafficManagerProfile extends
              *
              * @param port the monitoring port
              * @param path  the monitoring path
-             * @return the next stage of the traffic manager profile definition
+             * @return the next stage of the definition
              */
             WithCreate withHttpsMonitoring(int port, String path);
         }
@@ -237,7 +247,7 @@ public interface TrafficManagerProfile extends
              * Specify the DNS TTL in seconds.
              *
              * @param ttlInSeconds DNS TTL in seconds
-             * @return the next stage of the traffic manager profile definition
+             * @return the next stage of the definition
              */
             WithCreate withTimeToLive(int ttlInSeconds);
         }
@@ -251,7 +261,7 @@ public interface TrafficManagerProfile extends
              * <p>
              * Disabling the profile will disables traffic to all endpoints in the profile
              *
-             * @return the next stage of the traffic manager profile definition
+             * @return the next stage of the definition
              */
             WithCreate withProfileStatusDisabled();
         }
@@ -297,12 +307,21 @@ public interface TrafficManagerProfile extends
             Update withWeightBasedRouting();
 
             /**
-             * Specifies that end user traffic should be routed based on the geographic location of the endpoint
-             * close to user.
+             * Specifies that end user traffic should be routed based on the closest available endpoint in terms
+             * of the lowest network latency.
              *
-             * @return the next stage of the traffic manager profile update
+             * @return the next stage of the update
              */
             Update withPerformanceBasedRouting();
+
+            /**
+             * Specifies that end user traffic should be routed to the endpoint that is designated to serve users
+             * geographic region.
+             *
+             * @return the next stage of the update
+             */
+            @Beta(Beta.SinceVersion.V1_2_0)
+            Update withGeographicBasedRouting();
 
             /**
              * Specifies the traffic routing method for the profile.
